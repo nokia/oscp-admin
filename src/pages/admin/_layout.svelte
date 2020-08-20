@@ -1,10 +1,12 @@
+<!--
+    (c) 2020 Open AR Cloud
+    This code is licensed under MIT license (see LICENSE.md for details)
+-->
+
 <script>
     import { ready, redirect } from '@sveltech/routify'
-    import { authStore } from '../../core/auth.js'
+    import { loading, authenticated, user } from '../../core/auth.js'
 
-    const { user, authenticated, loading } = authStore
-
-    console.log($user);
 
     /**
      * since SSR normally won't render till all components have been loaded
@@ -21,7 +23,7 @@
         <div class="center-all">
             <h1>Loading...</h1>
         </div>
-    {:else if $user}
+    {:else if $authenticated}
         <slot />
     {:else}
         {$redirect('/')}

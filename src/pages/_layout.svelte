@@ -5,19 +5,17 @@
 
 <script>
     import { isActive, url } from "@sveltech/routify";
-    import { authStore } from '../core/auth';
-
+    import { authStore, authenticated } from '../core/auth';
 
     const links = [
             ['/index', 'Home', false],
-            ['/admin/services', 'Services', true],
-            ['/admin/content', 'Content', true],
+            ['/admin/services', 'Services', true]
         ]
 </script>
 
 <style>
     header {
-        padding: 6vw;
+        padding: 3rem;
         background: linear-gradient(180deg,#000,#09374b 67%,#1b5f7c),
         linear-gradient(180deg,transparent,transparent);
     }
@@ -41,8 +39,12 @@
         max-height: 51px;
     }
 
-    span.inactive {
+    .inactive {
         margin-right: 15px;
+    }
+
+    .login {
+        float: right;
     }
 </style>
 
@@ -51,12 +53,18 @@
 
     <nav>
         {#each links as [path, name, needsLogin]}
-            {#if authStore.isAuthenticated() || !needsLogin}
+            {#if $authenticated || !needsLogin}
             <a class:active={$isActive(path)} href={$url(path)}>{name}</a>
             {:else}
             <span class="inactive">{name}</span>
             {/if}
         {/each}
+
+        {#if $authenticated}
+            <a class="login" href="#" on:click="{authStore.logout}">Logout</a>
+        {:else}
+            <a class="login" href="#" on:click="{authStore.login}">Login</a>
+        {/if}
     </nav>
 </header>
 

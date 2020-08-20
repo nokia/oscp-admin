@@ -3,6 +3,11 @@
  * This code is licensed under MIT license (see LICENSE.md for details)
  */
 
+/*
+ * (c) 2020 Open AR Cloud
+ * This code is licensed under MIT license (see LICENSE.md for details)
+ */
+
 import svelte from 'rollup-plugin-svelte';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
@@ -45,7 +50,7 @@ export default {
 	plugins: [
 		replace({
 			// stringify the object
-			__myapp: JSON.stringify({
+			oscp_app: JSON.stringify({
 				env: {
 					isProd: production,
 					...config().parsed // attached the .env config
