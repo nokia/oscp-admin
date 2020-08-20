@@ -1,0 +1,32 @@
+{
+  "name": "oscp-admin",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "routify -b && rollup -c",
+    "dev": "routify -c my-server",
+    "my-server": "rollup -c -w",
+    "start": "sirv public --single --http2 --key localhost.key --cert localhost.cert --host"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpenArCloud/ssd-access.git"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^14.0.0",
+    "@rollup/plugin-node-resolve": "^8.0.0",
+    "@rollup/plugin-replace": "^2.3.3",
+    "dotenv": "^8.2.0",
+    "rollup": "^2.3.4",
+    "rollup-plugin-livereload": "^1.0.0",
+    "rollup-plugin-svelte": "^5.0.3",
+    "rollup-plugin-terser": "^6.0.0",
+    "svelte": "^3.0.0"
+  },
+  "dependencies": {
+    "@auth0/auth0-spa-js": "^1.11.0",
+    "@sveltech/routify": "^1.9.7",
+    "sirv-cli": "^1.0.0",
+    "ssd-access": "0.0.2"
+  },
+  "license": "MIT"
+}
