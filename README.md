@@ -22,3 +22,33 @@ To run this app locally, you need to copy SSL certificates to the root folder
 of the project, named localhost.key and localhost.cert. The information on
 this site might be halpful to generate these keys: 
 https://matthewhoelter.com/2019/10/21/how-to-setup-https-on-your-local-development-environment-localhost-in-minutes.html
+
+Also, adding a .env file to the root of the project is required. The format
+looks like this:
+
+## Usage
+
+```
+git clone https://github.com/OpenArCloud/oscp-admin
+cd oscp-admin
+npm install
+```
+
+Create .env file with required params ex.
+```
+AUTH0_SCD_DOMAIN = 
+AUTH0_SCD_CLIENTID = 
+AUTH0_SSD_DOMAIN = 
+AUTH0_SSD_CLIENTID = 
+```
+
+Start the local server for development
+
+```
+npm run dev
+```
+
+Start the server for production
+```
+npm start
+```
