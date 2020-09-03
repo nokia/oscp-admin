@@ -34,12 +34,12 @@ cd oscp-admin
 npm install
 ```
 
-Create .env file with required params ex.
+Create .env file with required parameters, ex.
 ```
-AUTH0_SCD_DOMAIN = 
-AUTH0_SCD_CLIENTID = 
-AUTH0_SSD_DOMAIN = 
-AUTH0_SSD_CLIENTID = 
+AUTH0_DOMAIN = 
+AUTH0_CLIENTID = 
+AUTH0_AUDIENCE = 
+AUTH0_SCOPE = 
 ```
 
 Start the local server for development
@@ -52,3 +52,7 @@ Start the server for production
 ```
 npm start
 ```
+
+Further information about the discovery services can be found here:
+- https://github.com/OpenArCloud/oscp-spatial-service-discovery
+- https://github.com/OpenArCloud/oscp-spatial-content-discovery

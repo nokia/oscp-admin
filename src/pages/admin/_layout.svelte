@@ -5,7 +5,7 @@
 
 <script>
     import { ready, redirect } from '@sveltech/routify'
-    import { loading, authenticated, user } from '../../core/auth.js'
+    import { loading, authenticated, user } from 'ssd-access/authstore.js'
 
 
     /**
