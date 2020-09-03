@@ -1,48 +1,40 @@
 /*
  * (c) 2020 Open AR Cloud
  * This code is licensed under MIT license (see LICENSE.md for details)
- */
-
-/*
- * (c) 2020 Open AR Cloud
- * This code is licensed under MIT license (see LICENSE.md for details)
- */
-
-/*
- * (c) 2020 Open AR Cloud
- * This code is licensed under MIT license (see LICENSE.md for details)
 */
 
-import { writable, get } from 'svelte/store'
+import {writable} from 'svelte/store'
 import createAuth0Client from "@auth0/auth0-spa-js"
 
 
-const AUTH_CONFIG = {
-    domain: oscp_app.env["AUTH0_SSD_DOMAIN"],
-    client_id: oscp_app.env["AUTH0_SSD_CLIENTID"]
-}
+export const authStore = createAuthStore();
 
-export const authStore = createAuthStore()
-
-export const loading = writable(false)
-export const authenticated = writable(false)
-export const user = writable('')
+export const loading = writable(false);
+export const authenticated = writable(false);
+export const user = writable('');
 
 
 function createAuthStore() {
-    let auth0 = null
+    let auth0 = null;
 
     async function init(){
-        auth0 = await createAuth0Client(AUTH_CONFIG)
+        auth0 = await createAuth0Client({
+            domain: oscp_app.env["AUTH0_DOMAIN"],
+            client_id: oscp_app.env["AUTH0_CLIENTID"],
+            audience: oscp_app.env["AUTH0_AUDIENCE"],
+            scope: oscp_app.env["AUTH0_SCOPE"]
+        });
 
         const query = window.location.search
         if (query.includes("code=") && query.includes("state=")) {
-            await auth0.handleRedirectCallback()
-            window.history.replaceState({}, document.title, "/")
+            await auth0.handleRedirectCallback();
+            window.history.replaceState({}, document.title, "/");
         }
 
-        user.set(await auth0.getUser())
-        authenticated.set(await auth0.isAuthenticated())
+        let temp = await auth0.getUser();
+
+        user.set(await auth0.getUser());
+        authenticated.set(await auth0.isAuthenticated());
     }
 
     async function login() {
@@ -62,9 +54,13 @@ function createAuthStore() {
             console.log("Log out failed", err);
         })
 
-        user.set(await auth0.getUser())
-        authenticated.set(false)
+        user.set(await auth0.getUser());
+        authenticated.set(false);
     }
 
-    return { auth0, login, logout, init }
+    async function getToken() {
+        return await auth0.getTokenSilently();
+    }
+
+    return { auth0, getToken, login, logout, init }
 }

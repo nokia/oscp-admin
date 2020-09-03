@@ -9,7 +9,9 @@
 
     const links = [
             ['/index', 'Home', false],
-            ['/admin/services', 'Services', true]
+            ['/admin/createservice', 'Create', true],
+            ['/admin/editservice', 'Edit', true],
+            ['/admin/importservices', 'Import', true]
         ]
 </script>
 
@@ -42,10 +44,6 @@
     .inactive {
         margin-right: 15px;
     }
-
-    .login {
-        float: right;
-    }
 </style>
 
 <header>
@@ -61,9 +59,9 @@
         {/each}
 
         {#if $authenticated}
-            <a class="login" href="#" on:click="{authStore.logout}">Logout</a>
+            <a class="floatright" href="#" on:click="{authStore.logout}">Logout</a>
         {:else}
-            <a class="login" href="#" on:click="{authStore.login}">Login</a>
+            <a class="floatright" href="#" on:click="{authStore.login}">Login</a>
         {/if}
     </nav>
 </header>
