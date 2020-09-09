@@ -8,7 +8,7 @@
 
     import { getServiceWithId } from 'ssd-access'
     import { url, route, params } from '@sveltech/routify'
-    import { authStore } from '../../core/auth.js'
+    import { authStore } from 'ssd-access/authstore.js'
 
     import KeyValue from '../../components/tree/KeyValue.svelte'
 

@@ -5,7 +5,7 @@
 
 <script>
     import { isActive, url } from "@sveltech/routify";
-    import { authStore, authenticated } from '../core/auth';
+    import { authStore, authenticated } from 'ssd-access/authstore.js';
 
     const links = [
             ['/index', 'Home', false],

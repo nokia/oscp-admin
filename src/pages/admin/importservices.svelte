@@ -1,6 +1,6 @@
 <script>
     import { postSsrFile } from 'ssd-access';
-    import { authStore } from '../../core/auth.js';
+    import { authStore } from 'ssd-access/authstore.js';
 
 
     let dropEnabled = true;

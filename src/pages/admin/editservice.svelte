@@ -5,7 +5,7 @@
 
 <script>
     import { url } from '@sveltech/routify';
-    import { user } from '../../core/auth.js';
+    import { user } from 'ssd-access/authstore.js';
 
     const detailUrl = '../detail';
 
