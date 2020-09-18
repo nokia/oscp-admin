@@ -47,7 +47,7 @@
 </style>
 
 <header>
-    <h1><img id="oarc_logo" src="/OARC_Logo_without_BG.png" alt="Open AR Cloud header image"/></h1>
+    <h1><img id="oarc_logo" src="/OARC_Logo_without_BG.png" alt="Open AR Cloud header"/></h1>
 
     <nav>
         {#each links as [path, name, needsLogin]}
@@ -59,9 +59,9 @@
         {/each}
 
         {#if $authenticated}
-            <a class="floatright" href="#" on:click="{authStore.logout}">Logout</a>
+            <a class="floatright" href="!#" on:click="{authStore.logout}">Logout</a>
         {:else}
-            <a class="floatright" href="#" on:click="{authStore.login}">Login</a>
+            <a class="floatright" href="!#" on:click="{authStore.login}">Login</a>
         {/if}
     </nav>
 </header>

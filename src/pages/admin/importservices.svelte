@@ -38,8 +38,6 @@
     }
 
     function uploadFile(file) {
-        let message = 'empty';
-
         if (file.type === 'application/json') {
             authStore.getToken()
                 .then(token => postSsrFile(countryCode, file, token))

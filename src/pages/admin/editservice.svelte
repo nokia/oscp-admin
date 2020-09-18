@@ -5,13 +5,12 @@
 
 <script>
     import { url } from '@sveltech/routify';
-    import { user } from 'ssd-access/authstore.js';
 
     const detailUrl = '../detail';
 
     const data = [{
         'provider': 'oscptest',
-        'id': '4010b3ff3047877a',
+        'id': 'f67792f03166a2db',
         'services': [{
             "type": "geopose",
             "url": "http://geopose.geo1.example.com",
@@ -23,7 +22,7 @@
         }]
     }, {
         'provider': 'oscptest',
-        'id': 'b431986c2f1f7477',
+        'id': 'cdebc0d23bba8833',
         'services': [{
             "type": 'geopose',
             "url": 'http://geopose.geo1.example.com',
