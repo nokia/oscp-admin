@@ -1,12 +1,12 @@
 <script>
-    import { postSsrFile } from 'ssd-access';
+    import { postSsrFile, supportedCountries } from 'ssd-access';
     import { authStore } from 'ssd-access/authstore.js';
 
 
     let dropEnabled = true;
     let protocol = [];
 
-    let countryCode = 'us';
+    let countryCodeElement;
 
     function handleDropOver(event) {
         event.preventDefault();
@@ -38,9 +38,14 @@
     }
 
     function uploadFile(file) {
+        if(!countryCodeElement.checkValidity()) {
+            output('Please select the Region to upload to')
+            return;
+        }
+
         if (file.type === 'application/json') {
             authStore.getToken()
-                .then(token => postSsrFile(countryCode, file, token))
+                .then(token => postSsrFile(countryCodeElement.value, file, token))
                 .then(response => output(`${file.name} uploaded - ${response}`))
                 .catch(error => output(`${file.name} not uploaded - ${error}`))
         } else {
@@ -70,7 +75,7 @@
 
 <div id="search">
     <label for="searchcountry">Region</label>
-    <input id="searchcountry" type="text" value="{countryCode}">
+    <input id="searchcountry" type="text" required list="supported-countries" bind:this={countryCodeElement}>
 </div>
 
 <div id="dropzone" class:disabled={!dropEnabled} on:drop={handleDrop} on:dragover={handleDropOver}>
@@ -86,3 +91,5 @@
         <div>{item}</div>
     {/each}
 </div>
+
+{@html supportedCountries}

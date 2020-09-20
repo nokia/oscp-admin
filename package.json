@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@sveltech/routify": "^1.9.9",
+    "jwt-decode": "^3.0.0-beta.2",
     "sirv-cli": "^1.0.0",
     "ssd-access": "0.0.9"
   },
