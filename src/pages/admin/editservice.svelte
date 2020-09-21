@@ -4,7 +4,7 @@
 -->
 
 <script>
-    import { url, goto } from '@sveltech/routify';
+    import { url } from '@sveltech/routify';
 
     import { searchServicesForTenant, getServiceWithId, supportedCountries } from 'ssd-access';
     import { authStore } from 'ssd-access/authstore.js'
