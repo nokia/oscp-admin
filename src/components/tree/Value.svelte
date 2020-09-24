@@ -3,9 +3,35 @@
     This code is licensed under MIT license (see LICENSE.md for details)
 -->
 
+<script context="module">
+    let counter = 0;
+</script>
+
 <script>
     export let key
     export let value
+    export let required;
+
+    const inputId = counter++;
+
+
+    function getInputType() {
+        let inputType;
+
+        switch (value.type) {
+            case 'string':
+                inputType = 'text';
+                break;
+            default:
+                inputType = value.type;
+        }
+
+        return inputType;
+    }
+
+    function getRequired() {
+        return required.includes(key) ? 'required' : '';
+    }
 </script>
 
 <style>
@@ -17,4 +43,9 @@
     }
 </style>
 
-<span>{key}: {value}</span>
+{#if ('const' in value || ('$form' in value && value.$form.type === 'nonedit'))}
+    <div>{key}: {value.default}</div>
+{:else}
+    <label for="editvalue{inputId}">{key}: </label>
+    <input id="editvalue{inputId}" type="{getInputType()}" required="{getRequired()}" value={value.default} />
+{/if}

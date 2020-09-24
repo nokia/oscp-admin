@@ -4,7 +4,7 @@
 -->
 
 <script>
-    import { url, goto } from '@sveltech/routify';
+    import { url } from '@sveltech/routify';
 
     import { searchServicesForTenant, getServiceWithId, supportedCountries } from 'ssd-access';
     import { authStore } from 'ssd-access/authstore.js'
@@ -85,7 +85,7 @@
 
 <div>
     <label for="searchcountry">Region:</label>
-    <input id="searchcountry" type="text" required list="supported-countries"bind:this={countryCodeElement} />
+    <input id="searchcountry" type="text" required list="supported-countries" bind:this={countryCodeElement} />
 
     <label for="searchserviceid">Service ID:</label>
     <input id="searchserviceid" type="text" bind:value="{serviceId}" />

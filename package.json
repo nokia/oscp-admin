@@ -26,6 +26,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-svelte3": "^2.7.3",
     "rollup": "^2.27.0",
+    "rollup-plugin-analyzer": "^3.3.0",
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte": "^6.0.1",
     "rollup-plugin-terser": "^7.0.2",
@@ -35,7 +36,7 @@
     "@sveltech/routify": "^1.9.9",
     "jwt-decode": "^3.0.0-beta.2",
     "sirv-cli": "^1.0.0",
-    "ssd-access": "0.0.9"
+    "ssd-access": "0.0.10"
   },
   "license": "MIT"
 }

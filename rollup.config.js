@@ -3,11 +3,6 @@
  * This code is licensed under MIT license (see LICENSE.md for details)
  */
 
-/*
- * (c) 2020 Open AR Cloud
- * This code is licensed under MIT license (see LICENSE.md for details)
- */
-
 import svelte from 'rollup-plugin-svelte';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
@@ -16,6 +11,9 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import {config} from 'dotenv';
 import replace from '@rollup/plugin-replace';
+
+import analyze from "rollup-plugin-analyzer";
+
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -49,6 +47,9 @@ export default {
 		file: 'public/build/bundle.js'
 	},
 	plugins: [
+		analyze({
+			summaryOnly: true
+		}),
 		replace({
 			// stringify the object
 			oscp_app: JSON.stringify({

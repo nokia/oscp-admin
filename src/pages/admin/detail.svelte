@@ -7,7 +7,7 @@
     import { onMount } from 'svelte'
     import { url, route, params, goto } from '@sveltech/routify'
 
-    import { getServiceWithId, deleteWithId } from 'ssd-access'
+    import { getServiceWithId, deleteWithId, ssr_schema } from 'ssd-access'
     import { authStore } from 'ssd-access/authstore.js'
 
     import KeyValue from '../../components/tree/KeyValue.svelte'
@@ -48,7 +48,7 @@
 
 <div id="detail">
     <div>
-        <KeyValue name="{$params.countryCode}/{$params.id}" values="{data}" expanded/>
+        <KeyValue name="{$params.countryCode}/{$params.id}" schema="{ssr_schema}" values="{data}" expanded/>
     </div>
 </div>
 

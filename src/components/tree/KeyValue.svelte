@@ -9,10 +9,18 @@
 
     export let expanded = false
     export let name
+    export let schema;
     export let values
+
+
+    const required = schema.required;
 
     function toggle() {
         expanded = !expanded
+    }
+
+    function getDefinitionSchema(path) {
+        return 'definitions' in schema ? schema.definitions[path.split('#')[1]] : undefined;
     }
 </script>
 
@@ -45,14 +53,22 @@
 
 {#if expanded}
     <ul>
-        {#each Object.entries(values) as [key, value]}
+        {#each Object.entries(schema.properties) as [key, value]}
             <li>
-                {#if value instanceof Array}
-                    <List name="{key}" values="{value}"/>
-                {:else if value instanceof Object}
-                    <svelte:self name="{key}" values="{value}"/>
+                {#if value.type === 'array'}
+                    {#if 'ref' in value.items}
+                        <svelte:self name="{key}" schema="{getDefinitionSchema(value.items.ref)}" values="{value}"/>
+                    {:else}
+                        <List name="{key}" values="{value}"/>
+                    {/if}
+                {:else if value.type === 'object'}
+                    {#if 'ref' in value.items}
+                        <svelte:self name="{key}" schema="{getDefinitionSchema(value.items.ref)}" values="{value}"/>
+                    {:else}
+<!--                        <svelte:self name="{key}" schema="schema" values="{value}"/>-->
+                    {/if}
                 {:else}
-                    <Value {key} {value}/>
+                    <Value {key} {value} {required} />
                 {/if}
             </li>
         {/each}
