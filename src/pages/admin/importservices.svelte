@@ -1,3 +1,44 @@
+<!--
+    (c) 2020 Open AR Cloud
+    This code is licensed under MIT license (see LICENSE.md for details)
+-->
+
+<style>
+    #dropzone {
+        height: 15rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 2rem;
+        border: 5px dashed darkgray;
+    }
+
+    #dropzone.disabled {
+        border-color: lightgray;
+        color: lightgray;
+    }
+
+    #dropzone button {
+        max-width: 15rem;
+        margin: auto;
+        padding: 2rem;
+    }
+
+    input[type=file] {
+        display: none;
+    }
+
+    #search {
+        margin-top: 2rem;
+    }
+
+    #protocol {
+        min-height: 5rem;
+        margin: 2rem;
+        padding: 5px;
+        border: 1px solid darkgray;
+    }</style>
+
 <script>
     import { postSsrFile, supportedCountries } from 'ssd-access';
     import { authStore } from 'ssd-access/authstore.js';
@@ -10,7 +51,6 @@
 
     function handleDropOver(event) {
         event.preventDefault();
-        console.log('drop over')
     }
 
     function handleDrop(event) {
@@ -57,12 +97,6 @@
         protocol = [message, ...protocol];
     }
 </script>
-
-
-<style>
-    /* Additional styles for dropzone moved to global.css, as they stopped working here */
-
-</style>
 
 
 <h2>Import Services</h2>

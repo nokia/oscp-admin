@@ -56,3 +56,6 @@ npm start
 Further information about the discovery services can be found here:
 - https://github.com/OpenArCloud/oscp-spatial-service-discovery
 - https://github.com/OpenArCloud/oscp-spatial-content-discovery
+
+
+App contains icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>

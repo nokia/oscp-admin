@@ -4,17 +4,19 @@
 -->
 
 <script>
-    import { onMount } from 'svelte'
-    import { url, route, params, goto } from '@sveltech/routify'
+    import { onMount } from 'svelte';
+    import { url, route, params, goto } from '@sveltech/routify';
 
-    import { getServiceWithId, deleteWithId } from 'ssd-access'
-    import { authStore } from 'ssd-access/authstore.js'
+    import {getServiceWithId, deleteWithId, validateSsr, putService} from 'ssd-access';
+    import { ssr_empty } from 'ssd-access';
+    import { authStore } from 'ssd-access/authstore.js';
 
-    import KeyValue from '../../components/tree/KeyValue.svelte'
+    import Form from '../../components/Form.svelte';
 
 
-    let data = [];
-    let returnPath = $route.last ? $route.last.path : '';
+    let data = ssr_empty;
+    let returnPath = $route.last ? $route.last.path : '/admin/editservice';
+
 
     onMount(() => {
         getServiceWithId($params.countryCode, $params.id)
@@ -30,28 +32,37 @@
         .then(() => $goto(returnPath))
         .catch(error => console.error(`Failed to delete: ${error}`))
     }
+
+    function handleSave(event) {
+        event.preventDefault();
+
+        const dataString = JSON.stringify(data);
+        validateSsr(dataString)
+            .then(() => authStore.getToken())
+            .then(token => putService($params.countryCode, dataString, data.id, token))
+            .then(response => {
+                console.log(`Record created: ${response}`);
+                $goto(returnPath);
+            })
+            .catch(error => {
+                console.log(`New SSR not sent - ${error}`);
+            });
+    }
 </script>
 
-<style>
-    #detail {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        margin-top: 3em;
-    }
-</style>
 
 <h2>
     <a href="{$url(returnPath)}"><img alt="back navigation arrow" src="/arrow_back_ios-24px.svg"/></a>
-    <span>Service detail</span>
+    <span>SSR record detail</span>
 </h2>
 
-<div id="detail">
-    <div>
-        <KeyValue name="{$params.countryCode}/{$params.id}" values="{data}" expanded/>
+<Form {data}>
+    <p slot="intro">Edit SSR record.</p>
+
+    <div slot="controls">
+        <button on:click={handleSave}>Save</button>
     </div>
-</div>
+</Form>
 
 <button on:click={handleDelete}>Delete</button>
-<button disabled>Save</button>
 

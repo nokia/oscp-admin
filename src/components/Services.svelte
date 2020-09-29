@@ -1,0 +1,91 @@
+<!--
+    (c) 2020 Open AR Cloud
+    This code is licensed under MIT license (see LICENSE.md for details)
+-->
+
+<style>
+    details:last-child {
+        margin-bottom: 0;
+    }
+
+    .buttonadd {
+        width: 100%;
+        background-color: black;
+        cursor: pointer;
+    }
+
+    .buttonadd img {
+        width: 2rem;
+    }
+</style>
+
+<script>
+    import { availableServiceTypes, ssr_service } from 'ssd-access';
+
+    import Capabilities from './Capabilities.svelte';
+
+    export let data;
+
+
+    function addService(event) {
+        event.preventDefault();
+
+        data = [...data, ssr_service];
+    }
+
+    function removeService(event, index) {
+        event.preventDefault();
+
+        data.splice(index, 1);
+        data = data;
+    }
+</script>
+
+
+{#each data as service, index}
+    <details>
+        <summary>
+            <span>{service.title} - </span>
+            <span>{service['type']}</span>
+            <button class="floatright buttondelete" on:click={(event) => removeService(event, index)}>
+                <img src="/remove.svg" alt="Delete button" />
+            </button>
+        </summary>
+
+        <div class="growable">
+            <label for="serviceid">ID</label>
+            <input id="serviceid" required bind:value="{service.id}" />
+        </div>
+
+        <div>
+            <label for="servicetype">Type</label>
+            <select id="servicetype" bind:value={service.type} required>
+                <option></option>
+                {#each availableServiceTypes as serviceType}
+                    <option value="{serviceType.toLowerCase()}">{serviceType}</option>
+                {/each}
+            </select>
+        </div>
+
+        <div class="growable">
+            <label for="servicetitle">Title</label>
+            <input id="servicetitle" required bind:value="{service.title}" />
+        </div>
+
+        <div class="growable">
+            <label for="servicedescription">Description</label>
+            <input id="servicedescription" bind:value="{service.description}" />
+        </div>
+
+        <div class="growable">
+            <label for="serviceurl">URL</label>
+            <input id="serviceurl" required bind:value="{service.url}" />
+        </div>
+
+        <Capabilities bind:data="{service.capabilities}" />
+    </details>
+{/each}
+
+<button class="buttonadd" on:click={addService}>
+    <img src="/plus-sign.svg" alt="Add Service button" />
+</button>

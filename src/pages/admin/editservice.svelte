@@ -4,12 +4,13 @@
 -->
 
 <script>
-    import { url, goto } from '@sveltech/routify';
+    import { url } from '@sveltech/routify';
 
-    import { searchServicesForTenant, getServiceWithId, supportedCountries } from 'ssd-access';
+    import { searchServicesForTenant, getServiceWithId } from 'ssd-access';
     import { authStore } from 'ssd-access/authstore.js'
 
     import jwtDecode from 'jwt-decode';
+    import CountryCode from "../../components/CountryCode.svelte";
 
 
     const detailUrl = '../detail';
@@ -30,7 +31,7 @@
     function handleSearch() {
         message = '';
 
-        if(!countryCodeElement.checkValidity()) {
+        if (!countryCodeElement.checkValidity()) {
             message = 'Please select the Region to search';
             return;
         }
@@ -43,7 +44,7 @@
     }
 
     function getService() {
-        getServiceWithId(countryCodeElement.value, serviceId)
+        getServiceWithId(countryCodeElement.value(), serviceId)
             .then(service => {
                 searchResults = [];
                 searchResults.push(service)
@@ -56,7 +57,7 @@
 
     function getServicesForTenant() {
         authStore.getToken()
-            .then(token => searchServicesForTenant(countryCodeElement.value, token))
+            .then(token => searchServicesForTenant(countryCodeElement.value(), token))
             .then(services => {
                 searchResults = services
                 if (services.length === 0) message = 'No services found';
@@ -73,10 +74,6 @@
         border-radius: 20px;
         padding: 20px;
     }
-
-    #searchcountry:invalid {
-        border: 2px solid red;
-    }
 </style>
 
 
@@ -84,8 +81,7 @@
 <h3>Tenant: ${tenant}</h3>
 
 <div>
-    <label for="searchcountry">Region:</label>
-    <input id="searchcountry" type="text" required list="supported-countries"bind:this={countryCodeElement} />
+    <CountryCode bind:this={countryCodeElement}></CountryCode>
 
     <label for="searchserviceid">Service ID:</label>
     <input id="searchserviceid" type="text" bind:value="{serviceId}" />
@@ -96,7 +92,7 @@
 {#if searchResults.length > 0}
 <dl id="service-container">
 {#each searchResults as result}
-    <dt><a href="{$url(detailUrl, {'countryCode': countryCodeElement.value, 'id': result.id})}">{result.id}</a></dt>
+    <dt><a href="{$url(detailUrl, {'countryCode': countryCodeElement.value(), 'id': result.id})}">{result.id}</a></dt>
     {#each result.services as service}
     <dd>{service.type}: {service.title}</dd>
     {/each}
@@ -105,5 +101,3 @@
 {:else}
     {message}
 {/if}
-
-{@html supportedCountries}
