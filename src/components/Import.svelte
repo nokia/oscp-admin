@@ -28,6 +28,7 @@
         display: none;
     }
 
+    /* eslint-disable-next-line css-unused-selector */
     #search {
         margin-top: 2rem;
     }
@@ -37,17 +38,17 @@
         margin: 2rem;
         padding: 5px;
         border: 1px solid darkgray;
-    }</style>
+    }
+</style>
 
 <script>
-    import { postSsrFile, supportedCountries } from 'ssd-access';
-    import { authStore } from 'ssd-access/authstore.js';
-
+    export let authStore;
+    export let postFileFunction;
+    export let propertyMissingMessage;
+    export let propertyElement;
 
     let dropEnabled = true;
     let protocol = [];
-
-    let countryCodeElement;
 
     function handleDropOver(event) {
         event.preventDefault();
@@ -78,14 +79,14 @@
     }
 
     function uploadFile(file) {
-        if(!countryCodeElement.checkValidity()) {
-            output('Please select the Region to upload to')
+        if(!propertyElement.checkValidity()) {
+            output(propertyMissingMessage)
             return;
         }
 
         if (file.type === 'application/json') {
             authStore.getToken()
-                .then(token => postSsrFile(countryCodeElement.value, file, token))
+                .then(token => postFileFunction(propertyElement.value, file, token))
                 .then(response => output(`${file.name} uploaded - ${response}`))
                 .catch(error => output(`${file.name} not uploaded - ${error}`))
         } else {
@@ -101,16 +102,9 @@
 
 <h2>Import Services</h2>
 
-<p>
-    Here it is possible to upload Spatial Service Records (SSR) by either dropping .json files onto the drop area or by
-    selecting files from drive. The content is validated against a json schema and sent to the regional server of the
-    provided region. A protocol of the process is shown below the drop area.
-</p>
+<slot name="intro" />
 
-<div id="search">
-    <label for="searchcountry">Region</label>
-    <input id="searchcountry" type="text" required list="supported-countries" bind:this={countryCodeElement}>
-</div>
+<slot name="search" />
 
 <div id="dropzone" class:disabled={!dropEnabled} on:drop={handleDrop} on:dragover={handleDropOver}>
     <span>Drop .json files</span>
@@ -125,5 +119,3 @@
         <div>{item}</div>
     {/each}
 </div>
-
-{@html supportedCountries}

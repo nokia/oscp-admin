@@ -13,15 +13,12 @@
         background-color: black;
         cursor: pointer;
     }
-
-    .buttonadd img {
-        width: 2rem;
-    }
 </style>
 
 <script>
     import { availableServiceTypes, ssr_service } from 'ssd-access';
 
+    import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
     import Capabilities from './Capabilities.svelte';
 
     export let data;
@@ -48,7 +45,7 @@
             <span>{service.title} - </span>
             <span>{service['type']}</span>
             <button class="floatright buttondelete" on:click={(event) => removeService(event, index)}>
-                <img src="/remove.svg" alt="Delete button" />
+                <CloseSolidIcon size="1.5rem" color="red" />
             </button>
         </summary>
 
@@ -79,7 +76,7 @@
 
         <div class="growable">
             <label for="serviceurl">URL</label>
-            <input id="serviceurl" required bind:value="{service.url}" />
+            <input id="serviceurl" required type="url" bind:value="{service.url}" />
         </div>
 
         <Capabilities bind:data="{service.capabilities}" />
@@ -87,5 +84,5 @@
 {/each}
 
 <button class="buttonadd" on:click={addService}>
-    <img src="/plus-sign.svg" alt="Add Service button" />
+    <AddSolidIcon size="2rem" color="white" />
 </button>

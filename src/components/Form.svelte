@@ -42,7 +42,7 @@
         flex-grow: 2;
     }
 
-    fieldset {
+    :global(fieldset) {
         border: 2px solid #0000;
         margin: 10px 0 10px;
     }
@@ -70,30 +70,15 @@
     #roottype {
         font-weight: bold;
     }
-
-    .hidden {
-        visibility: hidden;
-    }
 </style>
 
 <script>
-    import Services from './Services.svelte';
-    import Geometry from './Geometry.svelte';
-
     export let data;
 
     let form;
 
     export function reportValidity() {
         return form.reportValidity();
-    }
-
-    function toggleAltitude(event) {
-        if (event.target.checked) {
-            data.altitude = 0;
-        } else {
-            data.altitude = undefined;
-        }
     }
 </script>
 
@@ -121,35 +106,17 @@
         </div>
         {/if}
 
+        {#if data.timestamp}
+            <div>
+                <label for="roottimestamp">Last edited</label>
+                <span id="roottimestamp">{data.timestamp}</span>
+            </div>
+        {/if}
+
         <slot name="extras" />
     </fieldset>
 
-    <fieldset class="container">
-        <legend>Services</legend>
-        <Services bind:data="{data.services}"/>
-    </fieldset>
-
-    <fieldset class="container">
-        <legend>Coverage</legend>
-        <Geometry bind:data="{data.geometry}"/>
-    </fieldset>
-
-    <fieldset>
-        <div>
-            <label for="rootaltitude">
-                <input type="checkbox" checked="{data.altitude !== undefined}" on:change={toggleAltitude} />
-                <span>Altitude</span>
-            </label>
-            <input id="rootaltitude" type="number" step="0.1" class:hidden="{data.altitude === undefined}" bind:value="{data.altitude}"/>
-        </div>
-
-        {#if data.timestamp}
-        <div>
-            <label for="roottimestamp">Last edited</label>
-            <span id="roottimestamp">{data.timestamp}</span>
-        </div>
-        {/if}
-    </fieldset>
+    <slot name="form" />
 
     <slot name="controls" />
 </form>

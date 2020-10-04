@@ -3,17 +3,7 @@
     This code is licensed under MIT license (see LICENSE.md for details)
 -->
 
-<script>
-    import { isActive, url } from "@sveltech/routify";
-    import { authStore, authenticated } from 'ssd-access/authstore.js';
-
-    const links = [
-            ['/index', 'Home', false],
-            ['/admin/createservice', 'Create', true],
-            ['/admin/editservice', 'Edit', true],
-            ['/admin/importservices', 'Import', true]
-        ]
-</script>
+<!-- routify:options bundle=true -->
 
 <style>
     header {
@@ -23,16 +13,10 @@
     }
 
     main {
+        position: relative;
+        max-width: 800px;
+        margin: 0 auto;
         padding: 8px;
-    }
-
-    a {
-        color: #fff;
-        margin-right: 15px;
-    }
-
-    a.active {
-        color: #ea6237;
     }
 
     #oarc_logo {
@@ -40,30 +24,11 @@
         max-width: 100%;
         max-height: 51px;
     }
-
-    .inactive {
-        margin-right: 15px;
-    }
 </style>
+
 
 <header>
     <h1><img id="oarc_logo" src="/OARC_Logo_without_BG.png" alt="Open AR Cloud header"/></h1>
-
-    <nav>
-        {#each links as [path, name, needsLogin]}
-            {#if $authenticated || !needsLogin}
-            <a class:active={$isActive(path)} href={$url(path)}>{name}</a>
-            {:else}
-            <span class="inactive">{name}</span>
-            {/if}
-        {/each}
-
-        {#if $authenticated}
-            <a class="floatright" href="!#" on:click="{authStore.logout}">Logout</a>
-        {:else}
-            <a class="floatright" href="!#" on:click="{authStore.login}">Login</a>
-        {/if}
-    </nav>
 </header>
 
 <main>

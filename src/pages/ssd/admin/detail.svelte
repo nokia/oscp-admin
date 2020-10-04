@@ -11,11 +11,12 @@
     import { ssr_empty } from 'ssd-access';
     import { authStore } from 'ssd-access/authstore.js';
 
-    import Form from '../../components/Form.svelte';
+    import Form from '../../../components/Form.svelte';
+    import SSR from '../../../components/ssd/SSR.svelte';
 
 
     let data = ssr_empty;
-    let returnPath = $route.last ? $route.last.path : '/admin/editservice';
+    let returnPath = $route.last ? $route.last.path : '/ssd/admin/editservice';
 
 
     onMount(() => {
@@ -58,6 +59,10 @@
 
 <Form {data}>
     <p slot="intro">Edit SSR record.</p>
+
+    <div slot="form">
+        <SSR bind:data/>
+    </div>
 
     <div slot="controls">
         <button on:click={handleSave}>Save</button>

@@ -3,11 +3,6 @@
  * This code is licensed under MIT license (see LICENSE.md for details)
  */
 
-/*
- * (c) 2020 Open AR Cloud
- * This code is licensed under MIT license (see LICENSE.md for details)
- */
-
 import svelte from 'rollup-plugin-svelte';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
@@ -16,6 +11,8 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import {config} from 'dotenv';
 import replace from '@rollup/plugin-replace';
+import {routify} from '@sveltech/routify';
+import cleaner from 'rollup-plugin-cleaner';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -44,9 +41,9 @@ export default {
 	input: 'src/main.js',
 	output: {
 		sourcemap: true,
-		format: 'iife',
+		format: 'esm',
 		name: 'app',
-		file: 'public/build/bundle.js'
+		dir: 'public/build/'
 	},
 	plugins: [
 		replace({
@@ -58,6 +55,7 @@ export default {
 				}
 			}),
 		}),
+
 		svelte({
 			// enable run-time checks when not in production
 			dev: !production,
@@ -66,6 +64,16 @@ export default {
 			css: css => {
 				css.write('bundle.css');
 			}
+		}),
+
+		//Added routify plugin with dynamic import support
+		routify({ dynamicImports : true}),
+
+		//Added cleaner to clean the chunk files on changes
+		cleaner({
+			targets: [
+				'public/build/'
+			]
 		}),
 
 		// If you have external dependencies installed from
@@ -77,6 +85,7 @@ export default {
 			browser: true,
 			dedupe: ['svelte']
 		}),
+
 		commonjs(),
 		json(),
 

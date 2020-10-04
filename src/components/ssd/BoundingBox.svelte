@@ -9,26 +9,20 @@
         border: 0;
     }
 
-    .addbutton img {
-        width: 2rem;
-    }
-
     .deletebutton {
         padding: 0;
         margin: 0 15px 0 -5px;
         border: 0;
         background-color: transparent;
     }
-
-    .deletebutton img {
-        width: 1.5rem;
-    }
 </style>
 
 <script>
+    import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
+
     export let data;
 
-    function addCapability(event) {
+    function addBbox(event) {
         event.preventDefault();
 
         if (data) {
@@ -38,14 +32,14 @@
         }
     }
 
-    function deleteCapability(event, index) {
+    function deleteBbox(event, index) {
         event.preventDefault();
 
         data.splice(index, 1);
         data = data;
     }
 
-    function toggleCapabilities(event) {
+    function toggleBbox(event) {
         if (event.target.checked) {
             data = [];
         } else {
@@ -57,15 +51,15 @@
 
 <dl>
     <dt>
-        <input type="checkbox" checked="{data !== undefined}" on:change={toggleCapabilities} />
-        <span>Capabilities</span>
+        <input type="checkbox" checked="{data !== undefined}" on:change={(event) => toggleBbox(event)} />
+        <span>BBox</span>
     </dt>
     {#if data}
         <dd>
-        {#each data as capability, index}
-            <input bind:value="{capability}" />
-            <button class="deletebutton" on:click={(event) => deleteCapability(event, index)}>
-                <img src="/remove.svg" alt="Delete capability button" />
+        {#each data as box, index}
+            <input type="number" bind:value="{box}"/>
+            <button class="deletebutton" on:click={(event) => deleteBbox(event, index)}>
+                <CloseSolidIcon size="1.5rem" color="red" />
             </button>
         {/each}
         </dd>
@@ -73,7 +67,7 @@
 </dl>
 
 {#if data !== undefined}
-    <button class="addbutton" on:click={addCapability}>
-        <img src="/plus-sign.svg" alt="Add capability button"/>
+    <button class="addbutton" disabled="{data === undefined}" on:click={addBbox}>
+        <AddSolidIcon size="2rem" />
     </button>
 {/if}

@@ -9,23 +9,17 @@
         border: 0;
     }
 
-    .addbutton img {
-        width: 2rem;
-    }
-
     .deletebutton {
         padding: 0;
         margin: 0;
         border: 0;
         background-color: transparent;
     }
-
-    .deletebutton img {
-        width: 1.5rem;
-    }
 </style>
 
 <script>
+    import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
+
     export let data;
 
     function addCoordinate(event) {
@@ -56,7 +50,7 @@
                 <input id="coordlat1" type="number" step="any" required bind:value="{coordinate[0]}"/>
 
                 <button class="deletebutton" on:click={(event) => deleteCoordinate(event, index)}>
-                    <img src="/remove.svg" alt="Delete coordinate button" />
+                    <CloseSolidIcon size="1.5rem" color="red" />
                 </button>
             </span>
         </dd>
@@ -64,5 +58,5 @@
 </dl>
 
 <button class="addbutton" on:click={addCoordinate}>
-    <img src="/plus-sign.svg" alt="Add coordinate button" />
+    <AddSolidIcon size="2rem" />
 </button>
