@@ -45,7 +45,7 @@
         if (serviceId.length !== 0) {
             getService();
         } else {
-            getServicesForProducer()
+            getServicesForTenant()
         }
     }
 
@@ -61,7 +61,7 @@
             });
     }
 
-    function getServicesForProducer() {
+    function getServicesForTenant() {
         authStore.getToken()
             .then(token => searchServicesForTenant(topicElement.value(), token))
             .then(services => {
