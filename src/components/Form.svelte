@@ -106,6 +106,13 @@
         </div>
         {/if}
 
+        {#if data.tenant}
+        <div>
+            <label for="roottenant">Tenant</label>
+            <span id="roottenant">{data.tenant}</span>
+        </div>
+        {/if}
+
         {#if data.timestamp}
             <div>
                 <label for="roottimestamp">Last edited</label>
