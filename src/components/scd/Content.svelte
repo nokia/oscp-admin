@@ -5,6 +5,7 @@
 
 <script>
     import Keywords from './Keywords.svelte';
+    import References from './References.svelte';
 
     export let data;
 
@@ -59,10 +60,7 @@
 
 <Keywords bind:data={data.keywords} />
 
-<div>
-    <label for="contenturl">URL</label>
-    <input id="contenturl" type="url" required bind:value={data.url} />
-</div>
+<References bind:data={data.refs} />
 
 <div>
     <label for="contentsize">

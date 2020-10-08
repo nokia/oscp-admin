@@ -27,7 +27,7 @@
     function addService(event) {
         event.preventDefault();
 
-        data = [...data, ssr_service];
+        data = [...data, JSON.parse(JSON.stringify(ssr_service))];
     }
 
     function removeService(event, index) {

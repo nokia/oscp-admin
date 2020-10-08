@@ -16,7 +16,8 @@
 
     let form;
     let countryCodeElement;
-    let data = ssr_empty;
+    let data = JSON.parse(JSON.stringify(ssr_empty));
+
 
     function save(event) {
         event.preventDefault();

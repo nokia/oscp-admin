@@ -4,7 +4,7 @@
 -->
 
 <script>
-    import { scr_empty, validateScr, postService } from 'scd-access';
+    import {scr_empty, validateScr, postService} from 'scd-access';
     import { authStore } from 'scd-access/authstore.js'
 
     import { goto } from '@sveltech/routify';
@@ -16,7 +16,7 @@
 
     let form;
     let topicElement;
-    let data = scr_empty;
+    let data = JSON.parse(JSON.stringify(scr_empty))
 
 
     function save(event) {

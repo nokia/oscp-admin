@@ -4,11 +4,6 @@
 -->
 
 <style>
-    dt {
-        text-align: left;
-        font-weight: 700;
-    }
-
     dd label {
         width: 6rem;
     }
