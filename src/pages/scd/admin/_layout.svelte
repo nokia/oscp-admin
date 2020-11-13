@@ -7,7 +7,7 @@
 
 <script>
     import { ready, redirect } from '@sveltech/routify'
-    import { loading, authenticated, user } from 'scd-access/authstore.js'
+    import { loading, authenticated } from 'scd-access/authstore.js'
 
 
     /*
@@ -18,7 +18,6 @@
     $ready()
 </script>
 
-<div class="admin-module" class:not-authed={!$user}>
     {#if !window.routify.inBrowser}
         Hello bot. This page is only available to humans.
     {:else if $loading}
@@ -30,4 +29,3 @@
     {:else}
         {$redirect('/')}
     {/if}
-</div>

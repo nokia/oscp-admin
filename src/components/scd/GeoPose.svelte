@@ -11,17 +11,18 @@
 
 <script>
     export let data;
+    export let inactive;
 </script>
 
 
 <div>
-    <label for="geoposelongitude">Longitude</label>
-    <input id="geoposelongitude" type="number" step="any" required bind:value={data.longitude}>
+    <label for="geoposelatitude">Latitude</label>
+    <input id="geoposelatitude" type="number" step="any" required disabled="{inactive}" bind:value={data.latitude}>
 </div>
 
 <div>
-    <label for="geoposelatitude">Latitude</label>
-    <input id="geoposelatitude" type="number" step="any" required bind:value={data.latitude}>
+    <label for="geoposelongitude">Longitude</label>
+    <input id="geoposelongitude" type="number" step="any" required bind:value={data.longitude}>
 </div>
 
 <div>

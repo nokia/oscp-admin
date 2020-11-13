@@ -6,8 +6,12 @@
 <script>
     import Keywords from './Keywords.svelte';
     import References from './References.svelte';
+    import { createEventDispatcher } from 'svelte';
 
     export let data;
+
+    const dispatch = createEventDispatcher();
+
 
     function toggleSize(event) {
         if (event.target.checked) {
@@ -60,7 +64,7 @@
 
 <Keywords bind:data={data.keywords} />
 
-<References bind:data={data.refs} />
+<References bind:data={data.refs} on:refsUpdated={() => dispatch('refsUpdated')} />
 
 <div>
     <label for="contentsize">

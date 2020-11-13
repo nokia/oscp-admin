@@ -3,22 +3,79 @@
     This code is licensed under MIT license (see LICENSE.md for details)
 -->
 
+<style>
+    .editorbutton {
+        background-color: transparent;
+        border: 0;
+    }
+
+    :global(.editoricon) {
+        cursor: pointer;
+        width: 20px;
+        vertical-align: bottom;
+    }
+</style>
+
 <script>
+    import {UploadIcon, MapIcon} from 'svelte-zondicons';
+
+    import { goto } from '@sveltech/routify';
+
+    import { contentRefs, geoPose } from '../../core/store';
+
     import Content from './Content.svelte';
     import GeoPose from './GeoPose.svelte';
 
     export let data;
+
+    let hasRefs = handleRefsUpdate();
+
+
+    function openContentEditor(event) {
+        event.preventDefault();
+
+        import('../../pages/scd/admin/contenteditor/index.svelte')
+            .then(() => $goto('contenteditor/'))
+            .catch((error) => console.log(`Content editor not loaded: ${error}`));
+    }
+
+    function openGeoPoseEditor(event) {
+        event.preventDefault();
+
+        import('../../pages/scd/admin/geoposeeditor/index.svelte')
+            .then(() => {
+                contentRefs.set(data.content.refs);
+                geoPose.set(data.content.geopose)
+                $goto('geoposeeditor/');
+            })
+            .catch((error) => {
+                console.log(`GeoPose editor not loaded: ${error}`)
+            });
+    }
+
+    function handleRefsUpdate() {
+        return data.content.refs && data.content.refs.length > 0;
+    }
 </script>
 
 
 <fieldset>
-    <legend>Content</legend>
+    <legend>
+        <span>Content</span>
+        <button class="editorbutton" on:click={openContentEditor}><UploadIcon class="editoricon"/></button>
+    </legend>
 
-    <Content data="{data.content}" />
+    <Content data="{data.content}" on:refsUpdated={() => hasRefs = handleRefsUpdate()} />
 </fieldset>
 
 <fieldset>
-    <legend>GeoPose</legend>
+    <legend>
+        <span>GeoPose</span>
 
-    <GeoPose data="{data.content.geopose}" />
+        <button class="editorbutton" disabled="{!hasRefs}" on:click={openGeoPoseEditor}>
+            <MapIcon class="editoricon" />
+        </button>
+    </legend>
+
+    <GeoPose data="{data.content.geopose}"/>
 </fieldset>

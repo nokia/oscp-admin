@@ -42,6 +42,13 @@ AUTH0_AUDIENCE =
 AUTH0_SCOPE = 
 ```
 
+When you want to use The Google Drive Picker to select files, you
+need to add this to your .env file
+```
+GOOGLE_PROJECT_ID = 
+GOOGLE_PICKER_KEY = 
+```
+
 Start the local server for development
 
 ```

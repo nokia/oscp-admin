@@ -7,7 +7,9 @@
     import {scr_empty, validateScr, postService} from 'scd-access';
     import { authStore } from 'scd-access/authstore.js'
 
-    import { goto } from '@sveltech/routify';
+    import { goto, params } from '@sveltech/routify';
+
+    import deepMerge from 'deepmerge';
 
     import Form from '../../../components/Form.svelte';
     import Topic from '../../../components/scd/Topic.svelte';
@@ -16,8 +18,14 @@
 
     let form;
     let topicElement;
-    let data = JSON.parse(JSON.stringify(scr_empty))
 
+    let data = JSON.parse(JSON.stringify(scr_empty));
+    let selection = $params.selection;
+
+    if (selection !== undefined && selection.length > 2) {
+        // TODO: Remove the data from the browser location
+        data = deepMerge(data, JSON.parse(selection));
+    }
 
     function save(event) {
         event.preventDefault();

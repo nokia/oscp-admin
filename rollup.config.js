@@ -13,6 +13,8 @@ import {config} from 'dotenv';
 import replace from '@rollup/plugin-replace';
 import {routify} from '@sveltech/routify';
 import cleaner from 'rollup-plugin-cleaner';
+import fs from "fs";
+// import analyze from 'rollup-plugin-analyzer';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -40,7 +42,7 @@ function serve() {
 export default {
 	input: 'src/main.js',
 	output: {
-		sourcemap: true,
+		sourcemap: !production,
 		format: 'esm',
 		name: 'app',
 		dir: 'public/build/'
@@ -66,10 +68,10 @@ export default {
 			}
 		}),
 
-		//Added routify plugin with dynamic import support
+		//Dynamic import support
 		routify({ dynamicImports : true}),
 
-		//Added cleaner to clean the chunk files on changes
+		//Clean the chunk files on changes
 		cleaner({
 			targets: [
 				'public/build/'
@@ -83,11 +85,16 @@ export default {
 		// https://github.com/rollup/plugins/tree/master/packages/commonjs
 		resolve({
 			browser: true,
-			dedupe: ['svelte']
+			dedupe: ['svelte'],
+			preferBuiltins: false
 		}),
 
 		commonjs(),
 		json(),
+
+		// analyze({
+		// 	summaryOnly: true
+		// }),
 
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated
@@ -95,7 +102,13 @@ export default {
 
 		// Watch the `public` directory and refresh the
 		// browser on changes when not in production
-		!production && livereload('public'),
+		!production && livereload({
+			watch: 'public',
+			https: {
+				key: fs.readFileSync('localhost.key'),
+				cert: fs.readFileSync('localhost.cert')
+			}
+		}),
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
