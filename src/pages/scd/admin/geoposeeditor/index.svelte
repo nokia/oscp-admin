@@ -9,7 +9,7 @@
     import { geoPose } from "../../../../core/store";
 
     import Modal from '../../../../components/Modal.svelte';
-    import Map from '../../../../components/Map.svelte';
+    import Map2D from '../../../../components/Map2D.svelte';
 
     let showModal = false;
 
@@ -26,7 +26,7 @@
 </script>
 
 
-<Map on:goto-checkcontent={gotoCheckContent} />
+<Map2D on:goto-checkcontent={gotoCheckContent} />
 
 
 

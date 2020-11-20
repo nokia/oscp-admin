@@ -37,7 +37,7 @@
     import { geoPose } from '../core/store.js';
     import { H3RESOLUTION_AUTO, DEFAULT_H3RESOLUTION } from '../core/store.js';
 
-    import MapControl from './MapControl.svelte';
+    import Map2DControl from './Map2DControl.svelte';
 
 
     const COUNT_H3RING = 1;
@@ -272,7 +272,7 @@
 
         toolbar.onAdd = () => {
             let div = L.DomUtil.create('div');
-            toolbarComponent = new MapControl({
+            toolbarComponent = new Map2DControl({
                 target: div,
                 props: {
                     lat: thisLat,

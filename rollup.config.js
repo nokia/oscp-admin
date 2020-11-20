@@ -9,14 +9,20 @@ import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
+import copy from 'rollup-plugin-copy';
 import {config} from 'dotenv';
+import postcss from 'rollup-plugin-postcss';
 import replace from '@rollup/plugin-replace';
 import {routify} from '@sveltech/routify';
 import cleaner from 'rollup-plugin-cleaner';
 import fs from "fs";
 // import analyze from 'rollup-plugin-analyzer';
 
+import path from 'path';
+
+
 const production = !process.env.ROLLUP_WATCH;
+const cesiumBuildPath = '/node_modules/cesium/Build/Cesium';
 
 function serve() {
 	let server;
@@ -55,7 +61,7 @@ export default {
 					isProd: production,
 					...config().parsed // attached the .env config
 				}
-			}),
+			})
 		}),
 
 		svelte({
@@ -87,6 +93,19 @@ export default {
 			browser: true,
 			dedupe: ['svelte'],
 			preferBuiltins: false
+		}),
+
+		postcss({
+			extensions: [ '.css' ]
+		}),
+
+		copy({
+			targets: [
+				{ src: path.join(cesiumBuildPath, 'Assets'), dest: 'public/build/' },
+				{ src: path.join(cesiumBuildPath, 'ThirdParty'), dest: 'public/build/' },
+				{ src: path.join(cesiumBuildPath, 'Widgets'), dest: 'public/build/' },
+				{ src: path.join(cesiumBuildPath, 'Workers'), dest: 'public/build/' },
+			]
 		}),
 
 		commonjs(),

@@ -14,7 +14,8 @@
             ['/scd/', 'Home', false],
             ['/scd/admin/createservice', 'Create', true],
             ['/scd/admin/editservice', 'Edit', true],
-            ['/scd/admin/importservices', 'Import', true]
+            ['/scd/admin/importservices', 'Import', true],
+            ['/scd/admin/explore', 'Explore', true]
         ]
 </script>
 
