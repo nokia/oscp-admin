@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Augmented City API access</title>
+    <script>
+        function doRequest() {
+            fetch(`https://developer.augmented.city/api/v2/localizer/prepare?lat=41.127333&lon=16.868994`)
+                .then(response => {
+                    if (!response.ok) {
+                        console.log('response was not ok');
+                    }
+
+                    return response.text();
+                })
+                .then(content => console.log(`received: ${content}`))
+                .catch(error => console.error(`error: ${error}`));
+        }
+    </script>
+</head>
+<body>
+    <button onclick="doRequest()">Click</button><span> to access API</span>
+</body>
+</html>

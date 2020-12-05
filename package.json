@@ -46,7 +46,8 @@
     "scd-access": "0.0.3",
     "ssd-access": "0.1.0",
     "svelte": "^3.25.0",
-    "svelte-zondicons": "^1.0.1"
+    "svelte-zondicons": "^1.0.1",
+    "uuid": "^8.3.1"
   },
   "dependencies": {
     "cesium": "^1.75.0",
