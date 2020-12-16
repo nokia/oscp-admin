@@ -46,6 +46,12 @@
     const seattleLocation = {lat: 47.612, lon: -122.337};
     const bariLocation = {lat: 41.123, lon: 16.87};
 
+    const restaurantId = 221784;
+    const shopId = 220846;
+    const placeId = 220853;
+    const defaultId = 220848;
+
+
     window.CESIUM_BASE_URL = '/';
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0NjMwMzYwNi1lNTJiLTQwOWItODc0NS0wOGVhMWJjMjBhNWQiLCJpZCI6MjQyNjIsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1ODQ5MTY5MjB9.5yH_PV4X2a_yfqoRqXGwAXcIBFN7G0Rg70lbh97Hi-Y';
 
@@ -73,7 +79,8 @@
 
                 showMap = true;
                 positionContent(lat, lon);
-            });
+            })
+            .otherwise(error => console.log(error));
     }
 
     function positionContent(lat, lon) {
@@ -171,22 +178,59 @@
         let orientation;
         let ecef;
 
+        const terrainProvider = Cesium.createWorldTerrain();
+        const positions = [];
         content.scrs.forEach(item => {
-            ecef = item.content.geopose.ecef;
-            position = Cesium.Cartesian3.fromElements(ecef.x, ecef.y, ecef.z);
-            orientation = new Cesium.Quaternion(ecef.quaternion[0], ecef.quaternion[1], ecef.quaternion[2], ecef.quaternion[3]);
+            positions.push(Cesium.Cartographic.fromCartesian(new Cesium.Cartesian3(
+                    item.content.geopose.ecef.x, item.content.geopose.ecef.y, item.content.geopose.ecef.z)));
+        })
 
-            viewer.entities.add({
-                name: 'pin',
-                position: position,
-                orientation: orientation,
-                model: {
-                    uri: '/pin/model.glb',
-                    minimumPixelSize: 128,
-                    maximumScale: 200,
-                },
-            });
-        });
+        Cesium.sampleTerrainMostDetailed(terrainProvider, positions)
+            .then(updatedPositions => {
+                content.scrs.forEach(async item => {
+                    ecef = item.content.geopose.ecef;
+
+                    position = new Cesium.Cartesian3(ecef.x, ecef.y, ecef.z);
+                    orientation = new Cesium.Quaternion(
+                        ecef.quaternion[0], ecef.quaternion[1], ecef.quaternion[2], ecef.quaternion[3]);
+
+                    const local2fixed = Cesium.Transforms.northWestUpToFixedFrame(position);
+
+                    // TODO: Adapt when more accurate height is sent from GeoPose service
+                    const higher_position = Cesium.Matrix4.multiplyByPoint(local2fixed,
+                        new Cesium.Cartesian3(0, 0, updatedPositions[0].height + cameraWalkingHeight), {});
+
+                    const keyword = item.content.keywords[0];
+                    const assetId = keyword === 'shop' ? shopId :
+                        keyword === 'restaurant' ? restaurantId : keyword === 'place' ? placeId : defaultId;
+
+                    const tileset = viewer.scene.primitives.add(
+                        new Cesium.Cesium3DTileset({
+                            url: Cesium.IonResource.fromAssetId(assetId),
+                            modelMatrix: Cesium.Matrix4.fromTranslationQuaternionRotationScale(higher_position, orientation, new Cesium.Cartesian3(10, 10, 10)),
+                            skipLevelOfDetail : true,
+                            baseScreenSpaceError : 1024,
+                            skipScreenSpaceErrorFactor : 16,
+                            skipLevels : 1,
+                            immediatelyLoadDesiredLevelOfDetail : false,
+                            loadSiblings : false,
+                            cullWithChildrenBounds : true,
+                            backFaceCulling: false
+                        })
+                    );
+
+                    tileset.readyPromise
+                        .then(() => {
+                            tileset.style = new Cesium.Cesium3DTileStyle({
+                                color : 'color("blue")'
+                            });
+                        })
+                        .otherwise(error => console.log(error));
+
+
+                });
+            })
+            .otherwise(error => console.log(error));
     }
 </script>
 
