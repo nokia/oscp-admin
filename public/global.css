@@ -101,3 +101,7 @@ input:invalid, select:invalid {
 	border: 0;
 	background-color: transparent;
 }
+
+.backarrow {
+	height: 20px;
+}

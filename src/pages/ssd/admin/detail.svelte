@@ -53,7 +53,7 @@
 
 
 <h2>
-    <a href="{$url(returnPath)}"><img alt="back navigation arrow" src="/arrow_back_ios-24px.svg"/></a>
+    <a href="{$url(returnPath)}"><img class="backarrow" alt="back navigation arrow" src="/arrow_back_ios-24px.svg"/></a>
     <span>SSR record detail</span>
 </h2>
 
