@@ -36,6 +36,14 @@
             data.description = undefined;
         }
     }
+
+    function togglePlacekey(event) {
+        if (event.target.checked) {
+            data.placekey = '';
+        } else {
+            data.placekey = undefined;
+        }
+    }
 </script>
 
 
@@ -63,6 +71,14 @@
 </div>
 
 <Keywords bind:data={data.keywords} />
+
+<div>
+    <label for="contentplacekey">
+        <input type="checkbox" checked="{data.placekey !== undefined}" on:change={togglePlacekey} />
+        <span>Placekey</span>
+    </label>
+    <input id="contentplacekey" disabled="{data.placekey === undefined}" bind:value={data.placekey} />
+</div>
 
 <References bind:data={data.refs} on:refsUpdated={() => dispatch('refsUpdated')} />
 
