@@ -44,7 +44,7 @@
 </script>
 
 
-<h2>Spatial Content Service</h2>
+<h2>Spatial Services Service</h2>
 
 <Form bind:data bind:this={form}>
     <p slot="intro">Enter data for new SSR record.</p>

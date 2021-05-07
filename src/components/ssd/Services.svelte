@@ -19,7 +19,7 @@
     import { availableServiceTypes, ssr_service } from 'ssd-access';
 
     import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
-    import Capabilities from './Capabilities.svelte';
+    import Properties from './Properties.svelte';
 
     export let data;
 
@@ -79,7 +79,7 @@
             <input id="serviceurl" required type="url" bind:value="{service.url}" />
         </div>
 
-        <Capabilities bind:data="{service.capabilities}" />
+        <Properties bind:data="{service.properties}" />
     </details>
 {/each}
 

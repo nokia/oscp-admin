@@ -76,9 +76,25 @@
     export let data;
 
     let form;
+    let timestamp = 0;
+
+    $: {
+        if (data.timestamp) {
+            timestamp = data.timestamp;
+            delete data.timestamp;
+        }
+    }
 
     export function reportValidity() {
         return form.reportValidity();
+    }
+
+    function toggleActive(event) {
+        if (event.target.checked) {
+            data.active = true;
+        } else {
+            data.altitude = false;
+        }
     }
 </script>
 
@@ -99,6 +115,11 @@
             <span id="roottype">{data.type.toUpperCase()}</span>
         </div>
 
+        <div>
+            <label for="serviceactive">Active</label>
+            <input id="serviceactive" type="checkbox" checked="{data.active !== undefined}" on:change={toggleActive} />
+        </div>
+
         {#if data.provider}
         <div>
             <label for="rootprovider">Provider</label>
@@ -113,10 +134,10 @@
         </div>
         {/if}
 
-        {#if data.timestamp}
+        {#if timestamp}
             <div>
                 <label for="roottimestamp">Last edited</label>
-                <span id="roottimestamp">{data.timestamp}</span>
+                <span id="roottimestamp">{timestamp}</span>
             </div>
         {/if}
 

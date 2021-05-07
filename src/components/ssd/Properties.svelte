@@ -22,24 +22,25 @@
 
     export let data;
 
-    function addCapability(event) {
+    function addProperty(event) {
         event.preventDefault();
 
         if (data) {
-            data = [...data, ""];
+            data = [...data, {}];
         } else {
             data = [];
         }
     }
 
-    function deleteCapability(event, index) {
+    function deleteProperty(event, index) {
         event.preventDefault();
 
         data.splice(index, 1);
+        // noinspection SillyAssignmentJS
         data = data;
     }
 
-    function toggleCapabilities(event) {
+    function toggleProperties(event) {
         if (event.target.checked) {
             data = [];
         } else {
@@ -51,14 +52,19 @@
 
 <dl>
     <dt>
-        <input type="checkbox" checked="{data !== undefined}" on:change={toggleCapabilities} />
-        <span>Capabilities</span>
+        <input type="checkbox" checked="{data !== undefined}" on:change={toggleProperties} />
+        <span>Properties</span>
     </dt>
     {#if data}
         <dd>
-        {#each data as capability, index}
-            <input bind:value="{capability}" />
-            <button class="deletebutton" on:click={(event) => deleteCapability(event, index)}>
+        {#each data as property, index}
+            <label for="propertykey">Key:</label>
+            <input id="propertykey" bind:value="{property.type}" />
+
+            <label for="propertyvalue">Value:</label>
+            <input id="propertyvalue" bind:value="{property.value}" />
+
+            <button class="deletebutton" on:click={(event) => deleteProperty(event, index)}>
                 <CloseSolidIcon size="1.5rem" color="red" />
             </button>
         {/each}
@@ -67,7 +73,7 @@
 </dl>
 
 {#if data !== undefined}
-    <button class="addbutton" on:click={addCapability}>
+    <button class="addbutton" on:click={addProperty}>
         <AddSolidIcon size="2rem" />
     </button>
 {/if}
