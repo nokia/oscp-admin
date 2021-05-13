@@ -6,6 +6,7 @@
 <script>
     import Keywords from './Keywords.svelte';
     import References from './References.svelte';
+    import Definitions from './Definitions.svelte';
     import { createEventDispatcher } from 'svelte';
 
     export let data;
@@ -81,6 +82,8 @@
 </div>
 
 <References bind:data={data.refs} on:refsUpdated={() => dispatch('refsUpdated')} />
+
+<Definitions bind:data={data.definitions} />
 
 <div>
     <label for="contentsize">

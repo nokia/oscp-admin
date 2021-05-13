@@ -58,10 +58,10 @@
     {#if data}
         <dd>
         {#each data as property, index}
-            <label for="propertykey">Key:</label>
+            <label for="propertykey">Type</label>
             <input id="propertykey" bind:value="{property.type}" />
 
-            <label for="propertyvalue">Value:</label>
+            <label for="propertyvalue">Value</label>
             <input id="propertyvalue" bind:value="{property.value}" />
 
             <button class="deletebutton" on:click={(event) => deleteProperty(event, index)}>

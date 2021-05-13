@@ -88,14 +88,6 @@
     export function reportValidity() {
         return form.reportValidity();
     }
-
-    function toggleActive(event) {
-        if (event.target.checked) {
-            data.active = true;
-        } else {
-            data.altitude = false;
-        }
-    }
 </script>
 
 
@@ -113,11 +105,6 @@
         <div>
             <label for="roottype">Type</label>
             <span id="roottype">{data.type.toUpperCase()}</span>
-        </div>
-
-        <div>
-            <label for="serviceactive">Active</label>
-            <input id="serviceactive" type="checkbox" checked="{data.active !== undefined}" on:change={toggleActive} />
         </div>
 
         {#if data.provider}

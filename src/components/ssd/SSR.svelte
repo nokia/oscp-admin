@@ -16,8 +16,17 @@
             data.altitude = undefined;
         }
     }
+
+    function toggleActive(event) {
+        data.active = !!event.target.checked;
+    }
 </script>
 
+
+<div>
+    <label for="serviceactive">Active</label>
+    <input id="serviceactive" type="checkbox" checked="{data?.active}" on:change={toggleActive} />
+</div>
 
 <fieldset class="container">
     <legend>Services</legend>
@@ -32,7 +41,7 @@
 <fieldset>
     <div>
         <label for="rootaltitude">
-            <input type="checkbox" checked="{data.altitude !== undefined}" on:change={toggleAltitude} />
+            <input type="checkbox" checked="{data?.altitude}" on:change={toggleAltitude} />
             <span>Altitude</span>
         </label>
         <input id="rootaltitude" type="number" step="0.1" class:hidden="{data.altitude === undefined}" bind:value="{data.altitude}"/>

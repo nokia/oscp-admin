@@ -11,5 +11,6 @@
     <orderEntry type="library" name="client" level="application" />
     <orderEntry type="library" name="api" level="application" />
     <orderEntry type="module" module-name="ssd-access" />
+    <orderEntry type="module" module-name="scd-access" />
   </component>
 </module>

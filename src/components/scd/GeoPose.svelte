@@ -34,18 +34,18 @@
     <dt>Quaternion</dt>
     <dd>
         <label for="geoposequaternionx">X</label>
-        <input id="geoposequaternionx" type="number" step="any" required bind:value={data.quaternion[0]}>
+        <input id="geoposequaternionx" type="number" step="any" required bind:value={data.quaternion.x}>
     </dd>
     <dd>
         <label for="geoposequaterniony">Y</label>
-        <input id="geoposequaterniony" type="number" step="any" required bind:value={data.quaternion[1]}>
+        <input id="geoposequaterniony" type="number" step="any" required bind:value={data.quaternion.y}>
     </dd>
     <dd>
         <label for="geoposequaternionz">Z</label>
-        <input id="geoposequaternionz" type="number" step="any" required bind:value={data.quaternion[2]}>
+        <input id="geoposequaternionz" type="number" step="any" required bind:value={data.quaternion.z}>
     </dd>
     <dd>
         <label for="geoposequaternionw">W</label>
-        <input id="geoposequaternionw" type="number" step="any" required bind:value={data.quaternion[3]}>
+        <input id="geoposequaternionw" type="number" step="any" required bind:value={data.quaternion.w}>
     </dd>
 </dl>

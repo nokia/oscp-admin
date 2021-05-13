@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/oscp-admin.iml" filepath="$PROJECT_DIR$/.idea/oscp-admin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../scd-access/.idea/scd-access.iml" filepath="$PROJECT_DIR$/../scd-access/.idea/scd-access.iml" />
       <module fileurl="file://$PROJECT_DIR$/../ssd-access/.idea/ssd-access.iml" filepath="$PROJECT_DIR$/../ssd-access/.idea/ssd-access.iml" />
     </modules>
   </component>
