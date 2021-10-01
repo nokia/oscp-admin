@@ -13,8 +13,8 @@
 <script>
     import { url } from '@sveltech/routify';
 
-    import { searchServicesForTenant, getServiceWithId } from 'scd-access';
-    import { authStore } from 'scd-access/authstore.js'
+    import { searchServicesForTenant, getServiceWithId } from '@oarc/scd-access';
+    import { authStore } from '@oarc/scd-access/authstore.js'
 
     import jwtDecode from 'jwt-decode';
     import Topic from '../../../components/scd/Topic.svelte';

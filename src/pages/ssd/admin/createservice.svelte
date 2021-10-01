@@ -4,8 +4,8 @@
 -->
 
 <script>
-    import {ssr_empty, validateSsr, postService} from 'ssd-access';
-    import {authStore} from 'ssd-access/authstore.js'
+    import {ssr_empty, validateSsr, postService} from '@oarc/ssd-access';
+    import {authStore} from '@oarc/ssd-access/authstore.js'
 
     import {goto} from '@sveltech/routify';
 

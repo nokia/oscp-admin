@@ -16,7 +16,7 @@
 </style>
 
 <script>
-    import { availableServiceTypes, ssr_service } from 'ssd-access';
+    import { availableServiceTypes, ssr_service } from '@oarc/ssd-access';
 
     import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
     import Properties from './Properties.svelte';

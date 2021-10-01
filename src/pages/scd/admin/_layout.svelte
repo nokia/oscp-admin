@@ -7,7 +7,7 @@
 
 <script>
     import { ready, redirect } from '@sveltech/routify'
-    import { loading, authenticated } from 'scd-access/authstore.js'
+    import { loading, authenticated } from '@oarc/scd-access/authstore.js'
 
 
     /*

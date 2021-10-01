@@ -4,7 +4,7 @@
 -->
 
 <script>
-    import { supportedCountries } from 'ssd-access';
+    import { supportedCountries } from '@oarc/ssd-access';
 
 
     let countryCodeElement;

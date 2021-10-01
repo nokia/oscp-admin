@@ -19,7 +19,7 @@
 
 <script>
     import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
-    import { scr_definition } from 'scd-access';
+    import { scr_definition } from '@oarc/scd-access';
 
     export let data
 

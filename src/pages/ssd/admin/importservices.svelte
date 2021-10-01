@@ -4,8 +4,8 @@
 -->
 
 <script>
-    import { postSsrFile, supportedCountries } from 'ssd-access';
-    import { authStore } from 'ssd-access/authstore.js';
+    import { postSsrFile, supportedCountries } from '@oarc/ssd-access';
+    import { authStore } from '@oarc/ssd-access/authstore.js';
 
     import Import from '../../../components/Import.svelte';
 

@@ -4,7 +4,7 @@
 -->
 
 <script>
-    import { authStore } from 'ssd-access/authstore.js'
+    import { authStore } from '@oarc/ssd-access/authstore.js'
 
     // need to queue init till after Routify has been initialized
     setTimeout(() => window.routify.inBrowser && authStore.init())

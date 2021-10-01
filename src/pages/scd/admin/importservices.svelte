@@ -4,8 +4,8 @@
 -->
 
 <script>
-    import { postScrFile } from 'scd-access';
-    import { authStore } from 'scd-access/authstore.js';
+    import { postScrFile } from '@oarc/scd-access';
+    import { authStore } from '@oarc/scd-access/authstore.js';
 
     import Import from '../../../components/Import.svelte';
 

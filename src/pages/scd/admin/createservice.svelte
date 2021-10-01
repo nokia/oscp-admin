@@ -4,8 +4,8 @@
 -->
 
 <script>
-    import {scr_empty, validateScr, postService} from 'scd-access';
-    import { authStore } from 'scd-access/authstore.js'
+    import {scr_empty, validateScr, postService} from '@oarc/scd-access';
+    import { authStore } from '@oarc/scd-access/authstore.js'
 
     import { goto, params } from '@sveltech/routify';
 

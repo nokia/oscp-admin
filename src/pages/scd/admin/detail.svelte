@@ -8,8 +8,8 @@
     import { url, route, params, goto } from '@sveltech/routify';
 
     import {getServiceWithId, deleteWithId, validateScr, putService} from 'scd-access';
-    import { scr_empty } from 'scd-access';
-    import { authStore } from 'scd-access/authstore.js';
+    import { scr_empty } from '@oarc/scd-access';
+    import { authStore } from '@oarc/scd-access/authstore.js';
 
     import Form from '../../../components/Form.svelte';
     import SCR from '../../../components/scd/SCR.svelte';
