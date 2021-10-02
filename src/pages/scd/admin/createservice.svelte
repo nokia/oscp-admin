@@ -4,10 +4,10 @@
 -->
 
 <script>
-    import {scr_empty, validateScr, postService} from '@oarc/scd-access';
-    import { authStore } from '@oarc/scd-access/authstore.js'
+    import {scr_empty, validateScr, postContent} from '@oarc/scd-access';
+    import {authStore} from '@oarc/scd-access/authstore.js'
 
-    import { goto, params } from '@sveltech/routify';
+    import {goto, params} from '@sveltech/routify';
 
     import deepMerge from 'deepmerge';
 
@@ -40,7 +40,7 @@
         const dataString = JSON.stringify(data);
         validateScr(dataString)
             .then(() => authStore.getToken())
-            .then(token => postService(topicElement.value(), dataString, token))
+            .then(token => postContent(topicElement.value(), dataString, token))
             .then((response) => {
                 console.log(response);
                 $goto('/scd');

@@ -4,12 +4,12 @@
 -->
 
 <script>
-    import { onMount } from 'svelte';
-    import { url, route, params, goto } from '@sveltech/routify';
+    import {onMount} from 'svelte';
+    import {url, route, params, goto} from '@sveltech/routify';
 
-    import {getServiceWithId, deleteWithId, validateScr, putService} from 'scd-access';
-    import { scr_empty } from '@oarc/scd-access';
-    import { authStore } from '@oarc/scd-access/authstore.js';
+    import {getContentWithId, deleteWithId, validateScr, putContent} from 'scd-access';
+    import {scr_empty} from '@oarc/scd-access';
+    import {authStore} from '@oarc/scd-access/authstore.js';
 
     import Form from '../../../components/Form.svelte';
     import SCR from '../../../components/scd/SCR.svelte';
@@ -21,8 +21,8 @@
     let returnPath = $route.last ? $route.last.path : '/scd/admin/editservice';
 
     onMount(() => {
-        getServiceWithId($params.topic, $params.id)
-            .then((services) => data = services)
+        getContentWithId($params.topic, $params.id)
+            .then((contents) => data = contents)
             .catch(error => console.log(`Server access error: ${error}`))
     })
 
@@ -41,7 +41,7 @@
         const dataString = JSON.stringify(data);
         validateScr(dataString)
             .then(() => authStore.getToken())
-            .then(token => putService($params.topic, dataString, data.id, token))
+            .then(token => putContent($params.topic, dataString, data.id, token))
             .then(response => {
                 console.log(`Record created: ${response}`);
                 $goto(returnPath);

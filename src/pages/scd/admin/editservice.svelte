@@ -4,7 +4,7 @@
 -->
 
 <style>
-    #service-container {
+    #result-container {
         border-radius: 20px;
         padding: 20px;
     }
@@ -13,7 +13,7 @@
 <script>
     import { url } from '@sveltech/routify';
 
-    import { searchServicesForTenant, getServiceWithId } from '@oarc/scd-access';
+    import { searchContentForTenant, getContentWithId } from '@oarc/scd-access';
     import { authStore } from '@oarc/scd-access/authstore.js'
 
     import jwtDecode from 'jwt-decode';
@@ -24,7 +24,7 @@
     const detailUrl = '../detail';
 
     let topicElement;
-    let serviceId = '';
+    let contentId = '';
     let searchResults = [];
     let message = '';
 
@@ -42,18 +42,18 @@
             return;
         }
 
-        if (serviceId.length !== 0) {
-            getService();
+        if (contentId.length !== 0) {
+            getContent();
         } else {
-            getServicesForTenant()
+            getContentsForTenant()
         }
     }
 
-    function getService() {
-        getServiceWithId(topicElement.value(), serviceId)
-            .then(service => {
+    function getContent() {
+        getContentWithId(topicElement.value(), contentId)
+            .then(content => {
                 searchResults = [];
-                searchResults.push(service)
+                searchResults.push(content)
             })
             .catch(error => {
                 message = 'Search failed';
@@ -61,12 +61,12 @@
             });
     }
 
-    function getServicesForTenant() {
+    function getContentsForTenant() {
         authStore.getToken()
-            .then(token => searchServicesForTenant(topicElement.value(), token))
-            .then(services => {
-                searchResults = services
-                if (services.length === 0) message = 'No services found';
+            .then(token => searchContentForTenant(topicElement.value(), token)) // TODO: should be searchContentsForTenant
+            .then(contents => {
+                searchResults = contents
+                if (contents.length === 0) message = 'No contents found';
             })
             .catch(error => {
                 message = 'Search failed';
@@ -76,20 +76,20 @@
 </script>
 
 
-<h2>Search Services</h2>
+<h2>Search Contents</h2>
 <h3>Tenant: {tenant}</h3>
 
 <div>
     <Topic bind:this={topicElement} />
 
-    <label for="searchserviceid">Service ID:</label>
-    <input id="searchserviceid" type="text" bind:value="{serviceId}" />
+    <label for="searchcontentid">Content ID:</label>
+    <input id="searchcontentid" type="text" bind:value="{contentId}" />
 
     <button on:click={handleSearch}>Search</button>
 </div>
 
 {#if searchResults.length > 0}
-    <dl id="service-container">
+    <dl id="result-container">
         {#each searchResults as result}
             <dt><a href="{$url(detailUrl, {'topic': topicElement.value(), 'id': result.id})}">{result.id}</a></dt>
             <dd>{result.content.title}: {result.content.type}</dd>
