@@ -42,6 +42,6 @@
     {#if $authenticated}
         <a class="floatright" href="/" on:click="{authStore.logout}">Logout</a>
     {:else}
-        <a class="floatright" href="/ssd" on:click="{authStore.login}">Login</a>
+        <a class="floatright" href="/" on:click="{authStore.login}">Login</a>
     {/if}
 </nav>

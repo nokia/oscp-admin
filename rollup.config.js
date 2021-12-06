@@ -56,6 +56,7 @@ export default {
 					...config().parsed // attached the .env config
 				}
 			}),
+			preventAssignment: false,
 		}),
 
 		svelte({

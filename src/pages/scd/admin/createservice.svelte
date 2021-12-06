@@ -6,6 +6,7 @@
 <script>
     import {scr_empty, validateScr, postContent} from '@oarc/scd-access';
     import {authStore} from '@oarc/scd-access/authstore.js'
+    import { oscpScdUrl } from '../../../core/store';
 
     import {goto, params} from '@sveltech/routify';
 
@@ -40,7 +41,7 @@
         const dataString = JSON.stringify(data);
         validateScr(dataString)
             .then(() => authStore.getToken())
-            .then(token => postContent(topicElement.value(), dataString, token))
+            .then(token => postContent($oscpScdUrl, topicElement.value(), dataString, token))
             .then((response) => {
                 console.log(response);
                 $goto('/scd');
@@ -52,7 +53,7 @@
 </script>
 
 
-<h2>Create Spatial Service</h2>
+<h2>Create Spatial Content Record</h2>
 
 <Form bind:data bind:this={form}>
     <p slot="intro">Enter data for new SCR record.</p>

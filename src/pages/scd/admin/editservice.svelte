@@ -13,8 +13,9 @@
 <script>
     import { url } from '@sveltech/routify';
 
-    import { searchContentForTenant, getContentWithId } from '@oarc/scd-access';
-    import { authStore } from '@oarc/scd-access/authstore.js'
+    import { searchContentsForTenant, getContentWithId } from '@oarc/scd-access';
+    import { authStore } from '@oarc/scd-access/authstore.js';
+    import { oscpScdUrl } from '../../../core/store';
 
     import jwtDecode from 'jwt-decode';
     import Topic from '../../../components/scd/Topic.svelte';
@@ -50,7 +51,7 @@
     }
 
     function getContent() {
-        getContentWithId(topicElement.value(), contentId)
+        getContentWithId($oscpScdUrl, topicElement.value(), contentId)
             .then(content => {
                 searchResults = [];
                 searchResults.push(content)
@@ -63,7 +64,7 @@
 
     function getContentsForTenant() {
         authStore.getToken()
-            .then(token => searchContentForTenant(topicElement.value(), token)) // TODO: should be searchContentsForTenant
+            .then(token => searchContentsForTenant($oscpScdUrl, topicElement.value(), token))
             .then(contents => {
                 searchResults = contents
                 if (contents.length === 0) message = 'No contents found';

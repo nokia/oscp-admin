@@ -6,6 +6,7 @@
 <script>
     import { postScrFile } from '@oarc/scd-access';
     import { authStore } from '@oarc/scd-access/authstore.js';
+    import { oscpScdUrl } from '../../../core/store';
 
     import Import from '../../../components/Import.svelte';
 
@@ -14,7 +15,7 @@
 </script>
 
 
-<Import {authStore} {propertyMissingMessage} propertyElement="{topicElement}" postFileFunction="{postScrFile}">
+<Import {authStore} {propertyMissingMessage} propertyElement="{topicElement}" postFileFunction="{postScrFile}" url={$oscpScdUrl}>
     <p slot="intro">
         Here it is possible to upload Spatial Content Records (SCR) by either dropping .json files onto the drop area or by
         selecting files from local drive. The content is validated against a json schema and sent to the server

@@ -7,9 +7,10 @@
     import {onMount} from 'svelte';
     import {url, route, params, goto} from '@sveltech/routify';
 
-    import {getContentWithId, deleteWithId, validateScr, putContent} from 'scd-access';
+    import {getContentWithId, deleteWithId, validateScr, putContent} from '@oarc/scd-access';
     import {scr_empty} from '@oarc/scd-access';
     import {authStore} from '@oarc/scd-access/authstore.js';
+    import { oscpScdUrl } from '../../../core/store';
 
     import Form from '../../../components/Form.svelte';
     import SCR from '../../../components/scd/SCR.svelte';
@@ -21,7 +22,7 @@
     let returnPath = $route.last ? $route.last.path : '/scd/admin/editservice';
 
     onMount(() => {
-        getContentWithId($params.topic, $params.id)
+        getContentWithId($oscpScdUrl, $params.topic, $params.id)
             .then((contents) => data = contents)
             .catch(error => console.log(`Server access error: ${error}`))
     })
@@ -30,7 +31,7 @@
         // TODO: Show dialog - maybe
 
         authStore.getToken()
-            .then(token => { deleteWithId($params.topic, $params.id, token)})
+            .then(token => { deleteWithId($oscpScdUrl, $params.topic, $params.id, token)})
             .then(() => $goto(returnPath))
             .catch(error => console.error(`Failed to delete: ${error}`))
     }
@@ -41,7 +42,7 @@
         const dataString = JSON.stringify(data);
         validateScr(dataString)
             .then(() => authStore.getToken())
-            .then(token => putContent($params.topic, dataString, data.id, token))
+            .then(token => putContent($oscpScdUrl, $params.topic, dataString, data.id, token))
             .then(response => {
                 console.log(`Record created: ${response}`);
                 $goto(returnPath);

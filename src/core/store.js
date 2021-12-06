@@ -1,6 +1,9 @@
 import { writable, readable } from 'svelte/store';
 
 
+export const oscpSsdUrl = writable('');
+export const oscpScdUrl = writable('');
+
 // SCR content references
 export const contentRefs = writable([]);
 

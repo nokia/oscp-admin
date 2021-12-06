@@ -4,7 +4,12 @@
 -->
 
 <script>
-    import { authStore } from '@oarc/ssd-access/authstore.js'
+    import { authStore } from '@oarc/ssd-access/authstore.js';
+    import { setSsdUrl } from '@oarc/ssd-access';
+    import { oscpSsdUrl } from '../../core/store';
+
+    $oscpSsdUrl = oscp_app.env["OSCP_SSD_URL"];
+    setSsdUrl($oscpSsdUrl);
 
     let auth_domain = oscp_app.env["AUTH0_SSD_DOMAIN"]
     let auth_client_id = oscp_app.env["AUTH0_SSD_CLIENTID"]

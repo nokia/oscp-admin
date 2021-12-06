@@ -46,6 +46,7 @@
     export let postFileFunction;
     export let propertyMissingMessage;
     export let propertyElement;
+    export let url;
 
     let dropEnabled = true;
     let protocol = [];
@@ -86,7 +87,7 @@
 
         if (file.type === 'application/json') {
             authStore.getToken()
-                .then(token => postFileFunction(propertyElement.value, file, token))
+                .then(token => postFileFunction(url, propertyElement.value, file, token))
                 .then(response => output(`${file.name} uploaded - ${response}`))
                 .catch(error => output(`${file.name} not uploaded - ${error}`))
         } else {
