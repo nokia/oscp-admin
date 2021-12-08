@@ -1,26 +1,24 @@
 # **Sample OSCP Admin**
 
-Sample client for _Open Spatial Computing Platform_ (OSCP) spatial service and 
-spatial content discovery administration.
+Sample client for _Open Spatial Computing Platform_ (OSCP) for administration 
+of spatial service discovery and spatial content discovery.
 
-The spatial service discovery (SSD) allows finding spatial services around the 
-current location of the device. One of such services could be a GeoPose service, 
-providing the GeoPose of the current device.
+The OSCP [spatial service discovery (SSD)](https://github.com/OpenArCloud/oscp-spatial-service-discovery)
+allows finding spatial services around the current location of the device.
+With this tol you can new register services and edit existing services.
 
-The spatial content discovery (SCD) can be used to find geolocated content 
-available around the current location of the device. 
+The OSCP [spatial content discovery (SCD)](https://github.com/OpenArCloud/oscp-spatial-content-discovery)
+can be used to find geolocated content available around the current location of the device.
+With this tool, you can add new contents and edit existing contents.
 
-While this application is written using svelte, the main functional elements
-will also be available as web components, directly usable in many other web 
-frameworks and plain HTML pages. The aim is, that it's possible to use these
+While this application is written using Svelte, the main functional elements
+will also be available as Web components, directly usable in many other Web 
+frameworks and plain HTML pages. The aim is to use these
 components in as many content management environments as possible.
 
-What's available so far is in a very early stage, missing most of the planned
-functionality. Feedback, suggestions and (any sort of) contributions are very welcome.
-
 To run this app locally, you need to copy SSL certificates to the root folder
-of the project, named localhost.key and localhost.cert. The information on
-this site might be halpful to generate these keys: 
+of the project, named `localhost.key` and `localhost.cert`. The information on
+this site might be helpful to generate these keys: 
 https://matthewhoelter.com/2019/10/21/how-to-setup-https-on-your-local-development-environment-localhost-in-minutes.html
 
 Also, adding a .env file to the root of the project is required. The format
@@ -34,12 +32,20 @@ cd oscp-admin
 npm install
 ```
 
-Create .env file with required parameters, ex.
+Create `.env` file with required parameters:
 ```
-AUTH0_DOMAIN = 
-AUTH0_CLIENTID = 
-AUTH0_AUDIENCE = 
-AUTH0_SCOPE = 
+OSCP_SSD_URL=
+OSCP_SCD_URL=
+AUTH0_SSD_DOMAIN= 
+AUTH0_SSD_SCOPE= 
+AUTH0_SSD_PROVIDER=
+AUTH0_SSD_AUDIENCE=
+AUTH0_SSD_CLIENTID=
+AUTH0_SCD_DOMAIN= 
+AUTH0_SCD_SCOPE= 
+AUTH0_SCD_PROVIDER=
+AUTH0_SCD_AUDIENCE=
+AUTH0_SCD_CLIENTID
 ```
 
 When you want to use The Google Drive Picker to select files, you
@@ -49,20 +55,19 @@ GOOGLE_PROJECT_ID =
 GOOGLE_PICKER_KEY = 
 ```
 
-Start the local server for development
-
+Start a local server for development
 ```
 npm run dev
 ```
 
-Start the server for production
+Start a local server for production
 ```
-npm start
+npm run startlocal
 ```
 
-Further information about the discovery services can be found here:
-- https://github.com/OpenArCloud/oscp-spatial-service-discovery
-- https://github.com/OpenArCloud/oscp-spatial-content-discovery
-
+Start a server for production
+```
+npm run start
+```
 
 App contains icons from <a href="https://www.zondicons.com/" title="zondicons">Zondicons</a>
