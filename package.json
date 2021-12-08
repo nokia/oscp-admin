@@ -4,7 +4,8 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -cw",
-    "start": "sirv public --single --http2 --key localhost.key --cert localhost.cert --host",
+    "start": "sirv public --single --host 0.0.0.0 --port 8081",
+    "startlocal": "sirv public --single --http2 --key localhost.key --cert localhost.cert --host 0.0.0.0 --port 12345",
     "lint": "eslint . --ext .js,.svelte --fix"
   },
   "repository": {
