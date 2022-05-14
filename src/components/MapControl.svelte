@@ -117,8 +117,8 @@
 
     function handleSave() {
         geoPose.update((current) => {
-            current.latitude = lat;
-            current.longitude = lon;
+            current.position.lat = lat;
+            current.position.lon = lon;
             return current;
         })
 

@@ -14,22 +14,23 @@
     export let inactive;
 </script>
 
+<dl>
+    <dt>Position</dt>
+    <div>
+        <label for="geoposepositionlat">Latitude</label>
+        <input id="geoposepositionlat" type="number" step="any" required disabled="{inactive}" bind:value={data.position.lat}>
+    </div>
 
-<div>
-    <label for="geoposelatitude">Latitude</label>
-    <input id="geoposelatitude" type="number" step="any" required disabled="{inactive}" bind:value={data.latitude}>
-</div>
+    <div>
+        <label for="geoposepositionlon">Longitude</label>
+        <input id="geoposepositionlon" type="number" step="any" required bind:value={data.position.lon}>
+    </div>
 
-<div>
-    <label for="geoposelongitude">Longitude</label>
-    <input id="geoposelongitude" type="number" step="any" required bind:value={data.longitude}>
-</div>
-
-<div>
-    <label for="geoposeellipsoidHeight">EllipsoidHeight</label>
-    <input id="geoposeellipsoidHeight" type="number" step="any" required bind:value={data.ellipsoidHeight}>
-</div>
-
+    <div>
+        <label for="geoposepositionh">Height</label>
+        <input id="geoposepositionh" type="number" step="any" required bind:value={data.position.h}>
+    </div>
+</dl>
 <dl>
     <dt>Quaternion</dt>
     <dd>

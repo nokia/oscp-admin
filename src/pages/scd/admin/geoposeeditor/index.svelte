@@ -15,8 +15,8 @@
 
     function gotoCheckContent(event) {
         geoPose.update((pose) => {
-            pose.latitude = event.detail.lat;
-            pose.longitude = event.detail.lon;
+            pose.position.lat = event.detail.lat;
+            pose.position.lon = event.detail.lon;
             pose.h3 = event.detail.h3;
             return pose;
         })
