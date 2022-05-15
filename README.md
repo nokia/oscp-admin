@@ -16,23 +16,21 @@ will also be available as Web components, directly usable in many other Web
 frameworks and plain HTML pages. The aim is to use these
 components in as many content management environments as possible.
 
-To run this app locally, you need to copy SSL certificates to the root folder
-of the project, named `localhost.key` and `localhost.cert`. The information on
-this site might be helpful to generate these keys: 
-https://matthewhoelter.com/2019/10/21/how-to-setup-https-on-your-local-development-environment-localhost-in-minutes.html
-
-Also, adding a .env file to the root of the project is required. The format
-looks like this:
 
 ## Usage
-
 ```
 git clone https://github.com/OpenArCloud/oscp-admin
 cd oscp-admin
 npm install
 ```
 
-Create `.env` file with required parameters:
+To run this app locally, you need to copy SSL certificates to the root folder
+of the project, named `localhost.key` and `localhost.cert`. The information on
+this site might be helpful to generate these keys: 
+https://matthewhoelter.com/2019/10/21/how-to-setup-https-on-your-local-development-environment-localhost-in-minutes.html
+
+Also, adding a `.env` file to the root of the project is required. The format
+looks like this:
 ```
 OSCP_SSD_URL=
 OSCP_SCD_URL=
@@ -48,7 +46,7 @@ AUTH0_SCD_AUDIENCE=
 AUTH0_SCD_CLIENTID
 ```
 
-When you want to use The Google Drive Picker to select files, you
+If you want to use The Google Drive Picker to select files, you
 need to add this to your .env file
 ```
 GOOGLE_PROJECT_ID = 

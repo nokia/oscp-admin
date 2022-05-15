@@ -10,12 +10,11 @@
 
     import Navigation from '../../components/Navigation.svelte';
 
-    // TODO: rename to createcontent, editcontent, importcontents
     const links = [
             ['/scd/', 'Home', false],
-            ['/scd/admin/createservice', 'Create', true],
-            ['/scd/admin/editservice', 'Edit', true],
-            ['/scd/admin/importservices', 'Import', true]
+            ['/scd/admin/createcontent', 'Create', true],
+            ['/scd/admin/editcontent', 'Edit', true],
+            ['/scd/admin/importcontents', 'Import', true]
         ]
 </script>
 
