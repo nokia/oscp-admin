@@ -38,6 +38,7 @@
 </h2>
 
 <form class:invisible={isP2pConnected === false}>
-    <GeoPose inactive="{isP2pConnected === false}" data="{$geoPose}" />
+    <!--<GeoPose inactive="{isP2pConnected === false}" data="{$geoPose}" />-->
+    <GeoPose data="{$geoPose}" />
 </form>
 <P2p on:connected={p2pConnected} on:disconnected={p2pDisconnected} />

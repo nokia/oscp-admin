@@ -45,7 +45,7 @@
         import('../../pages/scd/admin/geoposeeditor/index.svelte')
             .then(() => {
                 contentRefs.set(data.content.refs);
-                geoPose.set(data.content.geopose)
+                geoPose.set(data.content.geopose);
                 $goto('geoposeeditor/');
             })
             .catch((error) => {
