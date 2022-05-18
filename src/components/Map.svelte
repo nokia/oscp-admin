@@ -405,9 +405,9 @@
     }
 
     function mapAction(container) {
-        if ($geoPose.latitude !== 0 && $geoPose.longitude !== 0) {
-            thisLat = $geoPose.latitude;
-            thisLon = $geoPose.longitude;
+        if ($geoPose.position.lat !== 0 && $geoPose.position.lon !== 0) {
+            thisLat = $geoPose.position.lat;
+            thisLon = $geoPose.position.lon;
         }
 
         instantiateMap(container);

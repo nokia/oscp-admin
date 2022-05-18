@@ -96,8 +96,8 @@
         h3: "871faa49dffffff"
     }
 
-    let savePath = $route.last ? $route.last.path : '/scd/admin/editservice';
-    const cancelPath = '/scd/admin/createservice';
+    let savePath = $route.last ? $route.last.path : '/scd/admin/editcontent';
+    const cancelPath = '/scd/admin/createcontent';
 
     let currentService = {};
     let serviceId = (recordId, serviceId) => `${recordId}-${serviceId}`;
@@ -117,8 +117,8 @@
 
     function handleSave() {
         geoPose.update((current) => {
-            current.latitude = lat;
-            current.longitude = lon;
+            current.position.lat = lat;
+            current.position.lon = lon;
             return current;
         })
 

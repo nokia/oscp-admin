@@ -19,7 +19,7 @@
 
 
     let data = scr_empty;
-    let returnPath = $route.last ? $route.last.path : '/scd/admin/editservice';
+    let returnPath = $route.last ? $route.last.path : '/scd/admin/editcontent';
 
     onMount(() => {
         getContentWithId($oscpScdUrl, $params.topic, $params.id)
