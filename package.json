@@ -13,7 +13,7 @@
     "url": "git+https://github.com/OpenArCloud/oscp-admin"
   },
   "devDependencies": {
-    "@oarc/scd-access": "^0.1.10",
+    "@oarc/scd-access": "^0.1.11",
     "@oarc/ssd-access": "^0.2.9",
     "@rollup/plugin-commonjs": "^15.1.0",
     "@rollup/plugin-json": "^4.1.0",
