@@ -4,12 +4,12 @@
 -->
 
 <script>
-    import {onMount} from 'svelte';
-    import {url, route, params, goto} from '@sveltech/routify';
+    import { onMount } from 'svelte';
+    import { url, route, params, goto } from '@sveltech/routify';
 
-    import {getContentWithId, deleteWithId, validateScr, putContent} from '@oarc/scd-access';
-    import {scr_empty} from '@oarc/scd-access';
-    import {authStore} from '@oarc/scd-access/authstore.js';
+    import { getContentWithId, deleteWithId, validateScr, putContent } from '@oarc/scd-access';
+    import { scr_empty } from '@oarc/scd-access';
+    import { authStore } from '@oarc/scd-access/authstore.js';
     import { oscpScdUrl } from '../../../core/store';
 
     import Form from '../../../components/Form.svelte';
@@ -17,23 +17,25 @@
 
     import { CheveronLeftIcon } from 'svelte-zondicons';
 
-
     let data = scr_empty;
     let returnPath = $route.last ? $route.last.path : '/scd/admin/editcontent';
 
     onMount(() => {
         getContentWithId($oscpScdUrl, $params.topic, $params.id)
-            .then((contents) => data = contents)
-            .catch(error => console.log(`Server access error: ${error}`))
-    })
+            .then((contents) => (data = contents))
+            .catch((error) => console.log(`Server access error: ${error}`));
+    });
 
     function handleDelete() {
         // TODO: Show dialog - maybe
 
-        authStore.getToken()
-            .then(token => { deleteWithId($oscpScdUrl, $params.topic, $params.id, token)})
+        authStore
+            .getToken()
+            .then((token) => {
+                deleteWithId($oscpScdUrl, $params.topic, $params.id, token);
+            })
             .then(() => $goto(returnPath))
-            .catch(error => console.error(`Failed to delete: ${error}`))
+            .catch((error) => console.error(`Failed to delete: ${error}`));
     }
 
     function handleSave(event) {
@@ -42,20 +44,19 @@
         const dataString = JSON.stringify(data);
         validateScr(dataString)
             .then(() => authStore.getToken())
-            .then(token => putContent($oscpScdUrl, $params.topic, dataString, data.id, token))
-            .then(response => {
+            .then((token) => putContent($oscpScdUrl, $params.topic, dataString, data.id, token))
+            .then((response) => {
                 console.log(`Record created: ${response}`);
                 $goto(returnPath);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.log(`New SCR not sent - ${error}`);
             });
     }
 </script>
 
-
 <h2>
-    <a href="{$url(returnPath)}">
+    <a href={$url(returnPath)}>
         <CheveronLeftIcon />
     </a>
     <span>SCR record detail</span>
@@ -65,7 +66,7 @@
     <p slot="intro">Edit SCR record.</p>
 
     <div slot="form">
-        <SCR bind:data/>
+        <SCR bind:data />
     </div>
 
     <div slot="controls">

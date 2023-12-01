@@ -15,6 +15,5 @@
     }
 </script>
 
-
 <label for="topic">Topic</label>
 <input id="topic" required bind:this={topicElement} />

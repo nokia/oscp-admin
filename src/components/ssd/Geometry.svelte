@@ -10,11 +10,9 @@
     export let data;
 </script>
 
-
 <details>
     <summary>{data.type}</summary>
 
-    <Coordinate bind:data="{data.coordinates[0]}" />
-    <BoundingBox bind:data="{data.bbox}" />
+    <Coordinate bind:data={data.coordinates[0]} />
+    <BoundingBox bind:data={data.bbox} />
 </details>
-

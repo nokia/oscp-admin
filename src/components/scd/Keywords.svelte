@@ -1,33 +1,13 @@
-<!--
-    (c) 2020 Open AR Cloud
-    This code is licensed under MIT license (see LICENSE.md for details)
--->
-
-<style>
-    .addbutton {
-        background-color: transparent;
-        border: 0;
-    }
-
-    .deletebutton {
-        padding: 0;
-        margin: 0 15px 0 -5px;
-        border: 0;
-        background-color: transparent;
-    }
-</style>
-
 <script>
     import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
 
-    export let data
-
+    export let data;
 
     function addKeyword(event) {
         event.preventDefault();
 
         if (data) {
-            data = [...data, ""];
+            data = [...data, ''];
         } else {
             data = [];
         }
@@ -49,20 +29,19 @@
     }
 </script>
 
-
 <dl>
     <dt>
-        <input type="checkbox" checked="{data !== undefined}" on:change={toggleKeywords} />
+        <input type="checkbox" checked={data !== undefined} on:change={toggleKeywords} />
         <span>Keywords</span>
     </dt>
     {#if data}
         <dd>
-        {#each data as keyword, index}
-            <input bind:value="{keyword}" />
-            <button class="deletebutton" on:click={(event) => deleteKeyword(event, index)}>
-                <CloseSolidIcon size="1.5rem" color="red" />
-            </button>
-        {/each}
+            {#each data as keyword, index}
+                <input bind:value={keyword} />
+                <button class="deletebutton" on:click={(event) => deleteKeyword(event, index)}>
+                    <CloseSolidIcon size="1.5rem" color="red" />
+                </button>
+            {/each}
         </dd>
     {/if}
 </dl>
@@ -72,3 +51,22 @@
         <AddSolidIcon size="2rem" />
     </button>
 {/if}
+
+<!--
+    (c) 2020 Open AR Cloud
+    This code is licensed under MIT license (see LICENSE.md for details)
+-->
+
+<style>
+    .addbutton {
+        background-color: transparent;
+        border: 0;
+    }
+
+    .deletebutton {
+        padding: 0;
+        margin: 0 15px 0 -5px;
+        border: 0;
+        background-color: transparent;
+    }
+</style>

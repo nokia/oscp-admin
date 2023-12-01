@@ -7,15 +7,14 @@
     import { createEventDispatcher } from 'svelte';
 
     // eslint-disable-next-line no-undef
-    const projectId = oscp_app.env["GOOGLE_PROJECT_ID"];
+    const projectId = oscp_app.env['GOOGLE_PROJECT_ID'];
     // eslint-disable-next-line no-undef
-    const pickerKey = oscp_app.env["GOOGLE_PICKER_KEY"]
+    const pickerKey = oscp_app.env['GOOGLE_PICKER_KEY'];
 
     const dispatch = createEventDispatcher();
 
     let pickerLoaded = false;
     let oauthToken;
-
 
     function handleClientLoad() {
         // eslint-disable-next-line no-undef
@@ -30,12 +29,14 @@
     }
 
     function onAuthLoad() {
-        window.gapi.auth.authorize({
-            'client_id': '1068640082910-v81bvg55ts1dhamr3q272jouhm9qivkp',
-            'scope': ['https://www.googleapis.com/auth/drive.file'],
-            'immediate': false
-        },
-        handleAuthResult);
+        window.gapi.auth.authorize(
+            {
+                client_id: '1068640082910-v81bvg55ts1dhamr3q272jouhm9qivkp',
+                scope: ['https://www.googleapis.com/auth/drive.file'],
+                immediate: false,
+            },
+            handleAuthResult,
+        );
     }
 
     function handleAuthResult(authResult) {
@@ -50,8 +51,7 @@
             // eslint-disable-next-line no-undef
             const view = new google.picker.View(google.picker.ViewId.DOCS);
             // eslint-disable-next-line no-undef
-            const upload = new google.picker.DocsUploadView()
-                .setIncludeFolders(true)
+            const upload = new google.picker.DocsUploadView().setIncludeFolders(true);
             // eslint-disable-next-line no-undef
             let picker = new google.picker.PickerBuilder()
                 .addView(view)
@@ -75,22 +75,22 @@
             let file = {
                 content: {
                     id: first.id,
-                    type: "3D", // TODO: Set based on mime type
+                    type: '3D', // TODO: Set based on mime type
                     title: first.name,
                     description: first.description,
-                    refs: []
-                }
-            }
+                    refs: [],
+                },
+            };
 
             data.docs.forEach((selection) => {
                 file.content.refs.push({
                     contentType: selection.mimeType,
-                    url: selection.url
-                })
-            })
+                    url: selection.url,
+                });
+            });
 
             dispatch('selected', { selection: file });
-        // eslint-disable-next-line no-undef
+            // eslint-disable-next-line no-undef
         } else if (data.action === google.picker.Action.CANCEL) {
             dispatch('canceled');
         } else {
@@ -98,8 +98,6 @@
         }
     }
 </script>
-
-
 
 <svelte:head>
     <script async defer src="https://apis.google.com/js/api.js" on:load={handleClientLoad}></script>

@@ -1,3 +1,66 @@
+<script>
+    export let data;
+
+    let form;
+    let timestamp = 0;
+
+    $: {
+        if (data.timestamp) {
+            timestamp = data.timestamp;
+            delete data.timestamp;
+        }
+    }
+
+    export function reportValidity() {
+        return form.reportValidity();
+    }
+</script>
+
+<slot name="intro" />
+
+<form bind:this={form}>
+    <fieldset>
+        {#if data.id}
+            <div>
+                <label for="rootid">ID</label>
+                <span id="rootid">{data.id}</span>
+            </div>
+        {/if}
+
+        <div>
+            <label for="roottype">Type</label>
+            <span id="roottype">{data.type.toUpperCase()}</span>
+        </div>
+
+        {#if data.provider}
+            <div>
+                <label for="rootprovider">Provider</label>
+                <span id="rootprovider">{data.provider}</span>
+            </div>
+        {/if}
+
+        {#if data.tenant}
+            <div>
+                <label for="roottenant">Tenant</label>
+                <span id="roottenant">{data.tenant}</span>
+            </div>
+        {/if}
+
+        {#if timestamp}
+            <div>
+                <label for="roottimestamp">Last edited</label>
+                <span id="roottimestamp">{timestamp}</span>
+            </div>
+        {/if}
+
+        <slot name="extras" />
+    </fieldset>
+
+    <slot name="form" />
+
+    <slot name="controls" />
+</form>
+
 <!--
     (c) 2020 Open AR Cloud
     This code is licensed under MIT license (see LICENSE.md for details)
@@ -16,7 +79,7 @@
     }
 
     :global(form label::after, form dt::after) {
-        content: ":";
+        content: ':';
     }
 
     :global(form dd) {
@@ -71,67 +134,3 @@
         font-weight: bold;
     }
 </style>
-
-<script>
-    export let data;
-
-    let form;
-    let timestamp = 0;
-
-    $: {
-        if (data.timestamp) {
-            timestamp = data.timestamp;
-            delete data.timestamp;
-        }
-    }
-
-    export function reportValidity() {
-        return form.reportValidity();
-    }
-</script>
-
-
-<slot name="intro" />
-
-<form bind:this={form}>
-    <fieldset>
-        {#if data.id}
-        <div>
-            <label for="rootid">ID</label>
-            <span id="rootid">{data.id}</span>
-        </div>
-        {/if}
-
-        <div>
-            <label for="roottype">Type</label>
-            <span id="roottype">{data.type.toUpperCase()}</span>
-        </div>
-
-        {#if data.provider}
-        <div>
-            <label for="rootprovider">Provider</label>
-            <span id="rootprovider">{data.provider}</span>
-        </div>
-        {/if}
-
-        {#if data.tenant}
-        <div>
-            <label for="roottenant">Tenant</label>
-            <span id="roottenant">{data.tenant}</span>
-        </div>
-        {/if}
-
-        {#if timestamp}
-            <div>
-                <label for="roottimestamp">Last edited</label>
-                <span id="roottimestamp">{timestamp}</span>
-            </div>
-        {/if}
-
-        <slot name="extras" />
-    </fieldset>
-
-    <slot name="form" />
-
-    <slot name="controls" />
-</form>

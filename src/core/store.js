@@ -1,12 +1,10 @@
 import { writable, readable } from 'svelte/store';
 
-
 export const oscpSsdUrl = writable('');
 export const oscpScdUrl = writable('');
 
 // SCR content references
 export const contentRefs = writable([]);
-
 
 // Location properties
 export const countryCode = writable('');
@@ -14,19 +12,17 @@ export const h3Index = writable('');
 
 export const geoPose = writable({});
 
-
 // GeoPose Services properties
 export const selectedGeoposeService = writable({
     id: null,
-    isRunning: false
+    isRunning: false,
 });
-
 
 // Content Services properties
 export const selectedContentService = writable({
     id: null,
-    isRunning: false
-})
+    isRunning: false,
+});
 
 // Map defaults
 export const MIN_H3RESOLUTION = readable(0, () => () => {});

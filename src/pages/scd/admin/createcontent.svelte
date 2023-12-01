@@ -4,18 +4,17 @@
 -->
 
 <script>
-    import {scr_empty, validateScr, postContent} from '@oarc/scd-access';
-    import {authStore} from '@oarc/scd-access/authstore.js'
+    import { scr_empty, validateScr, postContent } from '@oarc/scd-access';
+    import { authStore } from '@oarc/scd-access/authstore.js';
     import { oscpScdUrl } from '../../../core/store';
 
-    import {goto, params} from '@sveltech/routify';
+    import { goto, params } from '@sveltech/routify';
 
     import deepMerge from 'deepmerge';
 
     import Form from '../../../components/Form.svelte';
     import Topic from '../../../components/scd/Topic.svelte';
     import SCR from '../../../components/scd/SCR.svelte';
-
 
     let form;
     let topicElement;
@@ -41,17 +40,16 @@
         const dataString = JSON.stringify(data);
         validateScr(dataString)
             .then(() => authStore.getToken())
-            .then(token => postContent($oscpScdUrl, topicElement.value(), dataString, token))
+            .then((token) => postContent($oscpScdUrl, topicElement.value(), dataString, token))
             .then((response) => {
                 console.log(response);
                 $goto('/scd');
             })
-            .catch(error => {
+            .catch((error) => {
                 console.log(`New SCR not sent - ${error}`);
             });
     }
 </script>
-
 
 <h2>Create Spatial Content Record</h2>
 
@@ -63,7 +61,7 @@
     </div>
 
     <div slot="form">
-        <SCR bind:data={data} />
+        <SCR bind:data />
     </div>
 
     <div slot="controls">

@@ -4,20 +4,18 @@
 -->
 
 <script>
-    import {ssr_empty, validateSsr, postService} from '@oarc/ssd-access';
-    import {authStore} from '@oarc/ssd-access/authstore.js'
+    import { ssr_empty, validateSsr, postService } from '@oarc/ssd-access';
+    import { authStore } from '@oarc/ssd-access/authstore.js';
 
-    import {goto} from '@sveltech/routify';
+    import { goto } from '@sveltech/routify';
 
     import Form from '../../../components/Form.svelte';
     import CountryCode from '../../../components/ssd/CountryCode.svelte';
-    import SSR from "../../../components/ssd/SSR.svelte";
-
+    import SSR from '../../../components/ssd/SSR.svelte';
 
     let form;
     let countryCodeElement;
     let data = JSON.parse(JSON.stringify(ssr_empty));
-
 
     function save(event) {
         event.preventDefault();
@@ -32,17 +30,16 @@
         const dataString = JSON.stringify(data);
         validateSsr(dataString)
             .then(() => authStore.getToken())
-            .then(token => postService(countryCodeElement.value(), dataString, token))
+            .then((token) => postService(countryCodeElement.value(), dataString, token))
             .then((response) => {
                 console.log(response);
                 $goto('/ssd');
             })
-            .catch(error => {
+            .catch((error) => {
                 console.log(`New SSR not sent - ${error}`);
             });
     }
 </script>
-
 
 <h2>Create Spatial Service Record</h2>
 
@@ -54,7 +51,7 @@
     </div>
 
     <div slot="form">
-        <SSR bind:data={data}/>
+        <SSR bind:data />
     </div>
 
     <div slot="controls">

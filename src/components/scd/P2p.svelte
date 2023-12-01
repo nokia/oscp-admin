@@ -1,36 +1,18 @@
-<!--
-    (c) 2020 Open AR Cloud
-    This code is licensed under MIT license (see LICENSE.md for details)
--->
-
-<style>
-    #connect {
-        text-align: center;
-    }
-
-    #qrcode {
-        width: 350px;
-        height: 300px;
-        object-fit: cover;
-    }
-</style>
-
-
 <script>
-    import {createEventDispatcher} from 'svelte';
+    import { createEventDispatcher } from 'svelte';
 
-    import { geoPose, contentRefs } from "../../core/store.js";
+    import { geoPose, contentRefs } from '../../core/store.js';
 
     import Peer from 'peerjs';
     import QRCode from 'qrcode';
 
-
-    const peer = new Peer({  // TODO: Introduce .env parameters
+    const peer = new Peer({
+        // TODO: Introduce .env parameters
         debug: 2,
         host: 'rtc.oscp.cloudpose.io',
         port: 5678,
         key: 'peerjs-mvtest',
-        path: '/'
+        path: '/',
     });
 
     // const clientUrl = 'https://192.168.1.103:5001/dev/geoposeremote';
@@ -46,7 +28,6 @@
 
     let qrCodeUrl;
 
-
     peer.on('open', () => {
         // Workaround for peer.reconnect deleting previous id
         if (peer.id === null) {
@@ -57,7 +38,7 @@
         }
 
         console.log('ID: ' + peer.id);
-        connectionStatus = "Awaiting connection...";
+        connectionStatus = 'Awaiting connection...';
 
         localPeerId = peer.id;
         createQrCode(peer.id);
@@ -66,15 +47,17 @@
     peer.on('connection', (c) => {
         if (connection && connection.open) {
             c.on('open', () => {
-                c.send("Already connected to another client");
-                setTimeout(function() { c.close(); }, 500);
+                c.send('Already connected to another client');
+                setTimeout(function () {
+                    c.close();
+                }, 500);
             });
             return;
         }
 
         connection = c;
-        console.log("Connected to: " + connection.peer);
-        connectionStatus = "Connected";
+        console.log('Connected to: ' + connection.peer);
+        connectionStatus = 'Connected';
 
         dispatch('connected', connection.peer);
 
@@ -93,7 +76,7 @@
 
     function ready() {
         connection.on('data', (data) => {
-            console.log("Data recieved");
+            console.log('Data recieved');
 
             switch (data) {
                 case 'locationdata':
@@ -104,17 +87,17 @@
                         type: 'location',
                         geopose: $geoPose,
                         refs: $contentRefs,
-                        service: 'name and url of service'
-                    })
+                        service: 'name and url of service',
+                    });
                     break;
                 default:
-                    console.log("Peer: " + data);
+                    console.log('Peer: ' + data);
                     break;
             }
         });
 
         connection.on('close', () => {
-            connectionStatus = "Connection reset<br>Awaiting connection...";
+            connectionStatus = 'Connection reset<br>Awaiting connection...';
             connection = null;
             dispatch('disconnected');
         });
@@ -123,7 +106,7 @@
     function sendMessage(message) {
         if (connection && connection.open) {
             connection.send(JSON.stringify(message));
-            console.log("Sent: " + JSON.stringify(message))
+            console.log('Sent: ' + JSON.stringify(message));
         } else {
             console.log('Connection is closed');
         }
@@ -132,12 +115,12 @@
     function createQrCode(localId) {
         const data = `${clientUrl}?${idParameter}=${localId}`;
         QRCode.toDataURL(data)
-            .then(url => {
+            .then((url) => {
                 qrCodeUrl = url;
             })
-            .catch(err => {
+            .catch((err) => {
                 console.error(err);
-            })
+            });
     }
 
     function sendToPeer() {
@@ -145,16 +128,15 @@
     }
 </script>
 
-
 {#if connectionStatus !== 'Connected'}
     <p>
-        Scan the QR-Code with an AR capable mobile device to verify that the entered GeoPose values are correct. Once
-        a connection is established and an AR session successfully started, the GeoPose values can be edited here.
+        Scan the QR-Code with an AR capable mobile device to verify that the entered GeoPose values are correct. Once a connection is established and an AR session successfully started, the GeoPose
+        values can be edited here.
     </p>
 
     {#if localPeerId !== ''}
         <ul id="connect">
-            <li><img id="qrcode" src="{qrCodeUrl}" alt="QR-Code for viewer" /></li>
+            <li><img id="qrcode" src={qrCodeUrl} alt="QR-Code for viewer" /></li>
             <li>ID: {localPeerId}</li>
             <li>{connectionStatus}</li>
         </ul>
@@ -164,3 +146,20 @@
 {:else}
     <button on:click={sendToPeer}>Send to AR Viewer</button>
 {/if}
+
+<!--
+    (c) 2020 Open AR Cloud
+    This code is licensed under MIT license (see LICENSE.md for details)
+-->
+
+<style>
+    #connect {
+        text-align: center;
+    }
+
+    #qrcode {
+        width: 350px;
+        height: 300px;
+        object-fit: cover;
+    }
+</style>

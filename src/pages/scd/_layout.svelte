@@ -11,13 +11,13 @@
     import Navigation from '../../components/Navigation.svelte';
 
     const links = [
-            ['/scd/', 'Home', false],
-            ['/scd/admin/createcontent', 'Create', true],
-            ['/scd/admin/editcontent', 'Edit', true],
-            ['/scd/admin/importcontents', 'Import', true]
-        ]
+        ['/scd/', 'Home', false],
+        ['/scd/admin/createcontent', 'Create', true],
+        ['/scd/admin/editcontent', 'Edit', true],
+        ['/scd/admin/importcontents', 'Import', true],
+    ];
 </script>
 
 <Navigation {links} {authStore} {authenticated} />
 
-<slot/>
+<slot />

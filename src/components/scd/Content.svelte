@@ -13,7 +13,6 @@
 
     const dispatch = createEventDispatcher();
 
-
     function toggleSize(event) {
         if (event.target.checked) {
             data.size = '';
@@ -47,7 +46,6 @@
     }
 </script>
 
-
 <div>
     <label for="contentid">ID</label>
     <input id="contentid" required bind:value={data.id} />
@@ -65,20 +63,20 @@
 
 <div>
     <label for="contentdescription">
-        <input type="checkbox" checked="{data.description !== undefined}" on:change={toggleDescription} />
+        <input type="checkbox" checked={data.description !== undefined} on:change={toggleDescription} />
         <span>Description</span>
     </label>
-    <input id="contentdescription" disabled="{data.description === undefined}" bind:value={data.description} />
+    <input id="contentdescription" disabled={data.description === undefined} bind:value={data.description} />
 </div>
 
 <Keywords bind:data={data.keywords} />
 
 <div>
     <label for="contentplacekey">
-        <input type="checkbox" checked="{data.placekey !== undefined}" on:change={togglePlacekey} />
+        <input type="checkbox" checked={data.placekey !== undefined} on:change={togglePlacekey} />
         <span>Placekey</span>
     </label>
-    <input id="contentplacekey" disabled="{data.placekey === undefined}" bind:value={data.placekey} />
+    <input id="contentplacekey" disabled={data.placekey === undefined} bind:value={data.placekey} />
 </div>
 
 <References bind:data={data.refs} on:refsUpdated={() => dispatch('refsUpdated')} />
@@ -87,16 +85,16 @@
 
 <div>
     <label for="contentsize">
-        <input type="checkbox" checked="{data.size !== undefined}" on:change={toggleSize} />
+        <input type="checkbox" checked={data.size !== undefined} on:change={toggleSize} />
         <span>Size</span>
     </label>
-    <input id="contentsize" disabled="{data.size === undefined}" type="number" bind:value={data.size} />
+    <input id="contentsize" disabled={data.size === undefined} type="number" bind:value={data.size} />
 </div>
 
 <div>
     <label for="contentbbox">
-        <input type="checkbox" checked="{data.bbox !== undefined}" on:change={toggleBbox} />
+        <input type="checkbox" checked={data.bbox !== undefined} on:change={toggleBbox} />
         <span>Bounding Box</span>
     </label>
-    <input id="contentbbox" disabled="{data.bbox === undefined}" bind:value={data.bbox} />
+    <input id="contentbbox" disabled={data.bbox === undefined} bind:value={data.bbox} />
 </div>
