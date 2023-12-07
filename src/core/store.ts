@@ -10,7 +10,7 @@ export const contentRefs = writable([]);
 export const countryCode = writable('');
 export const h3Index = writable('');
 
-export const geoPose = writable({});
+export const geoPose = writable<{ position?: { lat: number; lon: number }; h3?: number }>({});
 
 // GeoPose Services properties
 export const selectedGeoposeService = writable({

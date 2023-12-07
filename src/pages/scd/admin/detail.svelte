@@ -3,11 +3,11 @@
     This code is licensed under MIT license (see LICENSE.md for details)
 -->
 
-<script>
+<script lang="ts">
     import { onMount } from 'svelte';
-    import { url, route, params, goto } from '@sveltech/routify';
+    import { url, route, params, goto } from '@roxi/routify';
 
-    import { getContentWithId, deleteWithId, validateScr, putContent } from '@oarc/scd-access';
+    import { getContentWithId, deleteWithId, validateScr, putContent, type SCR_EMPTY, type FormContent } from '@oarc/scd-access';
     import { scr_empty } from '@oarc/scd-access';
     import { authStore } from '@oarc/scd-access/authstore.js';
     import { oscpScdUrl } from '../../../core/store';
@@ -16,9 +16,10 @@
     import SCR from '../../../components/scd/SCR.svelte';
 
     import { CheveronLeftIcon } from 'svelte-zondicons';
+    import type { MouseEventHandler } from 'svelte/elements';
 
-    let data = scr_empty;
-    let returnPath = $route.last ? $route.last.path : '/scd/admin/editcontent';
+    let data: FormContent;
+    let returnPath = ($route as any).last ? ($route as any).last.path : '/scd/admin/editcontent';
 
     onMount(() => {
         getContentWithId($oscpScdUrl, $params.topic, $params.id)
@@ -38,7 +39,7 @@
             .catch((error) => console.error(`Failed to delete: ${error}`));
     }
 
-    function handleSave(event) {
+    const handleSave: MouseEventHandler<HTMLButtonElement> = (event) => {
         event.preventDefault();
 
         const dataString = JSON.stringify(data);
@@ -52,11 +53,14 @@
             .catch((error) => {
                 console.log(`New SCR not sent - ${error}`);
             });
-    }
+    };
+    const urlReturnPath = (): any => {
+        return $url(returnPath);
+    };
 </script>
 
 <h2>
-    <a href={$url(returnPath)}>
+    <a href={urlReturnPath()}>
         <CheveronLeftIcon />
     </a>
     <span>SCR record detail</span>

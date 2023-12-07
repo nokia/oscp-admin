@@ -1,13 +1,13 @@
-<script>
-    import { url, route, goto } from '@sveltech/routify';
+<script lang="ts">
+    import { url, route, goto } from '@roxi/routify';
 
     import { CheveronLeftIcon } from 'svelte-zondicons';
+    import type { MouseEventHandler } from 'svelte/elements';
+    let storageProvider: any;
 
-    let storageProvider;
+    let returnPath = ($route as any).last ? ($route as any).last.path : 'scd/admin/createservice';
 
-    let returnPath = $route.last ? $route.last.path : 'scd/admin/createservice';
-
-    function selectGDrive(event) {
+    const selectGDrive: MouseEventHandler<HTMLButtonElement> = (event) => {
         event.currentTarget.setAttribute('active', 'active');
 
         import('../../../../components/scd/storageprovider/GCloud.svelte')
@@ -15,9 +15,9 @@
                 storageProvider = result.default;
             })
             .catch((error) => console.log(`Storage service not loaded: ${error}`));
-    }
+    };
 
-    function handleSelected(event) {
+    function handleSelected(event: { detail: { selection: any } }) {
         storageProvider = undefined;
 
         const selection = event.detail.selection;
@@ -33,10 +33,14 @@
     function back(selection = []) {
         $goto(returnPath, { selection: JSON.stringify(selection) });
     }
+
+    const urlReturnPath = (): any => {
+        return $url(returnPath);
+    };
 </script>
 
 <h2>
-    <a href={$url(returnPath)}>
+    <a href={urlReturnPath()}>
         <CheveronLeftIcon />
     </a>
     <span>Content select / upload</span>

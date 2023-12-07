@@ -5,7 +5,7 @@
 
 <script>
     import { onMount } from 'svelte';
-    import { url, route, params, goto } from '@sveltech/routify';
+    import { url, route, params, goto } from '@roxi/routify';
 
     import { getServiceWithId, deleteWithId, validateSsr, putService } from '@oarc/ssd-access';
     import { ssr_empty } from '@oarc/ssd-access';

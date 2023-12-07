@@ -3,13 +3,13 @@
     This code is licensed under MIT license (see LICENSE.md for details)
 -->
 
-<script>
+<script lang="ts">
     import { postSsrFile, supportedCountries } from '@oarc/ssd-access';
     import { authStore } from '@oarc/ssd-access/authstore.js';
 
     import Import from '../../../components/Import.svelte';
 
-    let countryCodeElement;
+    let countryCodeElement: HTMLInputElement;
     const propertyMissingMessage = 'Please select the Region to upload to';
 </script>
 

@@ -1,6 +1,8 @@
-<script>
-    export let data;
-    export let inactive;
+<script lang="ts">
+    import type { Pose } from '@oarc/scd-access';
+
+    export let data: Pose;
+    export let inactive = false;
 </script>
 
 <dl>

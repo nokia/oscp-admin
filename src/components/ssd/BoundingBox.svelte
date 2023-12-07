@@ -1,9 +1,10 @@
-<script>
+<script lang="ts">
     import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
+    import type { ChangeEventHandler } from 'svelte/elements';
 
-    export let data;
+    export let data: (number | string)[] | undefined;
 
-    function addBbox(event) {
+    function addBbox(event: Event) {
         event.preventDefault();
 
         if (data) {
@@ -13,20 +14,20 @@
         }
     }
 
-    function deleteBbox(event, index) {
+    function deleteBbox(event: Event, index: number) {
         event.preventDefault();
 
-        data.splice(index, 1);
+        data?.splice(index, 1);
         data = data;
     }
 
-    function toggleBbox(event) {
-        if (event.target.checked) {
+    const toggleBbox: ChangeEventHandler<HTMLInputElement> = (event) => {
+        if (event.currentTarget.checked) {
             data = [];
         } else {
             data = undefined;
         }
-    }
+    };
 </script>
 
 <dl>

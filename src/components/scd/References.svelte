@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
     import { AddSolidIcon, CloseSolidIcon, ExploreIcon } from 'svelte-zondicons';
     import { scr_reference } from '@oarc/scd-access';
     import { createEventDispatcher } from 'svelte';
 
-    export let data;
+    export let data: { contentType: string; url: string }[];
 
     const dispatch = createEventDispatcher();
 
@@ -17,7 +17,7 @@
         dispatch('refsUpdated');
     }
 
-    function deleteReference(event, index) {
+    function deleteReference(event: Event, index: number) {
         data.splice(index, 1);
         data = data;
 

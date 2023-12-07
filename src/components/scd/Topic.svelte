@@ -3,8 +3,8 @@
     This code is licensed under MIT license (see LICENSE.md for details)
 -->
 
-<script>
-    let topicElement;
+<script lang="ts">
+    let topicElement: HTMLInputElement;
 
     export function value() {
         return topicElement.value;

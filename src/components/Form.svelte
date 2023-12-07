@@ -1,7 +1,8 @@
-<script>
-    export let data;
+<script lang="ts">
+    import type { FormContent } from '@oarc/scd-access';
+    export let data: FormContent;
 
-    let form;
+    let form: HTMLFormElement;
     let timestamp = 0;
 
     $: {

@@ -1,9 +1,10 @@
-<script>
+<script lang="ts">
     import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
+    import type { ChangeEventHandler } from 'svelte/elements';
 
-    export let data;
+    export let data: { type?: string; value?: string }[] | undefined;
 
-    function addProperty(event) {
+    function addProperty(event: Event) {
         event.preventDefault();
 
         if (data) {
@@ -13,21 +14,21 @@
         }
     }
 
-    function deleteProperty(event, index) {
+    function deleteProperty(event: Event, index: number) {
         event.preventDefault();
 
-        data.splice(index, 1);
+        data?.splice(index, 1);
         // noinspection SillyAssignmentJS
         data = data;
     }
 
-    function toggleProperties(event) {
-        if (event.target.checked) {
+    const toggleProperties: ChangeEventHandler<HTMLInputElement> = (event) => {
+        if (event.currentTarget.checked) {
             data = [];
         } else {
             data = undefined;
         }
-    }
+    };
 </script>
 
 <dl>

@@ -1,5 +1,5 @@
 <script>
-    import { isActive, url } from '@sveltech/routify';
+    import { isActive, url } from '@roxi/routify';
 
     export let links;
     export let authStore;

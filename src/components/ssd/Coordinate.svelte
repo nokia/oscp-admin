@@ -1,15 +1,15 @@
-<script>
+<script lang="ts">
     import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
 
-    export let data;
+    export let data: [number, number][];
 
-    function addCoordinate(event) {
+    function addCoordinate(event: Event) {
         event.preventDefault();
 
         data = [...data, [0, 0]];
     }
 
-    function deleteCoordinate(event, index) {
+    function deleteCoordinate(event: Event, index: number) {
         event.preventDefault();
 
         data.splice(index, 1);

@@ -3,23 +3,30 @@
     This code is licensed under MIT license (see LICENSE.md for details)
 -->
 
-<script>
+<script lang="ts">
     import Services from './Services.svelte';
     import Geometry from './Geometry.svelte';
+    import type { ChangeEventHandler } from 'svelte/elements';
+    import type { SSR_SERVICE } from '@oarc/ssd-access';
 
-    export let data;
+    export let data: {
+        services: SSR_SERVICE[];
+        geometry: any;
+        altitude?: number;
+        active?: boolean;
+    };
 
-    function toggleAltitude(event) {
-        if (event.target.checked) {
+    const toggleAltitude: ChangeEventHandler<HTMLInputElement> = (event) => {
+        if (event.currentTarget.checked) {
             data.altitude = 0;
         } else {
             data.altitude = undefined;
         }
-    }
+    };
 
-    function toggleActive(event) {
-        data.active = !!event.target.checked;
-    }
+    const toggleActive: ChangeEventHandler<HTMLInputElement> = (event) => {
+        data.active = !!event.currentTarget.checked;
+    };
 </script>
 
 <div>
@@ -40,7 +47,7 @@
 <fieldset>
     <div>
         <label for="rootaltitude">
-            <input type="checkbox" checked={data?.altitude} on:change={toggleAltitude} />
+            <input type="checkbox" checked={data?.altitude ? true : false} on:change={toggleAltitude} />
             <span>Altitude</span>
         </label>
         <input id="rootaltitude" type="number" step="0.1" class:hidden={data.altitude === undefined} bind:value={data.altitude} />

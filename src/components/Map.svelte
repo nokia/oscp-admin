@@ -1,14 +1,14 @@
-<script>
+<script lang="ts">
     import { createEventDispatcher } from 'svelte';
 
     import L from 'leaflet';
     import * as h3 from 'h3-js';
     import geojson2h3 from 'geojson2h3';
 
-    import { geoPose } from '../core/store.js';
-    import { H3RESOLUTION_AUTO, DEFAULT_H3RESOLUTION } from '../core/store.js';
+    import { geoPose, H3RESOLUTION_AUTO, DEFAULT_H3RESOLUTION } from '../core/store';
 
     import MapControl from './MapControl.svelte';
+    import type { StreetOrSatellite } from '../types/map';
 
     const COUNT_H3RING = 1;
 
@@ -25,16 +25,16 @@
 
     const dispatch = createEventDispatcher();
 
-    let map;
+    let map: L.Map | null;
 
     // LatLon defaults to Heidelberg Castle
     let thisLat = 49.410625;
     let thisLon = 8.715277;
 
-    let thisH3Index;
+    let thisH3Index: h3.H3IndexInput;
     let currentH3Resolution = $DEFAULT_H3RESOLUTION;
 
-    let thisGeoposeId;
+    let thisGeoposeId: any;
 
     let fakeServices = [
         {
@@ -94,7 +94,7 @@
         },
     ];
 
-    function createMap(container) {
+    function createMap(container: HTMLElement) {
         let calcH3Resolution = () => (currentH3Resolution === $H3RESOLUTION_AUTO ? Math.round(0.7 * (m.getZoom() - 3)) : currentH3Resolution);
 
         let streetLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -127,7 +127,7 @@
         let h3Layer = L.geoJSON([], {
             style: (feature) => {
                 return {
-                    color: feature.id === thisH3Index ? COLOR_H3Center : COLOR_H3RING,
+                    color: feature?.id === thisH3Index ? COLOR_H3Center : COLOR_H3RING,
                     opacity: OPACITY_H3HEXAGON,
                 };
             },
@@ -135,7 +135,7 @@
                 if (feature.id !== thisH3Index) {
                     layer.on({
                         click: (event) => {
-                            updateH3Layers(event.target.feature.id, h3Layer, h3MarkerLayer);
+                            updateH3Layers(event.target.feature.id, h3Layer);
                         },
                     });
                 }
@@ -143,7 +143,7 @@
         });
 
         let centerId = h3.geoToH3(thisLat, thisLon, calcH3Resolution());
-        updateH3Layers(centerId, h3Layer, h3MarkerLayer);
+        updateH3Layers(centerId, h3Layer);
 
         h3Layer.addTo(m);
         h3Layer.bringToFront();
@@ -155,7 +155,7 @@
 
             h3Layer.clearLayers();
             const clickH3 = h3.geoToH3(latlng.lat, latlng.lng, calcH3Resolution());
-            updateH3Layers(clickH3, h3Layer, h3MarkerLayer);
+            updateH3Layers(clickH3, h3Layer);
         });
 
         m.on('click', (event) => {
@@ -163,26 +163,26 @@
 
             h3Layer.clearLayers();
             const clickH3 = h3.geoToH3(event.latlng.lat, event.latlng.lng, calcH3Resolution());
-            updateH3Layers(clickH3, h3Layer, h3MarkerLayer);
+            updateH3Layers(clickH3, h3Layer);
         });
 
         m.on('zoomend', () => {
             let tempResolution = currentH3Resolution === $H3RESOLUTION_AUTO ? calcH3Resolution() : currentH3Resolution;
-            toolbarComponent.$set({ h3Resolution: tempResolution });
+            toolbarComponent?.$set({ h3Resolution: tempResolution });
 
             // TODO: Find a better way to change the resolution of an H3 index
             const centerGeo = marker ? Object.values(marker.getLatLng()) : h3.h3ToGeo(thisH3Index);
             const centerId = h3.geoToH3(centerGeo[0], centerGeo[1], tempResolution);
-            updateH3Layers(centerId, h3Layer, h3MarkerLayer);
+            updateH3Layers(centerId, h3Layer);
 
-            updateMarker(marker, marker ? marker.getLatLng() : { lat: centerGeo, lng: centerGeo[1] }, calcH3Resolution(), toolbarComponent);
+            updateMarker(marker, marker ? marker.getLatLng() : { lat: centerGeo[0], lng: centerGeo[1] }, calcH3Resolution(), toolbarComponent);
         });
 
         const coverageLayer = L.geoJSON([], {
             style: (feature) => {
                 return {
                     fillColor: COLOR_GEOPOSECOVERAGE,
-                    color: feature.properties.recordId === thisGeoposeId ? COLOR_GEOPOSECOVERAGESELECTED : COLOR_GEOPOSECOVERAGE,
+                    color: feature?.properties.recordId === thisGeoposeId ? COLOR_GEOPOSECOVERAGESELECTED : COLOR_GEOPOSECOVERAGE,
                     opacity: OPACITY_GEOPOSECOVERAGE,
                 };
             },
@@ -198,8 +198,8 @@
         coverageLayer.addTo(m);
         coverageLayer.bringToBack();
 
-        const toolbar = L.control({ position: 'topright' });
-        let toolbarComponent;
+        const toolbar = new L.Control({ position: 'topright' });
+        let toolbarComponent: MapControl | null;
 
         toolbar.onAdd = () => {
             let div = L.DomUtil.create('div');
@@ -216,15 +216,15 @@
                 let previousResolution = currentH3Resolution;
                 currentH3Resolution = event.detail;
 
-                if (previousResolution !== H3RESOLUTION_AUTO && event.detail !== H3RESOLUTION_AUTO && previousResolution !== event.detail) {
+                if (previousResolution !== $H3RESOLUTION_AUTO && event.detail !== $H3RESOLUTION_AUTO && previousResolution !== event.detail) {
                     const centerGeo = marker ? Object.values(marker.getLatLng()) : h3.h3ToGeo(thisH3Index);
                     const centerId = h3.geoToH3(centerGeo[0], centerGeo[1], calcH3Resolution());
-                    updateH3Layers(centerId, h3Layer, h3MarkerLayer);
+                    updateH3Layers(centerId, h3Layer);
 
                     updateMarker(marker, { lat: centerGeo[0], lng: centerGeo[1] }, calcH3Resolution(), toolbarComponent);
                 }
             });
-            toolbarComponent.$on('change-display', (event) => {
+            toolbarComponent.$on<'change-display'>('change-display', (event: { detail: { remove: StreetOrSatellite; add: StreetOrSatellite } }) => {
                 m.removeLayer(baseMaps[event.detail.remove]);
                 m.addLayer(baseMaps[event.detail.add]);
             });
@@ -232,7 +232,7 @@
                 // TODO: Simple fake for now, as no GeoPose services are available, yet
 
                 // Request services from service discovery
-                toolbarComponent.$set({
+                toolbarComponent?.$set({
                     geoPoseServices: fakeServices,
                 });
 
@@ -248,7 +248,7 @@
 
                 h3Layer.clearLayers();
                 const clickH3 = h3.geoToH3(event.detail.lat, event.detail.lon, calcH3Resolution());
-                updateH3Layers(clickH3, h3Layer, h3MarkerLayer);
+                updateH3Layers(clickH3, h3Layer);
             });
             toolbarComponent.$on('select-geoposeservice', (event) => updateGeoposeCoverageLayers(event.detail, coverageLayer));
 
@@ -269,36 +269,48 @@
         return m;
     }
 
-    function coverageFeatureCollectionFromSsrs(scrs) {
-        const features = scrs.reduce((geoJsonFeatures, record) => {
-            if (record.services.some((service) => service.type === 'geopose')) {
-                geoJsonFeatures.push({
-                    type: 'Feature',
-                    properties: {
-                        recordId: record.id,
-                    },
-                    geometry: record.geometry,
-                });
-            }
-            return geoJsonFeatures;
-        }, []);
+    function coverageFeatureCollectionFromSsrs(scrs: typeof fakeServices) {
+        const features = scrs.reduce(
+            (geoJsonFeatures, record) => {
+                if (record.services.some((service) => service.type === 'geopose')) {
+                    geoJsonFeatures.push({
+                        type: 'Feature',
+                        properties: {
+                            recordId: record.id,
+                        },
+                        geometry: record.geometry,
+                    });
+                }
+                return geoJsonFeatures;
+            },
+            [] as {
+                type: 'Feature';
+                properties: {
+                    recordId: any;
+                };
+                geometry: {
+                    type: string;
+                    coordinates: number[][][];
+                };
+            }[],
+        );
 
         return {
             type: 'FeatureCollection',
             features: features,
-        };
+        } as const;
     }
 
-    function updateGeoposeCoverageLayers(featureId, coverageLayer) {
+    function updateGeoposeCoverageLayers(featureId: any, coverageLayer: L.GeoJSON) {
         thisGeoposeId = featureId;
         coverageLayer.resetStyle();
     }
 
-    function updateMarker(marker, latlng, h3Resolution, toolbarComponent) {
+    function updateMarker(marker: L.Marker, latlng: { lat: number; lng: number }, h3Resolution: number, toolbarComponent: MapControl | null) {
         if (marker) {
             marker.setLatLng(latlng);
 
-            toolbarComponent.$set({
+            toolbarComponent?.$set({
                 lat: latlng.lat,
                 lon: latlng.lng,
                 h3: h3.geoToH3(latlng.lat, latlng.lng, h3Resolution),
@@ -306,34 +318,34 @@
         }
     }
 
-    function updateH3Layers(centerId, gridLayer) {
+    function updateH3Layers(centerId: string, gridLayer: L.GeoJSON) {
         const features = getFeaturesForH3Index(centerId);
 
         gridLayer.clearLayers();
         gridLayer.addData(features);
     }
 
-    function getFeaturesForH3Index(newIndex) {
+    function getFeaturesForH3Index(newIndex: h3.H3IndexInput) {
         thisH3Index = newIndex;
         const kRing = h3.kRing(thisH3Index, COUNT_H3RING);
         return geojson2h3.h3SetToFeatureCollection(kRing);
     }
 
-    function instantiateMap(container) {
+    function instantiateMap(container: HTMLElement) {
         // Leaflet doesn't find it's own icons...
         L.Icon.Default.imagePath = '/leaflet/';
 
         map = createMap(container);
         return {
             destroy: () => {
-                map.remove();
+                map?.remove();
                 map = null;
             },
         };
     }
 
-    function mapAction(container) {
-        if ($geoPose.position.lat !== 0 && $geoPose.position.lon !== 0) {
+    function mapAction(container: HTMLElement) {
+        if ($geoPose.position?.lat && $geoPose.position.lat !== 0 && $geoPose.position?.lon && $geoPose.position.lon !== 0) {
             thisLat = $geoPose.position.lat;
             thisLon = $geoPose.position.lon;
         }

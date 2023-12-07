@@ -3,10 +3,10 @@
     This code is licensed under MIT license (see LICENSE.md for details)
 -->
 
-<script>
+<script lang="ts">
     import { supportedCountries } from '@oarc/ssd-access';
 
-    let countryCodeElement;
+    let countryCodeElement: HTMLInputElement;
 
     export function value() {
         return countryCodeElement.value;

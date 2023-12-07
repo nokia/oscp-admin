@@ -3,47 +3,59 @@
     This code is licensed under MIT license (see LICENSE.md for details)
 -->
 
-<script>
+<script lang="ts">
     import Keywords from './Keywords.svelte';
     import References from './References.svelte';
     import Definitions from './Definitions.svelte';
     import { createEventDispatcher } from 'svelte';
+    import type { ChangeEventHandler } from 'svelte/elements';
 
-    export let data;
+    export let data: {
+        size?: string;
+        bbox?: string;
+        description?: string;
+        placekey?: string;
+        id: string;
+        type: string;
+        title: string;
+        keywords: string[];
+        definitions: { type: string; value: string }[];
+        refs: { contentType: string; url: string }[];
+    };
 
     const dispatch = createEventDispatcher();
 
-    function toggleSize(event) {
-        if (event.target.checked) {
+    const toggleSize: ChangeEventHandler<HTMLInputElement> = (event) => {
+        if (event.currentTarget?.checked) {
             data.size = '';
         } else {
             data.size = undefined;
         }
-    }
+    };
 
-    function toggleBbox(event) {
-        if (event.target.checked) {
+    const toggleBbox: ChangeEventHandler<HTMLInputElement> = (event) => {
+        if (event.currentTarget.checked) {
             data.bbox = '';
         } else {
             data.bbox = undefined;
         }
-    }
+    };
 
-    function toggleDescription(event) {
-        if (event.target.checked) {
+    const toggleDescription: ChangeEventHandler<HTMLInputElement> = (event) => {
+        if (event.currentTarget.checked) {
             data.description = '';
         } else {
             data.description = undefined;
         }
-    }
+    };
 
-    function togglePlacekey(event) {
-        if (event.target.checked) {
+    const togglePlacekey: ChangeEventHandler<HTMLInputElement> = (event) => {
+        if (event.currentTarget.checked) {
             data.placekey = '';
         } else {
             data.placekey = undefined;
         }
-    }
+    };
 </script>
 
 <div>

@@ -3,11 +3,12 @@
     This code is licensed under MIT license (see LICENSE.md for details)
 -->
 
-<script>
+<script lang="ts">
+    import type { Geometry } from '@oarc/ssd-access';
     import BoundingBox from './BoundingBox.svelte';
     import Coordinate from './Coordinate.svelte';
 
-    export let data;
+    export let data: Geometry;
 </script>
 
 <details>

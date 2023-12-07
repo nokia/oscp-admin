@@ -3,14 +3,14 @@
     This code is licensed under MIT license (see LICENSE.md for details)
 -->
 
-<script>
+<script lang="ts">
     import { postScrFile } from '@oarc/scd-access';
     import { authStore } from '@oarc/scd-access/authstore.js';
     import { oscpScdUrl } from '../../../core/store';
 
     import Import from '../../../components/Import.svelte';
 
-    let topicElement;
+    let topicElement: HTMLInputElement;
     const propertyMissingMessage = 'Please enter a topic';
 </script>
 

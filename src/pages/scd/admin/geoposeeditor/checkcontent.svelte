@@ -4,7 +4,7 @@
 -->
 
 <script>
-    import { url } from '@sveltech/routify';
+    import { url, route } from '@roxi/routify';
 
     import { geoPose } from '../../../../core/store.js';
 
@@ -12,7 +12,6 @@
     import GeoPose from '../../../../components/scd/GeoPose.svelte';
 
     import { CheveronLeftIcon } from 'svelte-zondicons';
-    import { route } from '@sveltech/routify';
 
     let returnPath = $route.last ? $route.last.path : '/scd/admin/geoposeeditor';
 

@@ -1,21 +1,32 @@
-<script>
-    export let authStore;
-    export let postFileFunction;
-    export let propertyMissingMessage;
-    export let propertyElement;
-    export let url;
+<script lang="ts">
+    import type { AuthStore } from '@oarc/scd-access/authstore.js';
+    import type { ChangeEventHandler } from 'svelte/elements';
+
+    export let authStore: AuthStore;
+    export let postFileFunction: (url: string, propertyValue: string, file: File, token: string) => any;
+    export let propertyMissingMessage: string;
+    export let propertyElement: HTMLInputElement;
+    export let url: string | undefined = undefined;
 
     let dropEnabled = true;
-    let protocol = [];
+    let protocol: string[] = [];
 
-    function handleDropOver(event) {
+    function handleDropOver(
+        event: DragEvent & {
+            currentTarget: EventTarget & HTMLDivElement;
+        },
+    ) {
         event.preventDefault();
     }
 
-    function handleDrop(event) {
+    function handleDrop(
+        event: DragEvent & {
+            currentTarget: EventTarget & HTMLDivElement;
+        },
+    ) {
         event.preventDefault();
 
-        if (event.dataTransfer.items) {
+        if (event.dataTransfer?.items) {
             dropEnabled = false;
 
             for (const file of event.dataTransfer.files) {
@@ -25,18 +36,18 @@
         dropEnabled = true;
     }
 
-    function handleFileInput(event) {
-        if (event.target.files) {
+    const handleFileInput: ChangeEventHandler<HTMLInputElement> = (event) => {
+        if (event.currentTarget.files) {
             dropEnabled = false;
 
-            for (const file of event.target.files) {
+            for (const file of event.currentTarget.files) {
                 uploadFile(file);
             }
         }
         dropEnabled = true;
-    }
+    };
 
-    function uploadFile(file) {
+    function uploadFile(file: File) {
         if (!propertyElement.checkValidity()) {
             output(propertyMissingMessage);
             return;
@@ -45,7 +56,7 @@
         if (file.type === 'application/json') {
             authStore
                 .getToken()
-                .then((token) => postFileFunction(url, propertyElement.value, file, token))
+                .then((token) => postFileFunction(url || '', propertyElement.value, file, token))
                 .then((response) => output(`${file.name} uploaded - ${response}`))
                 .catch((error) => output(`${file.name} not uploaded - ${error}`));
         } else {
@@ -53,7 +64,7 @@
         }
     }
 
-    function output(message) {
+    function output(message: string) {
         protocol = [message, ...protocol];
     }
 </script>

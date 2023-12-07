@@ -1,24 +1,25 @@
-<script>
+<script lang="ts">
     import { UploadIcon, MapIcon } from 'svelte-zondicons';
 
-    import { goto } from '@sveltech/routify';
+    import { goto } from '@roxi/routify';
 
     import { contentRefs, geoPose } from '../../core/store';
 
     import Content from './Content.svelte';
     import GeoPose from './GeoPose.svelte';
+    import type { SCD } from '@oarc/scd-access';
 
-    export let data;
+    export let data: SCD;
 
     let hasRefs = handleRefsUpdate();
 
-    function openContentEditor(event) {
+    function openContentEditor(event: Event) {
         event.preventDefault();
 
         import('../../pages/scd/admin/contenteditor/index.svelte').then(() => $goto('contenteditor/')).catch((error) => console.log(`Content editor not loaded: ${error}`));
     }
 
-    function openGeoPoseEditor(event) {
+    function openGeoPoseEditor(event: Event) {
         event.preventDefault();
 
         import('../../pages/scd/admin/geoposeeditor/index.svelte')

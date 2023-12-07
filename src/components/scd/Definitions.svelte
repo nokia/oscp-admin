@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
     import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
     import { scr_definition } from '@oarc/scd-access';
 
-    export let data;
+    export let data: { type: string; value: string }[];
 
     function addDefinition() {
         if (data) {
@@ -12,7 +12,7 @@
         }
     }
 
-    function deleteDefinition(event, index) {
+    function deleteDefinition(event: Event, index: number) {
         data.splice(index, 1);
         data = data;
     }

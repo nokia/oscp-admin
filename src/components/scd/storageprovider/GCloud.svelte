@@ -3,18 +3,18 @@
     This code is licensed under MIT license (see LICENSE.md for details)
 -->
 
-<script>
+<script lang="ts">
     import { createEventDispatcher } from 'svelte';
 
     // eslint-disable-next-line no-undef
-    const projectId = oscp_app.env['GOOGLE_PROJECT_ID'];
+    const projectId = import.meta.env['VITE_GOOGLE_PROJECT_ID'];
     // eslint-disable-next-line no-undef
-    const pickerKey = oscp_app.env['GOOGLE_PICKER_KEY'];
+    const pickerKey = import.meta.env['VITE_GOOGLE_PICKER_KEY'];
 
     const dispatch = createEventDispatcher();
 
     let pickerLoaded = false;
-    let oauthToken;
+    let oauthToken: string;
 
     function handleClientLoad() {
         // eslint-disable-next-line no-undef
@@ -39,7 +39,7 @@
         );
     }
 
-    function handleAuthResult(authResult) {
+    function handleAuthResult(authResult: GoogleApiOAuth2TokenObject) {
         if (authResult && !authResult.error) {
             oauthToken = authResult.access_token;
             createPicker();
@@ -49,7 +49,7 @@
     function createPicker() {
         if (pickerLoaded && oauthToken) {
             // eslint-disable-next-line no-undef
-            const view = new google.picker.View(google.picker.ViewId.DOCS);
+            const view = new google.picker.DocsView(google.picker.ViewId.DOCS);
             // eslint-disable-next-line no-undef
             const upload = new google.picker.DocsUploadView().setIncludeFolders(true);
             // eslint-disable-next-line no-undef
@@ -68,7 +68,7 @@
         }
     }
 
-    function pickerCallback(data) {
+    function pickerCallback(data: any) {
         // eslint-disable-next-line no-undef
         if (data.action === google.picker.Action.PICKED) {
             const first = data.docs[0];
@@ -78,11 +78,11 @@
                     type: '3D', // TODO: Set based on mime type
                     title: first.name,
                     description: first.description,
-                    refs: [],
+                    refs: [] as { contentType: any; url: any }[],
                 },
             };
 
-            data.docs.forEach((selection) => {
+            data.docs.forEach((selection: any) => {
                 file.content.refs.push({
                     contentType: selection.mimeType,
                     url: selection.url,

@@ -3,21 +3,22 @@
     This code is licensed under MIT license (see LICENSE.md for details)
 -->
 
-<script>
-    import { ssr_empty, validateSsr, postService } from '@oarc/ssd-access';
+<script lang="ts">
+    import { ssr_empty, validateSsr, postService, type SSR_EMPTY, type SSR_SERVICE } from '@oarc/ssd-access';
     import { authStore } from '@oarc/ssd-access/authstore.js';
 
-    import { goto } from '@sveltech/routify';
+    import { goto } from '@roxi/routify';
 
     import Form from '../../../components/Form.svelte';
     import CountryCode from '../../../components/ssd/CountryCode.svelte';
     import SSR from '../../../components/ssd/SSR.svelte';
+    import type { FormContent } from '@oarc/scd-access';
 
-    let form;
-    let countryCodeElement;
-    let data = JSON.parse(JSON.stringify(ssr_empty));
+    let form: Form;
+    let countryCodeElement: CountryCode;
+    let data: FormContent & { services: SSR_SERVICE[]; geometry: any } = JSON.parse(JSON.stringify(ssr_empty));
 
-    function save(event) {
+    function save(event: Event) {
         event.preventDefault();
 
         if (!form.reportValidity()) {

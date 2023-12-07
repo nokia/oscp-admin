@@ -1,5 +1,5 @@
-<script>
-    import { url } from '@sveltech/routify';
+<script lang="ts">
+    import { url } from '@roxi/routify';
 
     import { searchContentsForTenant, getContentWithId } from '@oarc/scd-access';
     import { authStore } from '@oarc/scd-access/authstore.js';
@@ -9,17 +9,17 @@
     import Topic from '../../../components/scd/Topic.svelte';
 
     // eslint-disable-next-line no-undef
-    const tenantUrl = oscp_app.env['AUTH0_SCD_TENANT'];
+    const tenantUrl = import.meta.env['VITE_AUTH0_SCD_TENANT'];
     const detailUrl = '../detail';
 
-    let topicElement;
+    let topicElement: Topic;
     let contentId = '';
     let searchResults = [];
     let message = '';
 
-    let tenant;
+    let tenant: any;
     authStore.getToken().then((token) => {
-        const decoded = jwtDecode(token);
+        const decoded = jwtDecode<Record<string, any>>(token);
         tenant = decoded[tenantUrl];
     });
 

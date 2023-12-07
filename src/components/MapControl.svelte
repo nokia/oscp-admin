@@ -1,21 +1,26 @@
-<script>
+<script lang="ts">
     import { createEventDispatcher } from 'svelte';
+    import * as h3Lib from 'h3-js';
 
-    import { route, goto } from '@sveltech/routify';
+    import { route, goto } from '@roxi/routify';
 
     import { ReloadIcon, ExploreIcon } from 'svelte-zondicons';
 
     import { MIN_H3RESOLUTION, DEFAULT_H3RESOLUTION, MAX_H3RESOLUTION, H3RESOLUTION_AUTO } from '../core/store.js';
     import { geoPose } from '../core/store.js';
+    import type { StreetOrSatellite } from '../types/map.js';
+    import type { KeyboardEventHandler } from 'svelte/elements';
 
     export let h3ResolutionType = false;
     export let h3Resolution = $DEFAULT_H3RESOLUTION;
 
-    export let lat;
-    export let lon;
-    export let h3;
+    export let lat: number;
+    export let lon: number;
+    export let h3: h3Lib.H3IndexInput;
+    type Service = { title?: string; id?: string; url?: string };
+    type Record = { id: string; services: Service[] };
 
-    export let geoPoseServices = [];
+    export let geoPoseServices: Record[] = [];
 
     const dispatch = createEventDispatcher();
 
@@ -25,13 +30,13 @@
         h3: '871faa49dffffff',
     };
 
-    let savePath = $route.last ? $route.last.path : '/scd/admin/editcontent';
+    let savePath = ($route as any).last ? ($route as any).last.path : '/scd/admin/editcontent';
     const cancelPath = '/scd/admin/createcontent';
 
-    let currentService = {};
-    let serviceId = (recordId, serviceId) => `${recordId}-${serviceId}`;
+    let currentService: Service = {};
+    let serviceId = (recordId: string, serviceId: string | undefined) => `${recordId}-${serviceId}`;
 
-    function preventDefault(event) {
+    function preventDefault(event: Event) {
         event.stopPropagation();
     }
 
@@ -39,14 +44,16 @@
         dispatch('change-h3resolution', h3ResolutionType ? h3Resolution : $H3RESOLUTION_AUTO);
     }
 
-    function handleDisplay(add, remove) {
+    function handleDisplay(add: StreetOrSatellite, remove: StreetOrSatellite) {
         dispatch('change-display', { add: add, remove: remove });
     }
 
     function handleSave() {
         geoPose.update((current) => {
-            current.position.lat = lat;
-            current.position.lon = lon;
+            if (current.position) {
+                current.position.lat = lat;
+                current.position.lon = lon;
+            }
             return current;
         });
 
@@ -61,7 +68,7 @@
         dispatch('check-geoposeservices', h3);
     }
 
-    function handleGeoPoseServiceSelect(record, service) {
+    function handleGeoPoseServiceSelect(record: Record, service: Service) {
         currentService = {
             id: serviceId(record.id, service.id),
             url: service.url,
@@ -77,7 +84,7 @@
         });
     }
 
-    function handleKeyup(event) {
+    const handleKeyup: KeyboardEventHandler<HTMLInputElement> = (event) => {
         if (event.code === 'Enter') {
             dispatch('movemarker', {
                 lat: lat,
@@ -85,7 +92,7 @@
                 h3: h3,
             });
         }
-    }
+    };
 
     function panToFakePos() {
         ({ lat, lon, h3 } = fakePos);

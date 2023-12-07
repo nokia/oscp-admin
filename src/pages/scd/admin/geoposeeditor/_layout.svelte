@@ -6,7 +6,7 @@
 <!-- routify:options bundle=true -->
 
 <script>
-    import { ready } from '@sveltech/routify';
+    import { ready } from '@roxi/routify';
 
     /*
      * since SCR normally won't render till all components have been loaded

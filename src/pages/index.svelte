@@ -1,5 +1,5 @@
 <script>
-    import { goto } from '@sveltech/routify';
+    import { goto } from '@roxi/routify';
 
     function loadSsd() {
         import('./ssd/index.svelte').then(() => $goto('/ssd')).catch((error) => console.log(`ssd not loaded: ${error}`));

@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
     import { createEventDispatcher } from 'svelte';
 
     import { geoPose, contentRefs } from '../../core/store.js';
 
-    import Peer from 'peerjs';
+    import Peer, { DataConnection } from 'peerjs';
     import QRCode from 'qrcode';
 
     const peer = new Peer({
@@ -21,18 +21,18 @@
     const dispatch = createEventDispatcher();
 
     let localPeerId = '';
-    let lastPeerId = null;
+    let lastPeerId: string | null = null;
 
-    let connection = null;
+    let connection: DataConnection | null = null;
     let connectionStatus = 'mada';
 
-    let qrCodeUrl;
+    let qrCodeUrl: string;
 
     peer.on('open', () => {
         // Workaround for peer.reconnect deleting previous id
         if (peer.id === null) {
             console.log('Received null id from peer open');
-            peer.id = lastPeerId;
+            (peer as any).id = lastPeerId;
         } else {
             lastPeerId = peer.id;
         }
@@ -75,7 +75,7 @@
     });
 
     function ready() {
-        connection.on('data', (data) => {
+        connection?.on('data', (data) => {
             console.log('Data recieved');
 
             switch (data) {
@@ -96,14 +96,14 @@
             }
         });
 
-        connection.on('close', () => {
+        connection?.on('close', () => {
             connectionStatus = 'Connection reset<br>Awaiting connection...';
             connection = null;
             dispatch('disconnected');
         });
     }
 
-    function sendMessage(message) {
+    function sendMessage(message: any) {
         if (connection && connection.open) {
             connection.send(JSON.stringify(message));
             console.log('Sent: ' + JSON.stringify(message));
@@ -112,7 +112,7 @@
         }
     }
 
-    function createQrCode(localId) {
+    function createQrCode(localId: string) {
         const data = `${clientUrl}?${idParameter}=${localId}`;
         QRCode.toDataURL(data)
             .then((url) => {

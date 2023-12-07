@@ -4,7 +4,7 @@
 -->
 
 <script>
-    import { url } from '@sveltech/routify';
+    import { url } from '@roxi/routify';
 
     import { searchServicesForProducer, getServiceWithId } from '@oarc/ssd-access';
     import { authStore } from '@oarc/ssd-access/authstore.js';
@@ -13,7 +13,7 @@
     import CountryCode from '../../../components/ssd/CountryCode.svelte';
 
     // eslint-disable-next-line no-undef
-    const providerUrl = oscp_app.env['AUTH0_SSD_PROVIDER'];
+    const providerUrl = import.meta.env['VITE_AUTH0_SSD_PROVIDER'];
     const detailUrl = '../detail';
 
     let countryCodeElement;
