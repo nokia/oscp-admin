@@ -6,7 +6,7 @@
 <script lang="ts">
     import { url, route } from '@sveltech/routify';
 
-    import { geoPose } from '../../../../core/store.js';
+    import { geoPose } from '../../../../core/store';
 
     import P2p from '../../../../components/scd/P2p.svelte';
     import GeoPose from '../../../../components/scd/GeoPose.svelte';
