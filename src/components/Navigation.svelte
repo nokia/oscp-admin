@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { isActive, url } from '@roxi/routify';
+    import { isActive, url } from '@sveltech/routify';
     import { authStore as authenticationStore } from '@oarc/scd-access';
 
     export let links: [string, string, boolean][];

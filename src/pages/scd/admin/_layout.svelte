@@ -6,7 +6,7 @@
 <!-- routify:options bundle=true -->
 
 <script lang="ts">
-    import { ready, redirect } from '@roxi/routify';
+    import { ready, redirect } from '@sveltech/routify';
     import { loading, authenticated } from '@oarc/scd-access/authstore.js';
 
     /*

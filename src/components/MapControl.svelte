@@ -2,7 +2,7 @@
     import { createEventDispatcher } from 'svelte';
     import * as h3Lib from 'h3-js';
 
-    import { route, goto } from '@roxi/routify';
+    import { route, goto } from '@sveltech/routify';
 
     import { ReloadIcon, ExploreIcon } from 'svelte-zondicons';
 

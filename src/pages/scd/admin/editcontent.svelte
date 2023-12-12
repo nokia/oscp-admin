@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { url } from '@roxi/routify';
+    import { url } from '@sveltech/routify';
 
     import { searchContentsForTenant, getContentWithId, type SCR } from '@oarc/scd-access';
     import { authStore } from '@oarc/scd-access/authstore.js';

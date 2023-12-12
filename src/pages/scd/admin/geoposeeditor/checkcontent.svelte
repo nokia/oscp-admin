@@ -4,7 +4,7 @@
 -->
 
 <script lang="ts">
-    import { url, route } from '@roxi/routify';
+    import { url, route } from '@sveltech/routify';
 
     import { geoPose } from '../../../../core/store.js';
 

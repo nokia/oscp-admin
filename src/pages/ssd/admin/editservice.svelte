@@ -4,7 +4,7 @@
 -->
 
 <script lang="ts">
-    import { url } from '@roxi/routify';
+    import { url } from '@sveltech/routify';
 
     import { searchServicesForProducer, getServiceWithId, type SSR } from '@oarc/ssd-access';
     import { authStore } from '@oarc/ssd-access/authstore.js';

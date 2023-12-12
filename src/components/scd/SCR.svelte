@@ -1,7 +1,7 @@
 <script lang="ts">
     import { UploadIcon, MapIcon } from 'svelte-zondicons';
 
-    import { goto } from '@roxi/routify';
+    import { goto } from '@sveltech/routify';
 
     import { contentRefs, geoPose } from '../../core/store';
 

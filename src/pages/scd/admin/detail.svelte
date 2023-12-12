@@ -5,7 +5,7 @@
 
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { url, route, params, goto } from '@roxi/routify';
+    import { url, route, params, goto } from '@sveltech/routify';
 
     import { authStore, getContentWithId, deleteWithId, validateScr, putContent, type SCR } from '@oarc/scd-access';
     import { oscpScdUrl } from '../../../core/store';

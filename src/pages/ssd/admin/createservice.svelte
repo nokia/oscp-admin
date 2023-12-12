@@ -7,7 +7,7 @@
     import { ssr_empty, validateSsr, postService } from '@oarc/ssd-access';
     import { authStore } from '@oarc/ssd-access';
 
-    import { goto } from '@roxi/routify';
+    import { goto } from '@sveltech/routify';
 
     import Form from '../../../components/Form.svelte';
     import CountryCode from '../../../components/ssd/CountryCode.svelte';

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { url, route, goto } from '@roxi/routify';
+    import { url, route, goto } from '@sveltech/routify';
 
     import { CheveronLeftIcon } from 'svelte-zondicons';
     import type { MouseEventHandler } from 'svelte/elements';

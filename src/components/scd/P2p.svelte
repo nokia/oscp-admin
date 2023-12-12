@@ -3,7 +3,7 @@
 
     import { geoPose, contentRefs } from '../../core/store.js';
 
-    import Peer, { DataConnection } from 'peerjs';
+    import Peer, { type DataConnection } from 'peerjs';
     import QRCode from 'qrcode';
 
     const peer = new Peer({

@@ -63,7 +63,7 @@
         "vite": "^5.0.0"
     },
     "dependencies": {
-        "@roxi/routify": "^2.18.12",
+        "@sveltech/routify": "^1.9.10",
         "draco3d": "^1.4.1",
         "sirv-cli": "^1.0.10"
     },

@@ -8,7 +8,7 @@
     import { authStore } from '@oarc/scd-access/authstore.js';
     import { oscpScdUrl } from '../../../core/store';
 
-    import { goto, params } from '@roxi/routify';
+    import { goto, params } from '@sveltech/routify';
 
     import deepMerge from 'deepmerge';
 

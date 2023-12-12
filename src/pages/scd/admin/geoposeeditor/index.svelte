@@ -4,7 +4,7 @@
 -->
 
 <script lang="ts">
-    import { goto } from '@roxi/routify';
+    import { goto } from '@sveltech/routify';
 
     import { geoPose } from '../../../../core/store';
 
