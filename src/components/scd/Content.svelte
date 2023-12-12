@@ -9,25 +9,15 @@
     import Definitions from './Definitions.svelte';
     import { createEventDispatcher } from 'svelte';
     import type { ChangeEventHandler } from 'svelte/elements';
+    import type { Content } from '@oarc/scd-access';
 
-    export let data: {
-        size?: string;
-        bbox?: string;
-        description?: string;
-        placekey?: string;
-        id: string;
-        type: string;
-        title: string;
-        keywords: string[];
-        definitions: { type: string; value: string }[];
-        refs: { contentType: string; url: string }[];
-    };
+    export let data: Content;
 
-    const dispatch = createEventDispatcher();
+    const dispatch = createEventDispatcher<{ refsUpdated: undefined }>();
 
     const toggleSize: ChangeEventHandler<HTMLInputElement> = (event) => {
         if (event.currentTarget?.checked) {
-            data.size = '';
+            data.size = 0;
         } else {
             data.size = undefined;
         }

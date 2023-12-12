@@ -5,12 +5,12 @@
 
 <!-- routify:options bundle=true -->
 
-<script>
+<script lang="ts">
     import { authStore, authenticated } from '@oarc/scd-access/authstore.js';
 
     import Navigation from '../../components/Navigation.svelte';
 
-    const links = [
+    const links: [string, string, boolean][] = [
         ['/scd/', 'Home', false],
         ['/scd/admin/createcontent', 'Create', true],
         ['/scd/admin/editcontent', 'Edit', true],

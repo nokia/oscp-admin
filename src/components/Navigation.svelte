@@ -1,8 +1,9 @@
-<script>
+<script lang="ts">
     import { isActive, url } from '@roxi/routify';
+    import { authStore as authenticationStore } from '@oarc/scd-access';
 
-    export let links;
-    export let authStore;
+    export let links: [string, string, boolean][];
+    export let authStore: typeof authenticationStore;
     export let authenticated;
 </script>
 

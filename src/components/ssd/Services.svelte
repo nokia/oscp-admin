@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { availableServiceTypes, ssr_service, type SSR_SERVICE } from '@oarc/ssd-access';
+    import { availableServiceTypes, ssr_service, type Service } from '@oarc/ssd-access';
 
     import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
     import Properties from './Properties.svelte';
 
-    export let data: SSR_SERVICE[];
+    export let data: Service[];
 
     function addService(event: Event) {
         event.preventDefault();

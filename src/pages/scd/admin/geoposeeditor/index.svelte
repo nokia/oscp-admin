@@ -10,25 +10,19 @@
 
     import Modal from '../../../../components/Modal.svelte';
     import Map from '../../../../components/Map.svelte';
-    import type { Pose } from '@oarc/scd-access';
+    import type { H3IndexInput } from 'h3-js';
 
     let showModal = false;
 
-    function gotoCheckContent(event: { detail: { lat: number; lon: number; h3: number } }) {
+    function gotoCheckContent(event: { detail: { lat: number; lon: number; h3: H3IndexInput } }) {
         geoPose.update((pose) => {
-            if (pose.position) {
+            if (pose) {
                 pose.position.lat = event.detail.lat;
                 pose.position.lon = event.detail.lon;
+                pose.h3 = event.detail.h3;
             } else {
-                pose = {
-                    ...pose,
-                    position: {
-                        lat: event.detail.lat,
-                        lon: event.detail.lon,
-                    },
-                };
+                pose = { position: { lat: event.detail.lat, lon: event.detail.lon, h: 0 }, quaternion: { x: 0, y: 0, z: 0, w: 1 }, h3: event.detail.h3 };
             }
-            pose.h3 = event.detail.h3;
             return pose;
         });
 

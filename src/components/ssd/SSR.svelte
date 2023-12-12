@@ -7,14 +7,9 @@
     import Services from './Services.svelte';
     import Geometry from './Geometry.svelte';
     import type { ChangeEventHandler } from 'svelte/elements';
-    import type { SSR_SERVICE } from '@oarc/ssd-access';
+    import type { SSR } from '@oarc/ssd-access';
 
-    export let data: {
-        services: SSR_SERVICE[];
-        geometry: any;
-        altitude?: number;
-        active?: boolean;
-    };
+    export let data: SSR;
 
     const toggleAltitude: ChangeEventHandler<HTMLInputElement> = (event) => {
         if (event.currentTarget.checked) {

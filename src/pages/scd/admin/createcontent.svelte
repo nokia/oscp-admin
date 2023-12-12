@@ -4,7 +4,7 @@
 -->
 
 <script lang="ts">
-    import { scr_empty, validateScr, postContent, type SCR_EMPTY, type FormContent, type SCD } from '@oarc/scd-access';
+    import { scr_empty, validateScr, postContent, type SCR } from '@oarc/scd-access';
     import { authStore } from '@oarc/scd-access/authstore.js';
     import { oscpScdUrl } from '../../../core/store';
 
@@ -14,12 +14,12 @@
 
     import Form from '../../../components/Form.svelte';
     import Topic from '../../../components/scd/Topic.svelte';
-    import SCR from '../../../components/scd/SCR.svelte';
+    import SCRComponent from '../../../components/scd/SCR.svelte';
 
     let form: Form;
     let topicElement: Topic;
 
-    let data: SCR_EMPTY & FormContent & SCD = JSON.parse(JSON.stringify(scr_empty));
+    let data: SCR = JSON.parse(JSON.stringify(scr_empty));
     let selection = $params.selection;
 
     if (selection !== undefined && selection.length > 2) {
@@ -39,7 +39,7 @@
         try {
             await validateScr(dataString);
             const token = await authStore.getToken();
-            const response = await postContent($oscpScdUrl, topicElement.value(), dataString, token);
+            const response = await postContent($oscpScdUrl, topicElement.value(), dataString, token || '');
             console.log(response);
             $goto('/scd');
         } catch (error) {
@@ -58,7 +58,7 @@
     </div>
 
     <div slot="form">
-        <SCR bind:data />
+        <SCRComponent bind:data />
     </div>
 
     <div slot="controls">

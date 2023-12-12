@@ -8,7 +8,6 @@
     import { geoPose, H3RESOLUTION_AUTO, DEFAULT_H3RESOLUTION } from '../core/store';
 
     import MapControl from './MapControl.svelte';
-    import type { StreetOrSatellite } from '../types/map';
 
     const COUNT_H3RING = 1;
 
@@ -23,7 +22,13 @@
     const COLOR_GEOPOSECOVERAGESELECTED = '#ff7800';
     const OPACITY_GEOPOSECOVERAGE = 0.4;
 
-    const dispatch = createEventDispatcher();
+    const dispatch = createEventDispatcher<{
+        'goto-checkcontent': {
+            lat: number;
+            lon: number;
+            h3: h3.H3IndexInput;
+        };
+    }>();
 
     let map: L.Map | null;
 
@@ -34,7 +39,7 @@
     let thisH3Index: h3.H3IndexInput;
     let currentH3Resolution = $DEFAULT_H3RESOLUTION;
 
-    let thisGeoposeId: any;
+    let thisGeoposeId: string;
 
     let fakeServices = [
         {
@@ -224,7 +229,7 @@
                     updateMarker(marker, { lat: centerGeo[0], lng: centerGeo[1] }, calcH3Resolution(), toolbarComponent);
                 }
             });
-            toolbarComponent.$on<'change-display'>('change-display', (event: { detail: { remove: StreetOrSatellite; add: StreetOrSatellite } }) => {
+            toolbarComponent.$on('change-display', (event) => {
                 m.removeLayer(baseMaps[event.detail.remove]);
                 m.addLayer(baseMaps[event.detail.add]);
             });
@@ -301,7 +306,7 @@
         } as const;
     }
 
-    function updateGeoposeCoverageLayers(featureId: any, coverageLayer: L.GeoJSON) {
+    function updateGeoposeCoverageLayers(featureId: string, coverageLayer: L.GeoJSON) {
         thisGeoposeId = featureId;
         coverageLayer.resetStyle();
     }
@@ -345,7 +350,7 @@
     }
 
     function mapAction(container: HTMLElement) {
-        if ($geoPose.position?.lat && $geoPose.position.lat !== 0 && $geoPose.position?.lon && $geoPose.position.lon !== 0) {
+        if ($geoPose?.position?.lat && $geoPose.position.lat !== 0 && $geoPose.position?.lon && $geoPose.position.lon !== 0) {
             thisLat = $geoPose.position.lat;
             thisLon = $geoPose.position.lon;
         }

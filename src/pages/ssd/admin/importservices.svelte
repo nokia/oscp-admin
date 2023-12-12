@@ -13,7 +13,7 @@
     const propertyMissingMessage = 'Please select the Region to upload to';
 </script>
 
-<Import {authStore} {propertyMissingMessage} propertyElement={countryCodeElement} postFileFunction={postSsrFile}>
+<Import {authStore} {propertyMissingMessage} propertyElement={countryCodeElement} postFileFunction={({ propertyValue, file, token }) => postSsrFile(propertyValue, file, token)}>
     <p slot="intro">
         Here it is possible to upload Spatial Service Records (SSR) by either dropping .json files onto the drop area or by selecting files from drive. The content is validated against a json schema
         and sent to the regional server of the provided region. A protocol of the process is shown below the drop area.

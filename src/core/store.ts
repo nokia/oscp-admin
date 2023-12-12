@@ -1,16 +1,18 @@
+import type { Geopose, Ref } from '@oarc/scd-access';
+import type { H3IndexInput } from 'h3-js';
 import { writable, readable } from 'svelte/store';
 
 export const oscpSsdUrl = writable('');
 export const oscpScdUrl = writable('');
 
 // SCR content references
-export const contentRefs = writable([]);
+export const contentRefs = writable<Ref[]>([]);
 
 // Location properties
 export const countryCode = writable('');
 export const h3Index = writable('');
 
-export const geoPose = writable<{ position?: { lat: number; lon: number }; h3?: number }>({});
+export const geoPose = writable<(Geopose & { h3?: H3IndexInput }) | undefined>(undefined);
 
 // GeoPose Services properties
 export const selectedGeoposeService = writable({

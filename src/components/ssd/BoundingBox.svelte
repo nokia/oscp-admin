@@ -1,14 +1,15 @@
 <script lang="ts">
+    import type { BBox } from '@oarc/ssd-access';
     import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
     import type { ChangeEventHandler } from 'svelte/elements';
 
-    export let data: (number | string)[] | undefined;
+    export let data: BBox | undefined;
 
     function addBbox(event: Event) {
         event.preventDefault();
 
         if (data) {
-            data = [...data, ''];
+            data = [...data, '']; // TODO: this cannot be right, because BBox is a single tuple, and not a list of tuples.
         } else {
             data = [];
         }

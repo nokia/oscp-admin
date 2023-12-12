@@ -22,7 +22,18 @@
 
     export let geoPoseServices: Record[] = [];
 
-    const dispatch = createEventDispatcher();
+    const dispatch = createEventDispatcher<{
+        movemarker: { lat: number; lon: number; h3: h3Lib.H3IndexInput };
+        'change-h3resolution': number;
+        'change-display': { add: StreetOrSatellite; remove: StreetOrSatellite };
+        'check-geoposeservices': h3Lib.H3IndexInput;
+        'select-geoposeservice': string;
+        checkcontent: {
+            lat: number;
+            lon: number;
+            h3: h3Lib.H3IndexInput;
+        };
+    }>();
 
     const fakePos = {
         lat: 48.661773184610375,
@@ -50,9 +61,10 @@
 
     function handleSave() {
         geoPose.update((current) => {
-            if (current.position) {
+            if (current?.position) {
                 current.position.lat = lat;
                 current.position.lon = lon;
+                current.h3 = h3;
             }
             return current;
         });

@@ -18,7 +18,7 @@
     // const clientUrl = 'https://192.168.1.103:5001/dev/geoposeremote';
     const clientUrl = 'https://client.browsar.app/dev/geoposeremote';
     const idParameter = 'peerid';
-    const dispatch = createEventDispatcher();
+    const dispatch = createEventDispatcher<{ connected: string; disconnected: undefined }>();
 
     let localPeerId = '';
     let lastPeerId: string | null = null;

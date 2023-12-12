@@ -7,9 +7,9 @@
 
     import Content from './Content.svelte';
     import GeoPose from './GeoPose.svelte';
-    import type { SCD } from '@oarc/scd-access';
+    import type { SCR } from '@oarc/scd-access';
 
-    export let data: SCD;
+    export let data: SCR;
 
     let hasRefs = handleRefsUpdate();
 
@@ -24,7 +24,7 @@
 
         import('../../pages/scd/admin/geoposeeditor/index.svelte')
             .then(() => {
-                contentRefs.set(data.content.refs);
+                contentRefs.set(data.content.refs || []);
                 geoPose.set(data.content.geopose);
                 $goto('geoposeeditor/');
             })

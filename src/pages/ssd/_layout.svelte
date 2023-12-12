@@ -5,12 +5,12 @@
 
 <!-- routify:options bundle=true -->
 
-<script>
+<script lang="ts">
     import { authStore, authenticated } from '@oarc/ssd-access/authstore.js';
 
     import Navigation from '../../components/Navigation.svelte';
 
-    const links = [
+    const links: [string, string, boolean][] = [
         ['/ssd/', 'Home', false],
         ['/ssd/admin/createservice', 'Create', true],
         ['/ssd/admin/editservice', 'Edit', true],

@@ -4,11 +4,11 @@
 -->
 
 <script lang="ts">
-    import type { Geometry } from '@oarc/ssd-access';
+    import type { Polygon } from '@oarc/ssd-access';
     import BoundingBox from './BoundingBox.svelte';
     import Coordinate from './Coordinate.svelte';
 
-    export let data: Geometry;
+    export let data: Polygon;
 </script>
 
 <details>

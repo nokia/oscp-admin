@@ -1,7 +1,7 @@
 <script lang="ts">
     import { url } from '@roxi/routify';
 
-    import { searchContentsForTenant, getContentWithId } from '@oarc/scd-access';
+    import { searchContentsForTenant, getContentWithId, type SCR } from '@oarc/scd-access';
     import { authStore } from '@oarc/scd-access/authstore.js';
     import { oscpScdUrl } from '../../../core/store';
 
@@ -14,12 +14,12 @@
 
     let topicElement: Topic;
     let contentId = '';
-    let searchResults = [];
+    let searchResults: SCR[] = [];
     let message = '';
 
     let tenant: any;
     authStore.getToken().then((token) => {
-        const decoded = jwtDecode<Record<string, any>>(token);
+        const decoded = jwtDecode<Record<string, any>>(token || '');
         tenant = decoded[tenantUrl];
     });
 
@@ -53,7 +53,7 @@
     function getContentsForTenant() {
         authStore
             .getToken()
-            .then((token) => searchContentsForTenant($oscpScdUrl, topicElement.value(), token))
+            .then((token) => searchContentsForTenant($oscpScdUrl, topicElement.value(), token || ''))
             .then((contents) => {
                 searchResults = contents;
                 if (contents.length === 0) message = 'No contents found';

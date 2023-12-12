@@ -7,18 +7,16 @@
     import { onMount } from 'svelte';
     import { url, route, params, goto } from '@roxi/routify';
 
-    import { getContentWithId, deleteWithId, validateScr, putContent, type SCR_EMPTY, type FormContent } from '@oarc/scd-access';
-    import { scr_empty } from '@oarc/scd-access';
-    import { authStore } from '@oarc/scd-access/authstore.js';
+    import { authStore, getContentWithId, deleteWithId, validateScr, putContent, type SCR } from '@oarc/scd-access';
     import { oscpScdUrl } from '../../../core/store';
 
     import Form from '../../../components/Form.svelte';
-    import SCR from '../../../components/scd/SCR.svelte';
+    import SCRComponent from '../../../components/scd/SCR.svelte';
 
     import { CheveronLeftIcon } from 'svelte-zondicons';
     import type { MouseEventHandler } from 'svelte/elements';
 
-    let data: FormContent;
+    let data: SCR;
     let returnPath = ($route as any).last ? ($route as any).last.path : '/scd/admin/editcontent';
 
     onMount(() => {
@@ -33,7 +31,7 @@
         authStore
             .getToken()
             .then((token) => {
-                deleteWithId($oscpScdUrl, $params.topic, $params.id, token);
+                deleteWithId($oscpScdUrl, $params.topic, $params.id, token || '');
             })
             .then(() => $goto(returnPath))
             .catch((error) => console.error(`Failed to delete: ${error}`));
@@ -43,9 +41,10 @@
         event.preventDefault();
 
         const dataString = JSON.stringify(data);
-        validateScr(dataString)
-            .then(() => authStore.getToken())
-            .then((token) => putContent($oscpScdUrl, $params.topic, dataString, data.id, token))
+        validateScr(dataString);
+        authStore
+            .getToken()
+            .then((token) => putContent($oscpScdUrl, $params.topic, dataString, data.id, token || ''))
             .then((response) => {
                 console.log(`Record created: ${response}`);
                 $goto(returnPath);
@@ -70,7 +69,7 @@
     <p slot="intro">Edit SCR record.</p>
 
     <div slot="form">
-        <SCR bind:data />
+        <SCRComponent bind:data />
     </div>
 
     <div slot="controls">

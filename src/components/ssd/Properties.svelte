@@ -1,14 +1,15 @@
 <script lang="ts">
+    import type { Property } from '@oarc/ssd-access';
     import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
     import type { ChangeEventHandler } from 'svelte/elements';
 
-    export let data: { type?: string; value?: string }[] | undefined;
+    export let data: Property[] | undefined;
 
     function addProperty(event: Event) {
         event.preventDefault();
 
         if (data) {
-            data = [...data, {}];
+            data = [...data, { type: '', value: '' }];
         } else {
             data = [];
         }

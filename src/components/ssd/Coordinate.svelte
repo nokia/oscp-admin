@@ -1,7 +1,8 @@
 <script lang="ts">
+    import type { Position } from '@oarc/ssd-access';
     import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
 
-    export let data: [number, number][];
+    export let data: Position[];
 
     function addCoordinate(event: Event) {
         event.preventDefault();

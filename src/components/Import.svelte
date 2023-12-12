@@ -1,9 +1,9 @@
 <script lang="ts">
-    import type { AuthStore } from '@oarc/scd-access/authstore.js';
+    import type { authStore as authenticationStore } from '@oarc/scd-access';
     import type { ChangeEventHandler } from 'svelte/elements';
 
-    export let authStore: AuthStore;
-    export let postFileFunction: (url: string, propertyValue: string, file: File, token: string) => any;
+    export let authStore: typeof authenticationStore;
+    export let postFileFunction: ({ url, propertyValue, file, token }: { url?: string; propertyValue: string; file: File; token: string }) => Promise<string>;
     export let propertyMissingMessage: string;
     export let propertyElement: HTMLInputElement;
     export let url: string | undefined = undefined;
@@ -56,7 +56,7 @@
         if (file.type === 'application/json') {
             authStore
                 .getToken()
-                .then((token) => postFileFunction(url || '', propertyElement.value, file, token))
+                .then((token) => postFileFunction({ url, propertyValue: propertyElement.value, file, token: token || '' }))
                 .then((response) => output(`${file.name} uploaded - ${response}`))
                 .catch((error) => output(`${file.name} not uploaded - ${error}`));
         } else {

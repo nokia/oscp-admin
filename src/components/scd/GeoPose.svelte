@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type { Pose } from '@oarc/scd-access';
+    import type { Geopose } from '@oarc/scd-access';
 
-    export let data: Pose;
+    export let data: Geopose;
     export let inactive = false;
 </script>
 

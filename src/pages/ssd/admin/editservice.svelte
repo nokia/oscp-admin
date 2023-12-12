@@ -3,10 +3,10 @@
     This code is licensed under MIT license (see LICENSE.md for details)
 -->
 
-<script>
+<script lang="ts">
     import { url } from '@roxi/routify';
 
-    import { searchServicesForProducer, getServiceWithId } from '@oarc/ssd-access';
+    import { searchServicesForProducer, getServiceWithId, type SSR } from '@oarc/ssd-access';
     import { authStore } from '@oarc/ssd-access/authstore.js';
 
     import jwtDecode from 'jwt-decode';
@@ -16,14 +16,14 @@
     const providerUrl = import.meta.env['VITE_AUTH0_SSD_PROVIDER'];
     const detailUrl = '../detail';
 
-    let countryCodeElement;
+    let countryCodeElement: CountryCode;
     let serviceId = '';
-    let searchResults = [];
+    let searchResults: SSR[] = [];
     let message = '';
 
-    let producer;
+    let producer: any;
     authStore.getToken().then((token) => {
-        const decoded = jwtDecode(token);
+        const decoded: Record<string, unknown> = jwtDecode(token || '');
         producer = decoded[providerUrl];
     });
 
@@ -57,7 +57,7 @@
     function getServicesForProducer() {
         authStore
             .getToken()
-            .then((token) => searchServicesForProducer(countryCodeElement.value(), token))
+            .then((token) => searchServicesForProducer(countryCodeElement.value(), token || ''))
             .then((services) => {
                 searchResults = services;
                 if (services.length === 0) message = 'No services found';

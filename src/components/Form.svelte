@@ -1,6 +1,8 @@
 <script lang="ts">
-    import type { FormContent } from '@oarc/scd-access';
-    export let data: FormContent;
+    import type { SCR } from '@oarc/scd-access';
+    import type { SSR } from '@oarc/ssd-access';
+
+    export let data: SCR | SSR;
 
     let form: HTMLFormElement;
     let timestamp = 0;
@@ -8,7 +10,7 @@
     $: {
         if (data.timestamp) {
             timestamp = data.timestamp;
-            delete data.timestamp;
+            delete data.timestamp; // TODO: why delete this timestamp, and save it only locally in this component?
         }
     }
 
@@ -33,14 +35,15 @@
             <span id="roottype">{data.type.toUpperCase()}</span>
         </div>
 
-        {#if data.provider}
+        {#if 'provider' in data && data.provider}
+            <!-- TODO: there is no provider in SCR -->
             <div>
                 <label for="rootprovider">Provider</label>
                 <span id="rootprovider">{data.provider}</span>
             </div>
         {/if}
 
-        {#if data.tenant}
+        {#if 'tenant' in data && data.tenant}
             <div>
                 <label for="roottenant">Tenant</label>
                 <span id="roottenant">{data.tenant}</span>

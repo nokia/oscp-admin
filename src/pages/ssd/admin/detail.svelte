@@ -3,19 +3,20 @@
     This code is licensed under MIT license (see LICENSE.md for details)
 -->
 
-<script>
+<script lang="ts">
     import { onMount } from 'svelte';
     import { url, route, params, goto } from '@roxi/routify';
 
-    import { getServiceWithId, deleteWithId, validateSsr, putService } from '@oarc/ssd-access';
+    import { getServiceWithId, deleteWithId, validateSsr, putService, type SSR } from '@oarc/ssd-access';
     import { ssr_empty } from '@oarc/ssd-access';
     import { authStore } from '@oarc/ssd-access/authstore.js';
 
     import Form from '../../../components/Form.svelte';
-    import SSR from '../../../components/ssd/SSR.svelte';
+    import SSRComponent from '../../../components/ssd/SSR.svelte';
+    import type { MouseEventHandler } from 'svelte/elements';
 
-    let data = ssr_empty;
-    let returnPath = $route.last ? $route.last.path : '/ssd/admin/editservice';
+    let data: SSR = ssr_empty;
+    let returnPath = ($route as any).last ? ($route as any).last.path : '/ssd/admin/editservice';
 
     onMount(() => {
         getServiceWithId($params.countryCode, $params.id)
@@ -29,19 +30,24 @@
         authStore
             .getToken()
             .then((token) => {
-                deleteWithId($params.countryCode, $params.id, token);
+                deleteWithId($params.countryCode, $params.id, token || '');
             })
             .then(() => $goto(returnPath))
             .catch((error) => console.error(`Failed to delete: ${error}`));
     }
 
-    function handleSave(event) {
+    const urlReturnPath = (): any => {
+        return $url(returnPath);
+    };
+
+    const handleSave: MouseEventHandler<HTMLButtonElement> = (event) => {
         event.preventDefault();
 
         const dataString = JSON.stringify(data);
-        validateSsr(dataString)
-            .then(() => authStore.getToken())
-            .then((token) => putService($params.countryCode, dataString, data.id, token))
+        validateSsr(dataString);
+        authStore
+            .getToken()
+            .then((token) => putService($params.countryCode, dataString, data.id, token || ''))
             .then((response) => {
                 console.log(`Record created: ${response}`);
                 $goto(returnPath);
@@ -49,11 +55,11 @@
             .catch((error) => {
                 console.log(`New SSR not sent - ${error}`);
             });
-    }
+    };
 </script>
 
 <h2>
-    <a href={$url(returnPath)}><img class="backarrow" alt="back navigation arrow" src="/arrow_back_ios-24px.svg" /></a>
+    <a href={urlReturnPath()}><img class="backarrow" alt="back navigation arrow" src="/arrow_back_ios-24px.svg" /></a>
     <span>SSR record detail</span>
 </h2>
 
@@ -61,7 +67,7 @@
     <p slot="intro">Edit SSR record.</p>
 
     <div slot="form">
-        <SSR bind:data />
+        <SSRComponent bind:data />
     </div>
 
     <div slot="controls">

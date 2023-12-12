@@ -4,19 +4,19 @@
 -->
 
 <script lang="ts">
-    import { ssr_empty, validateSsr, postService, type SSR_EMPTY, type SSR_SERVICE } from '@oarc/ssd-access';
-    import { authStore } from '@oarc/ssd-access/authstore.js';
+    import { ssr_empty, validateSsr, postService } from '@oarc/ssd-access';
+    import { authStore } from '@oarc/ssd-access';
 
     import { goto } from '@roxi/routify';
 
     import Form from '../../../components/Form.svelte';
     import CountryCode from '../../../components/ssd/CountryCode.svelte';
-    import SSR from '../../../components/ssd/SSR.svelte';
-    import type { FormContent } from '@oarc/scd-access';
+    import SSRComponent from '../../../components/ssd/SSR.svelte';
+    import type { SSR } from '@oarc/ssd-access';
 
     let form: Form;
     let countryCodeElement: CountryCode;
-    let data: FormContent & { services: SSR_SERVICE[]; geometry: any } = JSON.parse(JSON.stringify(ssr_empty));
+    let data: SSR = JSON.parse(JSON.stringify(ssr_empty));
 
     function save(event: Event) {
         event.preventDefault();
@@ -29,9 +29,10 @@
         }
 
         const dataString = JSON.stringify(data);
-        validateSsr(dataString)
-            .then(() => authStore.getToken())
-            .then((token) => postService(countryCodeElement.value(), dataString, token))
+        validateSsr(dataString);
+        authStore
+            .getToken()
+            .then((token) => postService(countryCodeElement.value(), dataString, token || ''))
             .then((response) => {
                 console.log(response);
                 $goto('/ssd');
@@ -52,7 +53,7 @@
     </div>
 
     <div slot="form">
-        <SSR bind:data />
+        <SSRComponent bind:data />
     </div>
 
     <div slot="controls">

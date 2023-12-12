@@ -1,9 +1,9 @@
 <script lang="ts">
     import { AddSolidIcon, CloseSolidIcon, ExploreIcon } from 'svelte-zondicons';
-    import { scr_reference } from '@oarc/scd-access';
+    import { scr_reference, type Ref } from '@oarc/scd-access';
     import { createEventDispatcher } from 'svelte';
 
-    export let data: { contentType: string; url: string }[];
+    export let data: Ref[] | undefined;
 
     const dispatch = createEventDispatcher();
 
@@ -18,7 +18,7 @@
     }
 
     function deleteReference(event: Event, index: number) {
-        data.splice(index, 1);
+        data?.splice(index, 1);
         data = data;
 
         dispatch('refsUpdated');
@@ -33,7 +33,7 @@
         reference.contentType = 'image/png';
         reference.url = '/content/PXL_20201102_142648945.png';
 
-        data = [...data, model, reference];
+        data = [...(data || []), model, reference];
 
         dispatch('refsUpdated');
     }
