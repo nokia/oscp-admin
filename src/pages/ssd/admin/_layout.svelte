@@ -7,7 +7,7 @@
 
 <script>
     import { ready, redirect } from '@sveltech/routify';
-    import { loading, authenticated, user } from '@oarc/ssd-access/authstore.js';
+    import { loading, authenticated, user } from '@oarc/ssd-access';
 
     /*
      * since SSR normally won't render till all components have been loaded

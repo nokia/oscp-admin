@@ -4,8 +4,7 @@
 -->
 
 <script lang="ts">
-    import { scr_empty, validateScr, postContent, type SCR } from '@oarc/scd-access';
-    import { authStore } from '@oarc/scd-access/authstore.js';
+    import { authStore, scr_empty, validateScr, postContent, type SCR } from '@oarc/scd-access';
     import { oscpScdUrl } from '../../../core/store';
 
     import { goto, params } from '@sveltech/routify';

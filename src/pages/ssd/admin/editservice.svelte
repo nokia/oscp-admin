@@ -6,8 +6,7 @@
 <script lang="ts">
     import { url } from '@sveltech/routify';
 
-    import { searchServicesForProducer, getServiceWithId, type SSR } from '@oarc/ssd-access';
-    import { authStore } from '@oarc/ssd-access/authstore.js';
+    import { authStore, searchServicesForProducer, getServiceWithId, type SSR } from '@oarc/ssd-access';
 
     import jwtDecode from 'jwt-decode';
     import CountryCode from '../../../components/ssd/CountryCode.svelte';

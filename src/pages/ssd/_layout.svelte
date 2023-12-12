@@ -6,7 +6,7 @@
 <!-- routify:options bundle=true -->
 
 <script lang="ts">
-    import { authStore, authenticated } from '@oarc/ssd-access/authstore.js';
+    import { authStore, authenticated } from '@oarc/ssd-access';
 
     import Navigation from '../../components/Navigation.svelte';
 

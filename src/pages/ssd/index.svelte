@@ -4,8 +4,7 @@
 -->
 
 <script>
-    import { authStore } from '@oarc/ssd-access/authstore.js';
-    import { setSsdUrl } from '@oarc/ssd-access';
+    import { setSsdUrl, authStore } from '@oarc/ssd-access';
     import { oscpSsdUrl } from '../../core/store';
 
     $oscpSsdUrl = import.meta.env['VITE_OSCP_SSD_URL'];

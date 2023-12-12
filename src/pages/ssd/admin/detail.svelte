@@ -7,9 +7,7 @@
     import { onMount } from 'svelte';
     import { url, route, params, goto } from '@sveltech/routify';
 
-    import { getServiceWithId, deleteWithId, validateSsr, putService, type SSR } from '@oarc/ssd-access';
-    import { ssr_empty } from '@oarc/ssd-access';
-    import { authStore } from '@oarc/ssd-access/authstore.js';
+    import { ssr_empty, authStore, getServiceWithId, deleteWithId, validateSsr, putService, type SSR } from '@oarc/ssd-access';
 
     import Form from '../../../components/Form.svelte';
     import SSRComponent from '../../../components/ssd/SSR.svelte';

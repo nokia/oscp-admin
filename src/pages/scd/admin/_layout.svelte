@@ -7,7 +7,7 @@
 
 <script lang="ts">
     import { ready, redirect } from '@sveltech/routify';
-    import { loading, authenticated } from '@oarc/scd-access/authstore.js';
+    import { loading, authenticated } from '@oarc/scd-access';
 
     /*
      * since SCR normally won't render till all components have been loaded

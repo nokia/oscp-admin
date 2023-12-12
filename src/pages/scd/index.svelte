@@ -4,7 +4,7 @@
 -->
 
 <script lang="ts">
-    import { authStore } from '@oarc/scd-access/authstore.js';
+    import { authStore } from '@oarc/scd-access';
     import { oscpScdUrl } from '../../core/store';
 
     $oscpScdUrl = import.meta.env['VITE_OSCP_SCD_URL'];

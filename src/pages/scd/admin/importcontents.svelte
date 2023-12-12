@@ -4,8 +4,7 @@
 -->
 
 <script lang="ts">
-    import { postScrFile } from '@oarc/scd-access';
-    import { authStore } from '@oarc/scd-access/authstore.js';
+    import { authStore, postScrFile } from '@oarc/scd-access';
     import { oscpScdUrl } from '../../../core/store';
 
     import Import from '../../../components/Import.svelte';

@@ -1,8 +1,7 @@
 <script lang="ts">
     import { url } from '@sveltech/routify';
 
-    import { searchContentsForTenant, getContentWithId, type SCR } from '@oarc/scd-access';
-    import { authStore } from '@oarc/scd-access/authstore.js';
+    import { authStore, searchContentsForTenant, getContentWithId, type SCR } from '@oarc/scd-access';
     import { oscpScdUrl } from '../../../core/store';
 
     import jwtDecode from 'jwt-decode';

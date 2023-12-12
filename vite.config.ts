@@ -6,4 +6,7 @@ import { routify } from '@sveltech/routify';
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [svelte(), basicSsl(), routify({ dynamicImports: true })],
+    optimizeDeps: {
+      exclude: ["@sveltech/routify"],
+    },
 });
