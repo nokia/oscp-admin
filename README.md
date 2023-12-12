@@ -22,36 +22,30 @@ components in as many content management environments as possible.
 git clone https://github.com/OpenArCloud/oscp-admin
 cd oscp-admin
 npm install
-npx devcert-cli generate localhost
 ```
-
-The `npx devcert-cli generate localhost` command generates `localhost.cert` and
-`localhost.key` files that are used as SSL certificates for https during local
-development.
-
 
 Also, adding a `.env` file to the root of the project is required. The format
 looks like this:
 ```
-OSCP_SSD_URL=
-OSCP_SCD_URL=
-AUTH0_SSD_DOMAIN=
-AUTH0_SSD_SCOPE=
-AUTH0_SSD_PROVIDER=
-AUTH0_SSD_AUDIENCE=
-AUTH0_SSD_CLIENTID=
-AUTH0_SCD_DOMAIN=
-AUTH0_SCD_SCOPE=
-AUTH0_SCD_PROVIDER=
-AUTH0_SCD_AUDIENCE=
-AUTH0_SCD_CLIENTID
+VITE_OSCP_SSD_URL=
+VITE_OSCP_SCD_URL=
+VITE_AUTH0_SSD_DOMAIN=
+VITE_AUTH0_SSD_SCOPE=
+VITE_AUTH0_SSD_PROVIDER=
+VITE_AUTH0_SSD_AUDIENCE=
+VITE_AUTH0_SSD_CLIENTID=
+VITE_AUTH0_SCD_DOMAIN=
+VITE_AUTH0_SCD_SCOPE=
+VITE_AUTH0_SCD_PROVIDER=
+VITE_AUTH0_SCD_AUDIENCE=
+VITE_AUTH0_SCD_CLIENTID
 ```
 
 If you want to use The Google Drive Picker to select files, you
 need to add this to your .env file
 ```
-GOOGLE_PROJECT_ID =
-GOOGLE_PICKER_KEY =
+VITE_GOOGLE_PROJECT_ID =
+VITE_GOOGLE_PICKER_KEY =
 ```
 
 Start a local server for development
