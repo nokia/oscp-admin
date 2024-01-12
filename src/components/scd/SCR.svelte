@@ -7,9 +7,9 @@
 
     import Content from './Content.svelte';
     import GeoPose from './GeoPose.svelte';
-    import type { SCR } from '@oarc/scd-access';
+    import type { SCR, SCRnoId } from '@oarc/scd-access';
 
-    export let data: SCR;
+    export let data: SCR | SCRnoId;
 
     let hasRefs = handleRefsUpdate();
 
@@ -51,7 +51,7 @@
     <legend>
         <span>GeoPose</span>
 
-        <button class="editorbutton" disabled={!hasRefs} on:click={openGeoPoseEditor}>
+        <button class="editorbutton" on:click={openGeoPoseEditor}>
             <MapIcon class="editoricon" />
         </button>
     </legend>

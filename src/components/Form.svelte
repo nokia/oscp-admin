@@ -1,8 +1,8 @@
 <script lang="ts">
-    import type { SCR } from '@oarc/scd-access';
+    import type { SCR, SCRnoId } from '@oarc/scd-access';
     import type { SSR } from '@oarc/ssd-access';
 
-    export let data: SCR | SSR;
+    export let data: SCRnoId | SCR | SSR;
 
     let form: HTMLFormElement;
     let timestamp = 0;
@@ -10,7 +10,7 @@
     $: {
         if (data.timestamp) {
             timestamp = data.timestamp;
-            delete data.timestamp; // TODO: why delete this timestamp, and save it only locally in this component?
+            delete data.timestamp;
         }
     }
 
@@ -22,8 +22,9 @@
 <slot name="intro" />
 
 <form bind:this={form}>
+    <div>Export</div>
     <fieldset>
-        {#if data.id}
+        {#if 'id' in data && data.id}
             <div>
                 <label for="rootid">ID</label>
                 <span id="rootid">{data.id}</span>

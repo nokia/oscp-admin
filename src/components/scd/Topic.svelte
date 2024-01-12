@@ -4,6 +4,8 @@
 -->
 
 <script lang="ts">
+    import { topicName } from '../../core/store';
+
     let topicElement: HTMLInputElement;
 
     export function value() {
@@ -16,4 +18,4 @@
 </script>
 
 <label for="topic">Topic</label>
-<input id="topic" required bind:this={topicElement} />
+<input id="topic" required bind:value={$topicName} bind:this={topicElement} />

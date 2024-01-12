@@ -1,4 +1,4 @@
-import type { Geopose, Ref } from '@oarc/scd-access';
+import { scr_empty, type Geopose, type Ref, type SCR, type SCRnoId } from '@oarc/scd-access';
 import type { H3IndexInput } from 'h3-js';
 import { writable, readable } from 'svelte/store';
 
@@ -13,6 +13,8 @@ export const countryCode = writable('');
 export const h3Index = writable('');
 
 export const geoPose = writable<(Geopose & { h3?: H3IndexInput }) | undefined>(undefined);
+export const newContentToCreate = writable<SCRnoId>(scr_empty);
+export const topicName = writable<string>('');
 
 // GeoPose Services properties
 export const selectedGeoposeService = writable({

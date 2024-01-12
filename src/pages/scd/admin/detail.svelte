@@ -7,7 +7,7 @@
     import { onMount } from 'svelte';
     import { url, route, params, goto } from '@sveltech/routify';
 
-    import { authStore, getContentWithId, deleteWithId, validateScr, putContent, type SCR } from '@oarc/scd-access';
+    import { authStore, getContentWithId, deleteWithId, putContent, type SCR } from '@oarc/scd-access';
     import { oscpScdUrl } from '../../../core/store';
 
     import Form from '../../../components/Form.svelte';
@@ -16,7 +16,7 @@
     import { CheveronLeftIcon } from 'svelte-zondicons';
     import type { MouseEventHandler } from 'svelte/elements';
 
-    let data: SCR;
+    let data: SCR | undefined;
     let returnPath = ($route as any).last ? ($route as any).last.path : '/scd/admin/editcontent';
 
     onMount(() => {
@@ -37,21 +37,19 @@
             .catch((error) => console.error(`Failed to delete: ${error}`));
     }
 
-    const handleSave: MouseEventHandler<HTMLButtonElement> = (event) => {
+    const handleSave: MouseEventHandler<HTMLButtonElement> = async (event) => {
         event.preventDefault();
 
-        const dataString = JSON.stringify(data);
-        validateScr(dataString);
-        authStore
-            .getToken()
-            .then((token) => putContent($oscpScdUrl, $params.topic, dataString, data.id, token || ''))
-            .then((response) => {
+        if (data) {
+            const token = await authStore.getToken();
+            try {
+                const response = putContent($oscpScdUrl, $params.topic, data, data.id, token || '');
                 console.log(`Record created: ${response}`);
                 $goto(returnPath);
-            })
-            .catch((error) => {
+            } catch (error) {
                 console.log(`New SCR not sent - ${error}`);
-            });
+            }
+        }
     };
     const urlReturnPath = (): any => {
         return $url(returnPath);
@@ -65,16 +63,18 @@
     <span>SCR record detail</span>
 </h2>
 
-<Form {data}>
-    <p slot="intro">Edit SCR record.</p>
+{#if data}
+    <Form {data}>
+        <p slot="intro">Edit SCR record.</p>
 
-    <div slot="form">
-        <SCRComponent bind:data />
-    </div>
+        <div slot="form">
+            <SCRComponent bind:data />
+        </div>
 
-    <div slot="controls">
-        <button on:click={handleSave}>Save</button>
-    </div>
-</Form>
+        <div slot="controls">
+            <button on:click={handleSave}>Save</button>
+        </div>
+    </Form>
 
-<button on:click={handleDelete}>Delete</button>
+    <button on:click={handleDelete}>Delete</button>
+{/if}

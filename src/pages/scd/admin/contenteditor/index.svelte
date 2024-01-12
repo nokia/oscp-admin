@@ -5,7 +5,7 @@
     import type { MouseEventHandler } from 'svelte/elements';
     let storageProvider: any;
 
-    let returnPath = ($route as any).last ? ($route as any).last.path : 'scd/admin/createservice';
+    let returnPath = ($route as any).last ? `${($route as any).last.path}?${new URLSearchParams(($route as any).last.params)}` : 'scd/admin/createservice';
 
     const selectGDrive: MouseEventHandler<HTMLButtonElement> = (event) => {
         event.currentTarget.setAttribute('active', 'active');

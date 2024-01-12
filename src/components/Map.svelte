@@ -355,7 +355,7 @@
             thisLon = $geoPose.position.lon;
         }
 
-        instantiateMap(container);
+        return instantiateMap(container);
     }
 
     function resizeMap() {
