@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { SCR, SCRnoId } from '@oarc/scd-access';
     import type { SSR } from '@oarc/ssd-access';
+    import { DownloadIcon, UploadIcon } from 'svelte-zondicons';
 
     export let data: SCRnoId | SCR | SSR;
 
@@ -22,8 +23,13 @@
 <slot name="intro" />
 
 <form bind:this={form}>
-    <div>Export</div>
     <fieldset>
+        <legend>
+            <span>Export</span>
+            <a class="editorbutton black-text" download="data.json" type="text/json" href={URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)]))}>
+                <DownloadIcon class="editoricon" />
+            </a>
+        </legend>
         {#if 'id' in data && data.id}
             <div>
                 <label for="rootid">ID</label>
@@ -137,5 +143,20 @@
 
     #roottype {
         font-weight: bold;
+    }
+
+    .editorbutton {
+        background-color: transparent;
+        border: 0;
+    }
+
+    .black-text {
+        color: black;
+    }
+
+    :global(.editoricon) {
+        cursor: pointer;
+        width: 20px;
+        vertical-align: bottom;
     }
 </style>

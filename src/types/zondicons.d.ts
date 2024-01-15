@@ -7,4 +7,5 @@ declare module 'svelte-zondicons' {
     export class UploadIcon extends SvelteComponent<{ class: string }> {}
     export class MapIcon extends SvelteComponent<{ class: string }> {}
     export class CheveronLeftIcon extends SvelteComponent {}
+    export class DownloadIcon extends SvelteComponent {}
 }
