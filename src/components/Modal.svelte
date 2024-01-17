@@ -40,11 +40,9 @@
 
 <div class="modal" role="dialog" aria-modal="true" bind:this={modal}>
     <slot name="header" />
-
-    <hr />
-    <slot />
-    <hr />
-
+    <div id="enclosing">
+        <slot />
+    </div>
     <!-- svelte-ignore a11y-autofocus -->
     <button autofocus on:click={close}>Close</button>
 </div>
@@ -67,13 +65,17 @@
         z-index: 1000;
     }
 
+    #enclosing {
+        width: calc(100vw - 4em);
+        height: calc(100vh - 8em);
+    }
+
     .modal {
-        position: absolute;
+        position: fixed;
         left: 50%;
         top: 50%;
         width: calc(100vw - 4em);
-        max-width: 32em;
-        max-height: calc(100vh - 4em);
+        height: calc(100vh - 4em);
         overflow: auto;
         transform: translate(-50%, -50%);
         padding: 0.5em;
@@ -85,5 +87,6 @@
     button {
         display: block;
         width: 100%;
+        margin-top: 1em;
     }
 </style>

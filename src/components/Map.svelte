@@ -9,6 +9,8 @@
 
     import MapControl from './MapControl.svelte';
 
+    export let onSaveCancel: () => void;
+    export let updateGeopose: ({ lat, lon }: { lat: number; lon: number }) => void;
     const COUNT_H3RING = 1;
 
     const DEFAULT_ZOOM = 13;
@@ -211,6 +213,8 @@
             toolbarComponent = new MapControl({
                 target: div,
                 props: {
+                    onSaveCancel,
+                    updateGeopose,
                     lat: thisLat,
                     lon: thisLon,
                     h3: thisH3Index,
@@ -387,7 +391,6 @@
     #map {
         height: 100%;
         width: 100%;
-        margin-top: -29px;
     }
 
     #map :global(.h3indexmarkercontainer) {

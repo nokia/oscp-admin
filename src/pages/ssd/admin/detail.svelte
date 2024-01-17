@@ -14,7 +14,7 @@
     import type { MouseEventHandler } from 'svelte/elements';
 
     let data: SSR = ssr_empty;
-    let returnPath = ($route as any).last ? ($route as any).last.path : '/ssd/admin/editservice';
+    let returnPath = ($route as any).last ? `${($route as any).last.path}?${new URLSearchParams(($route as any).last.params)}` : '/ssd/admin/editservice';
 
     onMount(() => {
         getServiceWithId($params.countryCode, $params.id)

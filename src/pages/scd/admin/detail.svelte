@@ -17,7 +17,7 @@
     import type { MouseEventHandler } from 'svelte/elements';
 
     let data: SCR | undefined;
-    let returnPath = ($route as any).last ? ($route as any).last.path : '/scd/admin/editcontent';
+    let returnPath = ($route as any).last ? `${($route as any).last.path}?${new URLSearchParams(($route as any).last.params)}` : '/scd/admin/editcontent';
 
     onMount(() => {
         getContentWithId($oscpScdUrl, $params.topic, $params.id)

@@ -22,7 +22,7 @@
 
 <slot name="intro" />
 
-<form bind:this={form}>
+<form novalidate bind:this={form}>
     <fieldset>
         <legend>
             <span>Export</span>

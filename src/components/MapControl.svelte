@@ -2,8 +2,6 @@
     import { createEventDispatcher } from 'svelte';
     import * as h3Lib from 'h3-js';
 
-    import { route, goto } from '@sveltech/routify';
-
     import { ReloadIcon, ExploreIcon } from 'svelte-zondicons';
 
     import { MIN_H3RESOLUTION, DEFAULT_H3RESOLUTION, MAX_H3RESOLUTION, H3RESOLUTION_AUTO } from '../core/store.js';
@@ -17,6 +15,8 @@
     export let lat: number;
     export let lon: number;
     export let h3: h3Lib.H3IndexInput;
+    export let onSaveCancel: () => void;
+    export let updateGeopose: ({ lat, lon }: { lat: number; lon: number }) => void;
     type Service = { title?: string; id?: string; url?: string };
     type Record = { id: string; services: Service[] };
 
@@ -40,9 +40,6 @@
         lon: 8.695943579077722,
         h3: '871faa49dffffff',
     };
-
-    let savePath = ($route as any).last ? ($route as any).last.path : '/scd/admin/editcontent';
-    const cancelPath = '/scd/admin/createcontent';
 
     let currentService: Service = {};
     let serviceId = (recordId: string, serviceId: string | undefined) => `${recordId}-${serviceId}`;
@@ -68,12 +65,12 @@
             }
             return current;
         });
-
-        $goto(savePath);
+        updateGeopose({ lat, lon });
+        onSaveCancel();
     }
 
     function handleCancel() {
-        $goto(cancelPath);
+        onSaveCancel();
     }
 
     function checkForGeoPoseServices() {
