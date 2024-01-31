@@ -1,3 +1,8 @@
+/*
+  (c) 2020 Open AR Cloud, This code is licensed under MIT license (see LICENSE.md for details)
+  (c) 2024 Nokia, Licensed under the MIT License, SPDX-License-Identifier: MIT
+*/
+
 import { scr_empty, type Geopose, type Ref, type SCR, type SCRnoId } from '@oarc/scd-access';
 import type { H3IndexInput } from 'h3-js';
 import { writable, readable } from 'svelte/store';

@@ -1,3 +1,8 @@
+<!--
+  (c) 2020 Open AR Cloud, This code is licensed under MIT license (see LICENSE.md for details)
+  (c) 2024 Nokia, Licensed under the MIT License, SPDX-License-Identifier: MIT
+-->
+
 <script lang="ts">
     import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
     import { scr_definition, type Def } from '@oarc/scd-access';

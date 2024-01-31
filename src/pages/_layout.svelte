@@ -1,3 +1,8 @@
+<!--
+  (c) 2020 Open AR Cloud, This code is licensed under MIT license (see LICENSE.md for details)
+  (c) 2024 Nokia, Licensed under the MIT License, SPDX-License-Identifier: MIT
+-->
+
 <header>
     <h1><img id="oarc_logo" src="/OARC_Logo_without_BG.png" alt="Open AR Cloud header" /></h1>
 </header>
