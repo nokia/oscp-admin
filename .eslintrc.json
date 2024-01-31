@@ -4,25 +4,23 @@
         "browser": true,
         "es2021": true
     },
-    "extends": [
-        "eslint:recommended"
-    ],
+    "extends": ["eslint:recommended", "plugin:svelte/recommended"],
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
+        "project": "./tsconfig.json",
         "ecmaVersion": 2020,
-        "sourceType": "module"
+        "sourceType": "module",
+        "extraFileExtensions": [".svelte"]
     },
-    "rules": {
-    },
-    "plugins": [
-        "svelte3"
-    ],
-    "overrides": [{
+    "rules": {},
+    "overrides": [
+        {
             "files": ["*.svelte"],
-            "processor": "svelte3/svelte3"
-    }
+            "parser": "svelte-eslint-parser",
+            "parserOptions": {
+                "parser": "@typescript-eslint/parser"
+            }
+        }
     ],
-    "ignorePatterns": [
-        "public/build/",
-        "rollup.config.js"
-    ]
+    "ignorePatterns": ["public/build/", "rollup.config.js"]
 }

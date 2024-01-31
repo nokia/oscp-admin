@@ -1,4 +1,71 @@
 <!--
+  (c) 2020 Open AR Cloud, This code is licensed under MIT license (see LICENSE.md for details)
+  (c) 2024 Nokia, Licensed under the MIT License, SPDX-License-Identifier: MIT
+-->
+
+<script lang="ts">
+    import type { Property } from '@oarc/ssd-access';
+    import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
+    import type { ChangeEventHandler } from 'svelte/elements';
+
+    export let data: Property[] | undefined;
+
+    function addProperty(event: Event) {
+        event.preventDefault();
+
+        if (data) {
+            data = [...data, { type: '', value: '' }];
+        } else {
+            data = [];
+        }
+    }
+
+    function deleteProperty(event: Event, index: number) {
+        event.preventDefault();
+
+        data?.splice(index, 1);
+        // noinspection SillyAssignmentJS
+        data = data;
+    }
+
+    const toggleProperties: ChangeEventHandler<HTMLInputElement> = (event) => {
+        if (event.currentTarget.checked) {
+            data = [];
+        } else {
+            data = undefined;
+        }
+    };
+</script>
+
+<dl>
+    <dt>
+        <input type="checkbox" checked={data !== undefined} on:change={toggleProperties} />
+        <span>Properties</span>
+    </dt>
+    {#if data}
+        <dd>
+            {#each data as property, index}
+                <label for="propertykey">Type</label>
+                <input id="propertykey" bind:value={property.type} />
+
+                <label for="propertyvalue">Value</label>
+                <input id="propertyvalue" bind:value={property.value} />
+
+                <button class="deletebutton" on:click={(event) => deleteProperty(event, index)}>
+                    <CloseSolidIcon size="1.5rem" color="red" />
+                </button>
+            {/each}
+        </dd>
+    {/if}
+</dl>
+
+{#if data !== undefined}
+    <button class="addbutton" on:click={addProperty}>
+        <AddSolidIcon size="2rem" />
+    </button>
+{/if}
+
+<!--
     (c) 2020 Open AR Cloud
     This code is licensed under MIT license (see LICENSE.md for details)
 -->
@@ -16,64 +83,3 @@
         background-color: transparent;
     }
 </style>
-
-<script>
-    import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
-
-    export let data;
-
-    function addProperty(event) {
-        event.preventDefault();
-
-        if (data) {
-            data = [...data, {}];
-        } else {
-            data = [];
-        }
-    }
-
-    function deleteProperty(event, index) {
-        event.preventDefault();
-
-        data.splice(index, 1);
-        // noinspection SillyAssignmentJS
-        data = data;
-    }
-
-    function toggleProperties(event) {
-        if (event.target.checked) {
-            data = [];
-        } else {
-            data = undefined;
-        }
-    }
-</script>
-
-
-<dl>
-    <dt>
-        <input type="checkbox" checked="{data !== undefined}" on:change={toggleProperties} />
-        <span>Properties</span>
-    </dt>
-    {#if data}
-        <dd>
-        {#each data as property, index}
-            <label for="propertykey">Type</label>
-            <input id="propertykey" bind:value="{property.type}" />
-
-            <label for="propertyvalue">Value</label>
-            <input id="propertyvalue" bind:value="{property.value}" />
-
-            <button class="deletebutton" on:click={(event) => deleteProperty(event, index)}>
-                <CloseSolidIcon size="1.5rem" color="red" />
-            </button>
-        {/each}
-        </dd>
-    {/if}
-</dl>
-
-{#if data !== undefined}
-    <button class="addbutton" on:click={addProperty}>
-        <AddSolidIcon size="2rem" />
-    </button>
-{/if}

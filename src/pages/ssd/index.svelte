@@ -1,27 +1,23 @@
 <!--
-    (c) 2020 Open AR Cloud
-    This code is licensed under MIT license (see LICENSE.md for details)
+  (c) 2020 Open AR Cloud, This code is licensed under MIT license (see LICENSE.md for details)
+  (c) 2024 Nokia, Licensed under the MIT License, SPDX-License-Identifier: MIT
 -->
 
 <script>
-    import { authStore } from '@oarc/ssd-access/authstore.js';
-    import { setSsdUrl } from '@oarc/ssd-access';
+    import { setSsdUrl, authStore } from '@oarc/ssd-access';
     import { oscpSsdUrl } from '../../core/store';
 
-    $oscpSsdUrl = oscp_app.env["OSCP_SSD_URL"];
+    $oscpSsdUrl = import.meta.env['VITE_OSCP_SSD_URL'];
     setSsdUrl($oscpSsdUrl);
 
-    let auth_domain = oscp_app.env["AUTH0_SSD_DOMAIN"]
-    let auth_client_id = oscp_app.env["AUTH0_SSD_CLIENTID"]
-    let auth_audience = oscp_app.env["AUTH0_SSD_AUDIENCE"]
-    let auth_scope = oscp_app.env["AUTH0_SSD_SCOPE"]
+    let auth_domain = import.meta.env['VITE_AUTH0_SSD_DOMAIN'];
+    let auth_client_id = import.meta.env['VITE_AUTH0_SSD_CLIENTID'];
+    let auth_audience = import.meta.env['VITE_AUTH0_SSD_AUDIENCE'];
+    let auth_scope = import.meta.env['VITE_AUTH0_SSD_SCOPE'];
     // need to queue init till after Routify has been initialized
-    setTimeout(() => window.routify.inBrowser && authStore.init(auth_domain, auth_client_id, auth_audience, auth_scope))
+    setTimeout(() => window.routify.inBrowser && authStore.init(auth_domain, auth_client_id, auth_audience, auth_scope));
 </script>
-
 
 <h2>Spatial Service Discovery</h2>
 
-<p>
-    General information about SSD upcoming.
-</p>
+<p>General information about SSD upcoming.</p>

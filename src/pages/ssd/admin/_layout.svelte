@@ -1,21 +1,20 @@
 <!--
-    (c) 2020 Open AR Cloud
-    This code is licensed under MIT license (see LICENSE.md for details)
+  (c) 2020 Open AR Cloud, This code is licensed under MIT license (see LICENSE.md for details)
+  (c) 2024 Nokia, Licensed under the MIT License, SPDX-License-Identifier: MIT
 -->
 
 <!-- routify:options bundle=true -->
 
 <script>
-    import { ready, redirect } from '@sveltech/routify'
-    import { loading, authenticated, user } from '@oarc/ssd-access/authstore.js'
-
+    import { ready, redirect } from '@sveltech/routify';
+    import { loading, authenticated, user } from '@oarc/ssd-access';
 
     /*
      * since SSR normally won't render till all components have been loaded
      * and our <slot /> will never load, we will have to let SSR do its job
      * right away by calling $ready()
      */
-    $ready()
+    $ready();
 </script>
 
 <div class="admin-module" class:not-authed={!$user}>

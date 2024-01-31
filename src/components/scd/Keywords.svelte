@@ -1,4 +1,64 @@
 <!--
+  (c) 2020 Open AR Cloud, This code is licensed under MIT license (see LICENSE.md for details)
+  (c) 2024 Nokia, Licensed under the MIT License, SPDX-License-Identifier: MIT
+-->
+
+<script lang="ts">
+    import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
+    import type { ChangeEventHandler } from 'svelte/elements';
+
+    export let data: string[] | undefined;
+
+    function addKeyword(event: Event) {
+        event.preventDefault();
+
+        if (data) {
+            data = [...data, ''];
+        } else {
+            data = [];
+        }
+    }
+
+    function deleteKeyword(event: Event, index: number) {
+        event.preventDefault();
+
+        data?.splice(index, 1);
+        data = data;
+    }
+
+    const toggleKeywords: ChangeEventHandler<HTMLInputElement> = (event) => {
+        if (event.currentTarget.checked) {
+            data = [];
+        } else {
+            data = undefined;
+        }
+    };
+</script>
+
+<dl>
+    <dt>
+        <input type="checkbox" checked={data !== undefined} on:change={toggleKeywords} />
+        <span>Keywords</span>
+    </dt>
+    {#if data}
+        <dd>
+            {#each data as keyword, index}
+                <input bind:value={keyword} />
+                <button class="deletebutton" on:click={(event) => deleteKeyword(event, index)}>
+                    <CloseSolidIcon size="1.5rem" color="red" />
+                </button>
+            {/each}
+        </dd>
+    {/if}
+</dl>
+
+{#if data !== undefined}
+    <button class="addbutton" on:click={addKeyword}>
+        <AddSolidIcon size="2rem" />
+    </button>
+{/if}
+
+<!--
     (c) 2020 Open AR Cloud
     This code is licensed under MIT license (see LICENSE.md for details)
 -->
@@ -16,59 +76,3 @@
         background-color: transparent;
     }
 </style>
-
-<script>
-    import { AddSolidIcon, CloseSolidIcon } from 'svelte-zondicons';
-
-    export let data
-
-
-    function addKeyword(event) {
-        event.preventDefault();
-
-        if (data) {
-            data = [...data, ""];
-        } else {
-            data = [];
-        }
-    }
-
-    function deleteKeyword(event, index) {
-        event.preventDefault();
-
-        data.splice(index, 1);
-        data = data;
-    }
-
-    function toggleKeywords(event) {
-        if (event.target.checked) {
-            data = [];
-        } else {
-            data = undefined;
-        }
-    }
-</script>
-
-
-<dl>
-    <dt>
-        <input type="checkbox" checked="{data !== undefined}" on:change={toggleKeywords} />
-        <span>Keywords</span>
-    </dt>
-    {#if data}
-        <dd>
-        {#each data as keyword, index}
-            <input bind:value="{keyword}" />
-            <button class="deletebutton" on:click={(event) => deleteKeyword(event, index)}>
-                <CloseSolidIcon size="1.5rem" color="red" />
-            </button>
-        {/each}
-        </dd>
-    {/if}
-</dl>
-
-{#if data !== undefined}
-    <button class="addbutton" on:click={addKeyword}>
-        <AddSolidIcon size="2rem" />
-    </button>
-{/if}

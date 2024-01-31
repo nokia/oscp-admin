@@ -1,23 +1,23 @@
 <!--
-    (c) 2020 Open AR Cloud
-    This code is licensed under MIT license (see LICENSE.md for details)
+  (c) 2020 Open AR Cloud, This code is licensed under MIT license (see LICENSE.md for details)
+  (c) 2024 Nokia, Licensed under the MIT License, SPDX-License-Identifier: MIT
 -->
 
 <!-- routify:options bundle=true -->
 
-<script>
-    import { authStore, authenticated } from '@oarc/ssd-access/authstore.js';
+<script lang="ts">
+    import { authStore, authenticated } from '@oarc/ssd-access';
 
     import Navigation from '../../components/Navigation.svelte';
 
-    const links = [
-            ['/ssd/', 'Home', false],
-            ['/ssd/admin/createservice', 'Create', true],
-            ['/ssd/admin/editservice', 'Edit', true],
-            ['/ssd/admin/importservices', 'Import', true]
-        ]
+    const links: [string, string, boolean][] = [
+        ['/ssd/', 'Home', false],
+        ['/ssd/admin/createservice', 'Create', true],
+        ['/ssd/admin/editservice', 'Edit', true],
+        ['/ssd/admin/importservices', 'Import', true],
+    ];
 </script>
 
 <Navigation {links} {authStore} {authenticated} />
 
-<slot/>
+<slot />

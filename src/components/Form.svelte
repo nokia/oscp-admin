@@ -1,4 +1,83 @@
 <!--
+  (c) 2020 Open AR Cloud, This code is licensed under MIT license (see LICENSE.md for details)
+  (c) 2024 Nokia, Licensed under the MIT License, SPDX-License-Identifier: MIT
+-->
+
+<script lang="ts">
+    import type { SCR, SCRnoId } from '@oarc/scd-access';
+    import type { SSR } from '@oarc/ssd-access';
+    import { DownloadIcon, UploadIcon } from 'svelte-zondicons';
+
+    export let data: SCRnoId | SCR | SSR;
+
+    let form: HTMLFormElement;
+    let timestamp = 0;
+
+    $: {
+        if (data.timestamp) {
+            timestamp = data.timestamp;
+            delete data.timestamp;
+        }
+    }
+
+    export function reportValidity() {
+        return form.reportValidity();
+    }
+</script>
+
+<slot name="intro" />
+
+<form novalidate bind:this={form}>
+    <fieldset>
+        <legend>
+            <span>Export</span>
+            <a class="editorbutton black-text" download="data.json" type="text/json" href={URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)]))}>
+                <DownloadIcon class="editoricon" />
+            </a>
+        </legend>
+        {#if 'id' in data && data.id}
+            <div>
+                <label for="rootid">ID</label>
+                <span id="rootid">{data.id}</span>
+            </div>
+        {/if}
+
+        <div>
+            <label for="roottype">Type</label>
+            <span id="roottype">{data.type.toUpperCase()}</span>
+        </div>
+
+        {#if 'provider' in data && data.provider}
+            <!-- TODO: there is no provider in SCR -->
+            <div>
+                <label for="rootprovider">Provider</label>
+                <span id="rootprovider">{data.provider}</span>
+            </div>
+        {/if}
+
+        {#if 'tenant' in data && data.tenant}
+            <div>
+                <label for="roottenant">Tenant</label>
+                <span id="roottenant">{data.tenant}</span>
+            </div>
+        {/if}
+
+        {#if timestamp}
+            <div>
+                <label for="roottimestamp">Last edited</label>
+                <span id="roottimestamp">{timestamp}</span>
+            </div>
+        {/if}
+
+        <slot name="extras" />
+    </fieldset>
+
+    <slot name="form" />
+
+    <slot name="controls" />
+</form>
+
+<!--
     (c) 2020 Open AR Cloud
     This code is licensed under MIT license (see LICENSE.md for details)
 -->
@@ -16,7 +95,7 @@
     }
 
     :global(form label::after, form dt::after) {
-        content: ":";
+        content: ':';
     }
 
     :global(form dd) {
@@ -70,68 +149,19 @@
     #roottype {
         font-weight: bold;
     }
+
+    .editorbutton {
+        background-color: transparent;
+        border: 0;
+    }
+
+    .black-text {
+        color: black;
+    }
+
+    :global(.editoricon) {
+        cursor: pointer;
+        width: 20px;
+        vertical-align: bottom;
+    }
 </style>
-
-<script>
-    export let data;
-
-    let form;
-    let timestamp = 0;
-
-    $: {
-        if (data.timestamp) {
-            timestamp = data.timestamp;
-            delete data.timestamp;
-        }
-    }
-
-    export function reportValidity() {
-        return form.reportValidity();
-    }
-</script>
-
-
-<slot name="intro" />
-
-<form bind:this={form}>
-    <fieldset>
-        {#if data.id}
-        <div>
-            <label for="rootid">ID</label>
-            <span id="rootid">{data.id}</span>
-        </div>
-        {/if}
-
-        <div>
-            <label for="roottype">Type</label>
-            <span id="roottype">{data.type.toUpperCase()}</span>
-        </div>
-
-        {#if data.provider}
-        <div>
-            <label for="rootprovider">Provider</label>
-            <span id="rootprovider">{data.provider}</span>
-        </div>
-        {/if}
-
-        {#if data.tenant}
-        <div>
-            <label for="roottenant">Tenant</label>
-            <span id="roottenant">{data.tenant}</span>
-        </div>
-        {/if}
-
-        {#if timestamp}
-            <div>
-                <label for="roottimestamp">Last edited</label>
-                <span id="roottimestamp">{timestamp}</span>
-            </div>
-        {/if}
-
-        <slot name="extras" />
-    </fieldset>
-
-    <slot name="form" />
-
-    <slot name="controls" />
-</form>
