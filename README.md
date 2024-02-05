@@ -41,6 +41,8 @@ VITE_AUTH0_SCD_AUDIENCE=
 VITE_AUTH0_SCD_CLIENTID
 ```
 
+For local development uncomment the line containing `//basicSsl(),` in `vite.config.js`. This enables https when running the service locally using `npm run dev`
+
 If you want to use The Google Drive Picker to select files, you
 need to add this to your .env file
 ```

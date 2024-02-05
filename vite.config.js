@@ -11,7 +11,12 @@ import typescript from '@rollup/plugin-typescript';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [svelte(), basicSsl(), routify({ dynamicImports: true }), typescript()],
+    plugins: [
+        svelte(),
+        //basicSsl(),
+        routify({ dynamicImports: true }),
+        typescript(),
+    ],
     optimizeDeps: {
         exclude: ['@sveltech/routify'],
     },
