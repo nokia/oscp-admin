@@ -41,6 +41,7 @@
     const handleSave: MouseEventHandler<HTMLButtonElement> = (event) => {
         event.preventDefault();
 
+        data.timestamp = Date.now();
         const dataString = JSON.stringify(data);
         validateSsr(dataString);
         authStore
