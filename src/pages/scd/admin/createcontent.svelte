@@ -44,6 +44,7 @@
         }
         try {
             const token = await authStore.getToken();
+            $newContentToCreate.timestamp = Date.now();
             const response = await postContent($oscpScdUrl, topicElement.value(), $newContentToCreate, token || '');
             $newContentToCreate = scr_empty;
             $topicName = '';
