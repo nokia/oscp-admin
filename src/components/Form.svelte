@@ -74,6 +74,8 @@
 
     <slot name="form" />
 
+    <slot name="viewer" />
+
     <slot name="controls" />
 </form>
 

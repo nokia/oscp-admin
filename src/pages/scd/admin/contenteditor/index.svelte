@@ -8,6 +8,7 @@
 
     import { CheveronLeftIcon } from 'svelte-zondicons';
     import type { MouseEventHandler } from 'svelte/elements';
+
     let storageProvider: any;
 
     let returnPath = ($route as any).last ? `${($route as any).last.path}?${new URLSearchParams(($route as any).last.params)}` : 'scd/admin/createservice';
@@ -91,11 +92,6 @@
 </ul>
 
 <svelte:component this={storageProvider} on:selected={handleSelected} on:canceled={handleCanceled} />
-
-<!--
-    (c) 2020 Open AR Cloud
-    This code is licensed under MIT license (see LICENSE.md for details)
--->
 
 <style>
     #selector {
