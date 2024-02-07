@@ -43,6 +43,7 @@
         if (data) {
             const token = await authStore.getToken();
             try {
+                data.timestamp = Date.now();
                 const response = putContent($oscpScdUrl, $params.topic, data, data.id, token || '');
                 console.log(`Record created: ${response}`);
                 $goto(returnPath);

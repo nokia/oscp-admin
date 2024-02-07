@@ -28,6 +28,7 @@
             return;
         }
 
+        data.timestamp = Date.now();
         const dataString = JSON.stringify(data);
         validateSsr(dataString);
         authStore
