@@ -29,6 +29,7 @@
         "@types/google.picker": "^0.0.42",
         "@types/leaflet": "^1.9.8",
         "@types/qrcode": "^1.5.5",
+        "@types/three": "^0.161.2",
         "@vitejs/plugin-basic-ssl": "^1.0.2",
         "buffer": "^5.7.1",
         "deepmerge": "^4.2.2",
