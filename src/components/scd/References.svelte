@@ -7,9 +7,7 @@
     import { AddSolidIcon, CloseSolidIcon, ExploreIcon } from 'svelte-zondicons';
     import { scr_reference, type Ref } from '@oarc/scd-access';
     import { createEventDispatcher } from 'svelte';
-    import * as THREE from 'three';
-    import * as SC from 'svelte-cubed';
-    import ReusableGltf from '../../pages/scd/admin/contentviewer/ReusableGltf.svelte';
+    import ContenViewer from '../../pages/scd/admin/contentviewer/ContentViewer.svelte';
 
     export let data: Ref[] | undefined;
 
@@ -68,14 +66,13 @@
                 </span>
             </dd>
 
-            {#if reference.contentType === 'model/gltf+json'}
+            {#if reference}
                 <div style="position: relative; width: 300px; height: 300px; margin-bottom: 50px;">
-                    <SC.Canvas background={new THREE.Color('skyblue')} antialias>
-                        <SC.PerspectiveCamera position={[1, 1, 1]} near={0.1} far={500} fov={40} />
-                        <SC.OrbitControls enabled={true} enableZoom={true} autoRotate={false} autoRotateSpeed={2} enableDamping={true} dampingFactor={0.1} target={[0, 0, 0]} />
-                        <SC.AmbientLight color={new THREE.Color(0xffffff)} intensity={1.0} />
-                        <ReusableGltf modelURL={reference.url} scale={[0.05, 0.05, 0.05]} />
-                    </SC.Canvas>
+                    <ContenViewer
+                        contentMimeType={reference.contentType}
+                        contentUrl={reference.url}
+                    >
+                    </ContenViewer>
                 </div>
             {/if}
         {/each}

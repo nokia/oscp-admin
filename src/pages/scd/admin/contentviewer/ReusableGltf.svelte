@@ -1,4 +1,9 @@
-<!-- 3D Viewer code copied from https://svelte.dev/repl/8ea0488302bb434991cc5b82f653cdb5?version=3.48.0 -->
+<!--
+  (c) 2020 Open AR Cloud, This code is licensed under MIT license (see LICENSE.md for details)
+  (c) 2024 Nokia, Licensed under the MIT License, SPDX-License-Identifier: MIT
+-->
+
+<!-- 3D Viewer code adapted from https://svelte.dev/repl/8ea0488302bb434991cc5b82f653cdb5?version=3.48.0 -->
 <script lang="ts">
     import * as SC from 'svelte-cubed';
     import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
