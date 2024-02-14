@@ -11,46 +11,70 @@
     import * as THREE from 'three';
     import * as SC from 'svelte-cubed';
 
-    import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+    import { FontLoader, Font } from 'three/addons/loaders/FontLoader.js';
     import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
     import ReusableGltf from './ReusableGltf.svelte';
     import Image from './Image.svelte'
 
+
     export let contentUrl:string;
     export let contentMimeType:string
-
-    let font:THREE.Font | undefined = undefined;
-    let textGroupXYZ: THREE.Group | undefined = undefined;
-    let textGroupENU: THREE.Group | undefined = undefined;
+    let font:Font | undefined = undefined;
+    let X:THREE.Mesh = new THREE.Mesh();
+    let Y:THREE.Mesh = new THREE.Mesh();
+    let Z:THREE.Mesh = new THREE.Mesh();
+    let E:THREE.Mesh = new THREE.Mesh();
+    let N:THREE.Mesh = new THREE.Mesh();
+    let U:THREE.Mesh = new THREE.Mesh();
+    // TODO: make it work with Groups
+    //const textGroupXYZ: THREE.Group = new THREE.Group();
+    //const textGroupENU: THREE.Group = new THREE.Group();
 
     onMount(() => {
-    //    loadFont('helveticer_regular');
+        loadFont('helvetiker_regular');
+
     });
 
     function loadFont(fontName:string) {
         const loader = new FontLoader();
-        loader.load('fonts/' + fontName + '.typeface.json',   // TODO: for some reason instead of this json the index.html is returned, which of course cannot be parsed.
-            function ( loadedFont:THREE.Font ) {
+        loader.load('/fonts/' + fontName + '.typeface.json',
+            function ( loadedFont:Font ) {
                 font = loadedFont;
-                createTextLabels();
-            })
-        ;
+                createTextLabels(font);
+            });
     }
 
-    function createText(text:string, font:THREE.Font, position:THREE.Vector3 = new THREE.Vector3(0,0,0), rotation:THREE.Vector3 = new THREE.Vector3(0,0,0)) {
+    function createTextLabels(font:Font) {
+        X = createText('X', font, new THREE.Vector3(1.0, 0.0, 0.0)); //, new THREE.Vector3(0, Math.PI/2, 0));
+        Y = createText('Y', font, new THREE.Vector3(0.0, 1.0, 0.0));
+        Z = createText('Z', font, new THREE.Vector3(0.0, 0.0, 1.0));
+        E = createText('E', font, new THREE.Vector3(1.5, 0.0, 0.0));
+        N = createText('N', font, new THREE.Vector3(0.0, 0.0, -1.5));
+        U = createText('U', font, new THREE.Vector3(0.0, 1.5, 0.0));
+        //textGroupXYZ.add(X);
+        //textGroupXYZ.add(Y);
+        //textGroupXYZ.add(Z);
+        //textGroupENU.add(E);
+        //textGroupENU.add(N);
+        //textGroupENU.add(U);
+    }
+
+    function createText(text:string, font:Font, position:THREE.Vector3 = new THREE.Vector3(0,0,0), rotation:THREE.Vector3 = new THREE.Vector3(0,0,0)) {
+        console.log("Creating " + text);
+
         const textGeometry:TextGeometry = new TextGeometry(text, {
             font: font,
-            size: 5,
-			height: 0.25,
+            size: 0.1,
+			height: 0.01,
 			curveSegments: 12
         } );
 
         textGeometry.computeBoundingBox();
-        const centerOffset = - 0.5 * ( textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x );
-        const hover = 30;
+        const centerOffset = 0.0; //- 0.5 * ( textGeometry.boundingBox!.max.x - textGeometry.boundingBox!.min.x );
+        const hover = 0.0;
 
-        const textMaterial = new THREE.BasicMaterial({ color: 0x888888 });
+        const textMaterial = new THREE.MeshBasicMaterial({ color: 0x888888 });
 
         const textMesh = new THREE.Mesh( textGeometry, textMaterial );
         textMesh.position.x = position.x + centerOffset;
@@ -64,23 +88,9 @@
         return textMesh;
     }
 
-    function createTextLabels() {
-        textGroupXYZ = new THREE.Group();
-        textGroupXYZ.position = new THREE.Vector3(0.0, 0.0, 0.0);
-        textGroupXYZ.add(createText('X', font, THREE.Vector3(1.0, 0.0, 0.0)), THREE.Vector3(0, Math.PI/2, 0));
-        textGroupXYZ.add(createText('Y', font, THREE.Vector3(0.0, 1.0, 0.0)));
-        textGroupXYZ.add(createText('Z', font, THREE.Vector3(0.0, 0.0, 1.0)));
-
-        textGroupENU = new THREE.Group();
-        textGroupENU.position = new THREE.Vector3(0.0, 0.0, 0.0);
-        textGroupENU.add(createText('East', font, THREE.Vector3(1.5, 0.0, 0.0)));
-        textGroupENU.add(createText('North', font, THREE.Vector3(0.0, 0.0, -1.5)));
-        textGroupENU.add(createText('Up', font, THREE.Vector3(0.0, 1.5, 0.0)));
-    }
-
 </script>
 
-{#if contentMimeType === 'model/gltf+json'}
+{#if contentMimeType === 'model/gltf+json' || contentMimeType === 'model/glb'}
     <SC.Canvas background={new THREE.Color(0xf0f0f0)} antialias>
         <SC.PerspectiveCamera position={[2, 2, 2]} near={0.1} far={10} fov={50} />
         <SC.OrbitControls enabled={true} enableZoom={true} autoRotate={true} autoRotateSpeed={1} enableDamping={true} dampingFactor={0.1} target={[0, 0, 0]} />
@@ -88,6 +98,12 @@
         <ReusableGltf modelURL={contentUrl} scale={[1, 1, 1]} />
         <SC.Primitive object={new THREE.GridHelper(50, 50, 0x444444, 0x555555)} position={[0.0, 0.0, 0.0]} />
         <SC.Primitive object={new THREE.AxesHelper(5)} position={[0.0, 0.001, 0.0]}/>
+        <SC.Mesh geometry={X.geometry} position={X.position.toArray()} rotation={[X.rotation.x, X.rotation.y, X.rotation.z, 'XYZ']} material={new THREE.MeshBasicMaterial({ color: 0x888888 })}/>
+        <SC.Mesh geometry={Y.geometry} position={Y.position.toArray()} rotation={[Y.rotation.x, Y.rotation.y, Y.rotation.z, 'XYZ']} material={new THREE.MeshBasicMaterial({ color: 0x888888 })}/>
+        <SC.Mesh geometry={Z.geometry} position={Z.position.toArray()} rotation={[Z.rotation.x, Z.rotation.y, Z.rotation.z, 'XYZ']} material={new THREE.MeshBasicMaterial({ color: 0x888888 })}/>
+        <SC.Mesh geometry={E.geometry} position={E.position.toArray()} rotation={[E.rotation.x, E.rotation.y, E.rotation.z, 'XYZ']} material={new THREE.MeshBasicMaterial({ color: 0x888888 })}/>
+        <SC.Mesh geometry={N.geometry} position={N.position.toArray()} rotation={[N.rotation.x, N.rotation.y, N.rotation.z, 'XYZ']} material={new THREE.MeshBasicMaterial({ color: 0x888888 })}/>
+        <SC.Mesh geometry={U.geometry} position={U.position.toArray()} rotation={[U.rotation.x, U.rotation.y, U.rotation.z, 'XYZ']} material={new THREE.MeshBasicMaterial({ color: 0x888888 })}/>
     </SC.Canvas>
 {:else if contentMimeType === 'image/png' || contentMimeType === 'image/jpg'}
     <Image width={300} src={contentUrl}>
