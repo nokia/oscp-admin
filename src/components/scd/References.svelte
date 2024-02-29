@@ -5,11 +5,12 @@
 
 <script lang="ts">
     import { AddSolidIcon, CloseSolidIcon, ExploreIcon } from 'svelte-zondicons';
-    import { scr_reference, type Ref } from '@oarc/scd-access';
+    import { scr_reference, type Ref, type Geopose } from '@oarc/scd-access';
     import { createEventDispatcher } from 'svelte';
     import ContenViewer from '../../pages/scd/admin/contentviewer/ContentViewer.svelte';
 
     export let data: Ref[] | undefined;
+    export let geopose: Geopose;
 
     const dispatch = createEventDispatcher();
 
@@ -68,11 +69,7 @@
 
             {#if reference}
                 <div style="position: relative; width: 300px; height: 300px; margin-bottom: 50px;">
-                    <ContenViewer
-                        contentMimeType={reference.contentType}
-                        contentUrl={reference.url}
-                    >
-                    </ContenViewer>
+                    <ContenViewer {geopose} contentMimeType={reference.contentType} contentUrl={reference.url}></ContenViewer>
                 </div>
             {/if}
         {/each}
@@ -84,7 +81,6 @@
         <AddSolidIcon size="2rem" />
     </button>
 {/if}
-
 
 <style>
     .addbutton {

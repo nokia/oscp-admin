@@ -4,27 +4,16 @@
 -->
 
 <script lang="ts">
-    import { UploadIcon, MapIcon } from 'svelte-zondicons';
+    import { UploadIcon } from 'svelte-zondicons';
 
     import { goto } from '@sveltech/routify';
 
-    import { contentRefs, geoPose } from '../../core/store';
-
     import Content from './Content.svelte';
-    import GeoPose from './GeoPose.svelte';
     import type { SCR, SCRnoId } from '@oarc/scd-access';
-    import Modal from '../Modal.svelte';
-    import Map from '../Map.svelte';
 
     export let data: SCR | SCRnoId;
 
     let hasRefs = handleRefsUpdate();
-    let showModal = false;
-
-    function updateGeopose({ lat, lon }: { lat: number; lon: number }) {
-        data.content.geopose.position.lat = lat;
-        data.content.geopose.position.lon = lon;
-    }
 
     function openContentEditor(event: Event) {
         event.preventDefault();
@@ -45,32 +34,6 @@
 
     <Content data={data.content} on:refsUpdated={() => (hasRefs = handleRefsUpdate())} />
 </fieldset>
-
-<fieldset>
-    <legend>
-        <span>GeoPose</span>
-
-        <button
-            class="editorbutton"
-            on:click={(event) => {
-                event.preventDefault();
-                contentRefs.set(data.content.refs || []);
-                geoPose.set(data.content.geopose);
-                showModal = true;
-            }}
-        >
-            <MapIcon class="editoricon" />
-        </button>
-    </legend>
-
-    <GeoPose data={data.content.geopose} />
-</fieldset>
-
-{#if showModal}
-    <Modal on:close={() => (showModal = false)}>
-        <Map {updateGeopose} onSaveCancel={() => (showModal = false)} />
-    </Modal>
-{/if}
 
 <!--
     (c) 2020 Open AR Cloud
