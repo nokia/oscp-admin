@@ -131,9 +131,9 @@
         </dd>
     </dl>
     <dl>
-        <dt>Euler angles (order: xyz)</dt>
+        <dt>Euler angles (order: EUN)</dt>
         <dd>
-            <label for="euleranglex">X</label>
+            <label for="euleranglex">E</label>
             <input
                 id="euleranglex"
                 type="number"
@@ -146,28 +146,28 @@
             />
         </dd>
         <dd>
-            <label for="eulerangley">Y</label>
+            <label for="eulerangley">N</label>
             <input
                 id="eulerangley"
-                type="number"
-                step="any"
-                required
-                value={eulerDegrees.y}
-                on:change={(event) => {
-                    onChangeEuler('y', parseFloat(event.currentTarget.value));
-                }}
-            />
-        </dd>
-        <dd>
-            <label for="euleranglez">Z</label>
-            <input
-                id="euleranglez"
                 type="number"
                 step="any"
                 required
                 value={eulerDegrees.z}
                 on:change={(event) => {
                     onChangeEuler('z', parseFloat(event.currentTarget.value));
+                }}
+            />
+        </dd>
+        <dd>
+            <label for="euleranglez">U</label>
+            <input
+                id="euleranglez"
+                type="number"
+                step="any"
+                required
+                value={-1 * eulerDegrees.y}
+                on:change={(event) => {
+                    onChangeEuler('y', -1 * parseFloat(event.currentTarget.value));
                 }}
             />
         </dd>
