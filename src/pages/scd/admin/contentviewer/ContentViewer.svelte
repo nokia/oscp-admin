@@ -12,7 +12,6 @@
 
     import { FontLoader, Font } from 'three/addons/loaders/FontLoader.js';
     import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-    //import { TransformControls } from 'three/addons/controls/TransformControls.js';
 
     import ReusableGltf from './ReusableGltf.svelte';
     import Image from './Image.svelte';
@@ -21,9 +20,6 @@
     export let geopose: Geopose;
     export let contentUrl: string;
     export let contentMimeType: string;
-    //export let contentGeoPose:GeoPose
-    let contentEuler: THREE.Euler;
-    //const transformControls:TransformControls = new TransformControls() // TODO:  we cannot attach to the object because it is hidden in SC.ReusableGltf :(  Shoudl we add +- Euler rotation buttons instead?
 
     let font: Font | undefined = undefined;
 
@@ -33,7 +29,10 @@
     let E: THREE.Mesh = new THREE.Mesh();
     let N: THREE.Mesh = new THREE.Mesh();
     let U: THREE.Mesh = new THREE.Mesh();
-    const axisLabelMaterial = new THREE.MeshBasicMaterial({ color: 0x444444 });
+    const defaultMaterial = new THREE.MeshBasicMaterial({ color: 0x444444 });
+    const eLabelMaterial = new THREE.MeshBasicMaterial({ color: 0xFF0000 });
+    const nLabelMaterial = new THREE.MeshBasicMaterial({ color: 0x00FF00 });
+    const uLabelMaterial = new THREE.MeshBasicMaterial({ color: 0x0000FF });
 
     onMount(() => {
         loadFont('helvetiker_regular');
@@ -58,12 +57,12 @@
     }
 
     function createTextLabels(font: Font) {
-        X = createText('X', font, new THREE.Vector3(1.0, 0.0, 0.0)); //, new THREE.Vector3(0, Math.PI/2, 0));
+        X = createText('X', font, new THREE.Vector3(1.0, 0.0, 0.0));
         Y = createText('Y', font, new THREE.Vector3(0.0, 1.0, 0.0));
         Z = createText('Z', font, new THREE.Vector3(0.0, 0.0, 1.0));
-        E = createText('E', font, new THREE.Vector3(1.5, 0.0, 0.0));
-        N = createText('N', font, new THREE.Vector3(0.0, 0.0, -1.5));
-        U = createText('U', font, new THREE.Vector3(0.0, 1.5, 0.0));
+        E = createText('E', font, new THREE.Vector3(1.5, 0.0, 0.0), new THREE.Vector3(0, 0, 0), 0xFF0000);
+        N = createText('N', font, new THREE.Vector3(0.0, 0.0, -1.5), new THREE.Vector3(0, 0, 0), 0x00FF00);
+        U = createText('U', font, new THREE.Vector3(0.0, 1.5, 0.0), new THREE.Vector3(0, 0, 0), 0x0000FF);
     }
 
     function createText(text: string, font: Font, position: THREE.Vector3 = new THREE.Vector3(0, 0, 0), rotation: THREE.Vector3 = new THREE.Vector3(0, 0, 0), color = 0x444444) {
@@ -93,23 +92,23 @@
     }
 </script>
 
-{#if contentMimeType === 'model/gltf+json' || contentMimeType === 'model/glb'}
+{#if contentMimeType === 'model/gltf+json' || contentMimeType === 'model/gltf-binary'}
     <SC.Canvas background={new THREE.Color(0xf0f0f0)} antialias>
         <SC.PerspectiveCamera position={[2, 2, 2]} near={0.1} far={10} fov={50} />
         <SC.OrbitControls enabled={true} enableZoom={true} autoRotate={true} autoRotateSpeed={1} enableDamping={true} dampingFactor={0.1} target={[0, 0, 0]} />
         <SC.AmbientLight color={new THREE.Color(0xffffff)} intensity={1.0} />
         <ReusableGltf modelURL={contentUrl} scale={[1, 1, 1]} rotation={[contentEuler.x, contentEuler.y, contentEuler.z, 'XYZ']} />
         <SC.Primitive object={new THREE.GridHelper(50, 50, 0x444444, 0x555555)} position={[0.0, 0.0, 0.0]} />
-        <SC.Primitive object={new THREE.AxesHelper(5)} position={[0.0, 0.001, 0.0]} />
+        <SC.Primitive object={new THREE.AxesHelper(5)} position={[0.0, 0.001, 0.0]} rotation={[-Math.PI/2, 0, 0]} />
         <SC.Group position={[0, 0, 0]}>
-            <SC.Mesh geometry={X.geometry} position={X.position.toArray()} rotation={[X.rotation.x, X.rotation.y, X.rotation.z, 'XYZ']} material={axisLabelMaterial} />
-            <SC.Mesh geometry={Y.geometry} position={Y.position.toArray()} rotation={[Y.rotation.x, Y.rotation.y, Y.rotation.z, 'XYZ']} material={axisLabelMaterial} />
-            <SC.Mesh geometry={Z.geometry} position={Z.position.toArray()} rotation={[Z.rotation.x, Z.rotation.y, Z.rotation.z, 'XYZ']} material={axisLabelMaterial} />
+            <SC.Mesh geometry={X.geometry} position={X.position.toArray()} rotation={[X.rotation.x, X.rotation.y, X.rotation.z, 'XYZ']} material={defaultMaterial} />
+            <SC.Mesh geometry={Y.geometry} position={Y.position.toArray()} rotation={[Y.rotation.x, Y.rotation.y, Y.rotation.z, 'XYZ']} material={defaultMaterial} />
+            <SC.Mesh geometry={Z.geometry} position={Z.position.toArray()} rotation={[Z.rotation.x, Z.rotation.y, Z.rotation.z, 'XYZ']} material={defaultMaterial} />
         </SC.Group>
         <SC.Group position={[0, 0, 0]}>
-            <SC.Mesh geometry={E.geometry} position={E.position.toArray()} rotation={[E.rotation.x, E.rotation.y, E.rotation.z, 'XYZ']} material={axisLabelMaterial} />
-            <SC.Mesh geometry={N.geometry} position={N.position.toArray()} rotation={[N.rotation.x, N.rotation.y, N.rotation.z, 'XYZ']} material={axisLabelMaterial} />
-            <SC.Mesh geometry={U.geometry} position={U.position.toArray()} rotation={[U.rotation.x, U.rotation.y, U.rotation.z, 'XYZ']} material={axisLabelMaterial} />
+            <SC.Mesh geometry={E.geometry} position={E.position.toArray()} rotation={[E.rotation.x, E.rotation.y, E.rotation.z, 'XYZ']} material={eLabelMaterial} />
+            <SC.Mesh geometry={N.geometry} position={N.position.toArray()} rotation={[N.rotation.x, N.rotation.y, N.rotation.z, 'XYZ']} material={nLabelMaterial} />
+            <SC.Mesh geometry={U.geometry} position={U.position.toArray()} rotation={[U.rotation.x, U.rotation.y, U.rotation.z, 'XYZ']} material={uLabelMaterial} />
         </SC.Group>
     </SC.Canvas>
 {:else if contentMimeType === 'image/png' || contentMimeType === 'image/jpg'}
