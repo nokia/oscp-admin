@@ -11,23 +11,26 @@
     export let inactive = false;
 
     const quaternionToEuler = (quaternion: Quaternion): THREE.Euler => {
-        return new THREE.Euler().setFromQuaternion(new THREE.Quaternion(data.quaternion.x, data.quaternion.z, -data.quaternion.y, data.quaternion.w), 'XYZ');
+        const q = new THREE.Quaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+        q.normalize();
+        return new THREE.Euler().setFromQuaternion(q, 'XYZ');
     };
 
     const eulerToQuaternion = (euler: THREE.Euler): Quaternion => {
-        const threeJsQuaternion = new THREE.Quaternion().setFromEuler(euler);
+        const q = new THREE.Quaternion().setFromEuler(euler);
+        q.normalize();
         return {
-            x: threeJsQuaternion.x,
-            y: threeJsQuaternion.z,
-            z: -threeJsQuaternion.y,
-            w: threeJsQuaternion.w,
+            x: q.x,
+            y: q.y,
+            z: q.z,
+            w: q.w,
         };
     };
 
     const onChangeQuat = (quatIndex: keyof Quaternion, value: number) => {
         data.quaternion[quatIndex] = value;
         const euler = quaternionToEuler(data.quaternion);
-        eulerDegrees = {
+        eulerDeg = {
             x: convertRadToDeg(euler.x),
             y: convertRadToDeg(euler.y),
             z: convertRadToDeg(euler.z),
@@ -35,26 +38,28 @@
     };
 
     const onChangeEuler = (eulerIndex: 'x' | 'y' | 'z', degrees: number) => {
-        eulerDegrees[eulerIndex] = degrees;
+        eulerDeg[eulerIndex] = degrees;
         const radians = convertDegToRad(degrees);
-        euler[eulerIndex] = radians;
-        data.quaternion = eulerToQuaternion(euler);
+        eulerRad[eulerIndex] = radians;
+
+        data.quaternion = eulerToQuaternion(eulerRad);
     };
 
     const convertDegToRad = (degrees: number) => {
-        return degrees * (Math.PI / 180);
+        return degrees * (Math.PI / 180.0);
     };
 
     const convertRadToDeg = (radians: number) => {
-        return radians * (180 / Math.PI);
+        return radians * (180.0 / Math.PI);
     };
 
-    let euler = new THREE.Euler().setFromQuaternion(new THREE.Quaternion(data.quaternion.x, data.quaternion.z, -data.quaternion.y, data.quaternion.w), 'XYZ');
-    let eulerDegrees = {
-        x: convertRadToDeg(euler.x),
-        y: convertRadToDeg(euler.y),
-        z: convertRadToDeg(euler.z),
+    let eulerRad = quaternionToEuler(data.quaternion);
+    let eulerDeg = {
+        x: convertRadToDeg(eulerRad.x),
+        y: convertRadToDeg(eulerRad.y),
+        z: convertRadToDeg(eulerRad.z),
     };
+
 </script>
 
 <dl>
@@ -131,43 +136,43 @@
         </dd>
     </dl>
     <dl>
-        <dt>Euler angles (order: EUN)</dt>
+        <dt>Euler angles (degrees)</dt>
         <dd>
-            <label for="euleranglex">E</label>
+            <label for="euleranglex">East</label>
             <input
                 id="euleranglex"
                 type="number"
                 step="any"
                 required
-                value={eulerDegrees.x}
+                value={eulerDeg.x}
                 on:change={(event) => {
                     onChangeEuler('x', parseFloat(event.currentTarget.value));
                 }}
             />
         </dd>
         <dd>
-            <label for="eulerangley">N</label>
+            <label for="eulerangley">North</label>
             <input
                 id="eulerangley"
                 type="number"
                 step="any"
                 required
-                value={eulerDegrees.z}
+                value={eulerDeg.y}
                 on:change={(event) => {
-                    onChangeEuler('z', parseFloat(event.currentTarget.value));
+                    onChangeEuler('y', parseFloat(event.currentTarget.value));
                 }}
             />
         </dd>
         <dd>
-            <label for="euleranglez">U</label>
+            <label for="euleranglez">Up</label>
             <input
                 id="euleranglez"
                 type="number"
                 step="any"
                 required
-                value={-1 * eulerDegrees.y}
+                value={eulerDeg.z}
                 on:change={(event) => {
-                    onChangeEuler('y', -1 * parseFloat(event.currentTarget.value));
+                    onChangeEuler('z', parseFloat(event.currentTarget.value));
                 }}
             />
         </dd>
