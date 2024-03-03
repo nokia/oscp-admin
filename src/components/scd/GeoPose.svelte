@@ -19,11 +19,11 @@
     const eulerToQuaternion = (euler: THREE.Euler): Quaternion => {
         const q = new THREE.Quaternion().setFromEuler(euler);
         q.normalize();
-        return {
-            x: q.x,
-            y: q.y,
-            z: q.z,
-            w: q.w,
+        return { // clamp very small values to zero
+            x: Math.abs(q.x) > 0.01 ? q.x : 0.0,
+            y: Math.abs(q.y) > 0.01 ? q.y : 0.0,
+            z: Math.abs(q.z) > 0.01 ? q.z : 0.0,
+            w: Math.abs(q.w) > 0.01 ? q.w : 0.0,
         };
     };
 
@@ -87,7 +87,7 @@
             <input
                 id="geoposequaternionx"
                 type="number"
-                step="any"
+                step=0.01
                 required
                 value={data.quaternion.x}
                 on:change={(event) => {
@@ -100,7 +100,9 @@
             <input
                 id="geoposequaterniony"
                 type="number"
-                step="any"
+                step=0.01
+                min=-1.0
+                max=1.0
                 required
                 value={data.quaternion.y}
                 on:change={(event) => {
@@ -113,7 +115,9 @@
             <input
                 id="geoposequaternionz"
                 type="number"
-                step="any"
+                step=0.01
+                min=-1.0
+                max=1.0
                 required
                 value={data.quaternion.z}
                 on:change={(event) => {
@@ -126,7 +130,9 @@
             <input
                 id="geoposequaternionw"
                 type="number"
-                step="any"
+                step=0.01
+                min=-1.0
+                max=1.0
                 required
                 value={data.quaternion.w}
                 on:change={(event) => {
@@ -143,6 +149,8 @@
                 id="euleranglex"
                 type="number"
                 step="any"
+                min=-180
+                max=180
                 required
                 value={eulerDeg.x}
                 on:change={(event) => {
@@ -156,6 +164,8 @@
                 id="eulerangley"
                 type="number"
                 step="any"
+                min=-180
+                max=180
                 required
                 value={eulerDeg.y}
                 on:change={(event) => {
@@ -169,6 +179,8 @@
                 id="euleranglez"
                 type="number"
                 step="any"
+                min=-180
+                max=180
                 required
                 value={eulerDeg.z}
                 on:change={(event) => {
