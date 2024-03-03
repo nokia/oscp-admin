@@ -7,11 +7,22 @@
     import Keywords from './Keywords.svelte';
     import References from './References.svelte';
     import Definitions from './Definitions.svelte';
+    import Modal from '../Modal.svelte';
+    import Map from '../Map.svelte';
+    import GeoPose from './GeoPose.svelte';
+    import { MapIcon } from 'svelte-zondicons';
+    import { contentRefs, geoPose } from '../../core/store';
     import { createEventDispatcher } from 'svelte';
     import type { ChangeEventHandler } from 'svelte/elements';
     import type { Content } from '@oarc/scd-access';
 
     export let data: Content;
+    let showModal = false;
+
+    function updateGeopose({ lat, lon }: { lat: number; lon: number }) {
+        data.geopose.position.lat = lat;
+        data.geopose.position.lon = lon;
+    }
 
     const dispatch = createEventDispatcher<{ refsUpdated: undefined }>();
 
@@ -81,7 +92,33 @@
     <input id="contentplacekey" disabled={data.placekey === undefined} bind:value={data.placekey} />
 </div>
 
-<References bind:data={data.refs} on:refsUpdated={() => dispatch('refsUpdated')} />
+<fieldset>
+    <legend>
+        <span>GeoPose</span>
+
+        <button
+            class="editorbutton"
+            on:click={(event) => {
+                event.preventDefault();
+                contentRefs.set(data.refs || []);
+                geoPose.set(data.geopose);
+                showModal = true;
+            }}
+        >
+            <MapIcon class="editoricon" />
+        </button>
+    </legend>
+
+    <GeoPose bind:data={data.geopose} />
+</fieldset>
+
+{#if showModal}
+    <Modal on:close={() => (showModal = false)}>
+        <Map {updateGeopose} onSaveCancel={() => (showModal = false)} />
+    </Modal>
+{/if}
+
+<References bind:data={data.refs} geopose={data.geopose} on:refsUpdated={() => dispatch('refsUpdated')} />
 
 <Definitions bind:data={data.definitions} />
 
@@ -100,3 +137,16 @@
     </label>
     <input id="contentbbox" disabled={data.bbox === undefined} bind:value={data.bbox} />
 </div>
+
+<style>
+    .editorbutton {
+        background-color: transparent;
+        border: 0;
+    }
+
+    :global(.editoricon) {
+        cursor: pointer;
+        width: 20px;
+        vertical-align: bottom;
+    }
+</style>
