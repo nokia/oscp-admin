@@ -35,11 +35,6 @@
     <Content data={data.content} on:refsUpdated={() => (hasRefs = handleRefsUpdate())} />
 </fieldset>
 
-<!--
-    (c) 2020 Open AR Cloud
-    This code is licensed under MIT license (see LICENSE.md for details)
--->
-
 <style>
     .editorbutton {
         background-color: transparent;
