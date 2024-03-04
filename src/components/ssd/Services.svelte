@@ -73,11 +73,6 @@
     <AddSolidIcon size="2rem" color="white" />
 </button>
 
-<!--
-    (c) 2020 Open AR Cloud
-    This code is licensed under MIT license (see LICENSE.md for details)
--->
-
 <style>
     details:last-child {
         margin-bottom: 0;

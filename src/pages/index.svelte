@@ -28,11 +28,6 @@
     <dd><button on:click={loadScd}>Spatial Content Discovery</button></dd>
 </dl>
 
-<!--
-    (c) 2020 Open AR Cloud
-    This code is licensed under MIT license (see LICENSE.md for details)
--->
-
 <style>
     button {
         color: blue;

@@ -77,11 +77,6 @@
     <slot name="controls" />
 </form>
 
-<!--
-    (c) 2020 Open AR Cloud
-    This code is licensed under MIT license (see LICENSE.md for details)
--->
-
 <style>
     :global(form label, form dt) {
         display: inline-block;
