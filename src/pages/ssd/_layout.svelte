@@ -9,10 +9,11 @@
     import { setSsdUrl, authStore, authenticated, loading } from '@oarc/ssd-access';
     import { oscpSsdUrl } from '../../core/store';
     import { initAuth } from '../../core/authMode';
+    import { env } from '../../core/runtimeConfig';
 
     import Navigation from '../../components/Navigation.svelte';
 
-    $oscpSsdUrl = import.meta.env['VITE_OSCP_SSD_URL'] ?? '';
+    $oscpSsdUrl = env('VITE_OSCP_SSD_URL');
     setSsdUrl($oscpSsdUrl);
     initAuth(authStore.init, 'SSD', (value) => loading.set(value));
 

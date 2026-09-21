@@ -12,9 +12,9 @@
     import CountryCode from '../../../components/ssd/CountryCode.svelte';
 
     import { authDisabled, NO_AUTH_LABEL } from '../../../core/authMode';
+    import { env } from '../../../core/runtimeConfig';
 
-    // eslint-disable-next-line no-undef
-    const providerUrl = import.meta.env['VITE_AUTH0_SSD_PROVIDER'];
+    const providerUrl = env('VITE_AUTH0_SSD_PROVIDER');
     const detailUrl = '../detail';
 
     let countryCodeElement: CountryCode;

@@ -6,6 +6,8 @@
         "start": "npm run dev",
         "postinstall": "node scripts/patch-routify-esm.cjs",
         "build": "vite build",
+        "build:docker": "docker compose build",
+        "start:docker": "docker compose up -d",
         "preview": "vite preview --port 8081",
         "check": "svelte-check --tsconfig ./tsconfig.json",
         "lint": "eslint . --ext .js,.svelte --fix",

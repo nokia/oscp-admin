@@ -3,8 +3,10 @@
   (c) 2024 Nokia, Licensed under the MIT License, SPDX-License-Identifier: MIT
 */
 
+import { env, envFlag } from './runtimeConfig';
+
 /** Local/compose mode: skip Auth0 and treat the user as authenticated. */
-export const authDisabled = import.meta.env['VITE_AUTH_DISABLED'] === 'true';
+export const authDisabled = envFlag('VITE_AUTH_DISABLED') || envFlag('AUTH_DISABLED');
 
 /** Claim value backends use when AUTH_REQUIRED=false. */
 export const NO_AUTH_LABEL = 'noauthtest';
@@ -17,10 +19,10 @@ export function authInitParams(service: DiscoveryService): [string, string, stri
     }
 
     return [
-        import.meta.env[`VITE_AUTH0_${service}_DOMAIN`] ?? '',
-        import.meta.env[`VITE_AUTH0_${service}_CLIENTID`] ?? '',
-        import.meta.env[`VITE_AUTH0_${service}_AUDIENCE`] ?? '',
-        import.meta.env[`VITE_AUTH0_${service}_SCOPE`] ?? '',
+        env(`VITE_AUTH0_${service}_DOMAIN`),
+        env(`VITE_AUTH0_${service}_CLIENTID`),
+        env(`VITE_AUTH0_${service}_AUDIENCE`),
+        env(`VITE_AUTH0_${service}_SCOPE`),
     ];
 }
 

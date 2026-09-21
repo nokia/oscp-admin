@@ -13,9 +13,9 @@
     import Topic from '../../../components/scd/Topic.svelte';
 
     import { authDisabled, NO_AUTH_LABEL } from '../../../core/authMode';
+    import { env } from '../../../core/runtimeConfig';
 
-    // eslint-disable-next-line no-undef
-    const tenantUrl = import.meta.env['VITE_AUTH0_SCD_TENANT'];
+    const tenantUrl = env('VITE_AUTH0_SCD_TENANT');
     const detailUrl = '../detail';
 
     let topicElement: Topic;

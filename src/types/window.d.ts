@@ -5,4 +5,5 @@
 
 interface Window {
     routify: { inBrowser: boolean };
+    __OSCP_CONFIG__?: Record<string, string | undefined>;
 }

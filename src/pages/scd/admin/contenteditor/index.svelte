@@ -8,10 +8,11 @@
 
     import { CheveronLeftIcon } from 'svelte-zondicons';
     import type { MouseEventHandler } from 'svelte/elements';
+    import { env } from '../../../../core/runtimeConfig';
 
     let storageProvider: any;
 
-    const googleDriveEnabled = Boolean(import.meta.env['VITE_GOOGLE_PROJECT_ID'] && import.meta.env['VITE_GOOGLE_PICKER_KEY'] && import.meta.env['VITE_GOOGLE_CLIENT_ID']);
+    const googleDriveEnabled = Boolean(env('VITE_GOOGLE_PROJECT_ID') && env('VITE_GOOGLE_PICKER_KEY') && env('VITE_GOOGLE_CLIENT_ID'));
 
     let returnPath = ($route as any).last ? `${($route as any).last.path}?${new URLSearchParams(($route as any).last.params)}` : '/scd/admin/createcontent';
 

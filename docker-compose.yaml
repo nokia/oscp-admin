@@ -1,0 +1,15 @@
+services:
+  oscp-admin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: oscp-admin:latest
+    ports:
+      - "${ADMIN_PORT:-8081}:80"
+    env_file:
+      - .env
+    environment:
+      OSCP_SSD_URL: ${OSCP_SSD_URL:-${VITE_OSCP_SSD_URL:-http://localhost:8031}}
+      OSCP_SCD_URL: ${OSCP_SCD_URL:-${VITE_OSCP_SCD_URL:-http://localhost:8032}}
+      AUTH_DISABLED: ${AUTH_DISABLED:-${VITE_AUTH_DISABLED:-true}}
+    restart: unless-stopped

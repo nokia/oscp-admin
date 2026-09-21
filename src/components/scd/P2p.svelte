@@ -7,15 +7,16 @@
     import { createEventDispatcher } from 'svelte';
 
     import { geoPose, contentRefs } from '../../core/store';
+    import { env } from '../../core/runtimeConfig';
 
     import Peer, { type DataConnection } from 'peerjs';
     import QRCode from 'qrcode';
 
-    const peerHost = import.meta.env['VITE_PEERJS_HOST'];
-    const peerPort = import.meta.env['VITE_PEERJS_PORT'];
-    const peerKey = import.meta.env['VITE_PEERJS_KEY'];
-    const peerPath = import.meta.env['VITE_PEERJS_PATH'] || '/';
-    const clientUrl = import.meta.env['VITE_PEERJS_CLIENT_URL'];
+    const peerHost = env('VITE_PEERJS_HOST');
+    const peerPort = env('VITE_PEERJS_PORT');
+    const peerKey = env('VITE_PEERJS_KEY');
+    const peerPath = env('VITE_PEERJS_PATH') || '/';
+    const clientUrl = env('VITE_PEERJS_CLIENT_URL');
     const peerEnabled = Boolean(peerHost && peerPort && peerKey && clientUrl);
 
     const peer = peerEnabled
