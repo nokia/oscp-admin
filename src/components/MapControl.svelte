@@ -9,9 +9,9 @@
 
     import { ReloadIcon, ExploreIcon } from 'svelte-zondicons';
 
-    import { MIN_H3RESOLUTION, DEFAULT_H3RESOLUTION, MAX_H3RESOLUTION, H3RESOLUTION_AUTO } from '../core/store.js';
-    import { geoPose } from '../core/store.js';
-    import type { StreetOrSatellite } from '../types/map.js';
+    import { MIN_H3RESOLUTION, DEFAULT_H3RESOLUTION, MAX_H3RESOLUTION, H3RESOLUTION_AUTO } from '../core/store';
+    import { geoPose } from '../core/store';
+    import type { StreetOrSatellite } from '../types/map';
     import type { KeyboardEventHandler } from 'svelte/elements';
 
     export let h3ResolutionType = false;

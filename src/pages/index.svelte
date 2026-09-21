@@ -18,8 +18,7 @@
 <h2>Welcome</h2>
 
 <p>
-    Sample admin app for the services offered by Open Spatial Computing Platform of Open AR Cloud. The idea is to offer main functionality available as standard web components, to make it as easy as
-    possible to integrate access to the services into existing cms already in use by companies.
+    Sample admin app for the services offered by Open Spatial Computing Platform of Open AR Cloud. Use it to register and edit spatial services and geolocated content.
 </p>
 
 <dl>

@@ -13,11 +13,8 @@
     let form: HTMLFormElement;
     let timestamp = 0;
 
-    $: {
-        if (data.timestamp) {
-            timestamp = data.timestamp;
-            delete data.timestamp;
-        }
+    $: if (data.timestamp) {
+        timestamp = data.timestamp;
     }
 
     export function reportValidity() {

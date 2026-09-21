@@ -10,6 +10,8 @@
     const projectId = import.meta.env['VITE_GOOGLE_PROJECT_ID'];
     // eslint-disable-next-line no-undef
     const pickerKey = import.meta.env['VITE_GOOGLE_PICKER_KEY'];
+    const clientId = import.meta.env['VITE_GOOGLE_CLIENT_ID'];
+    const googleConfigured = Boolean(projectId && pickerKey && clientId);
 
     const dispatch = createEventDispatcher();
 
@@ -17,6 +19,10 @@
     let oauthToken: string;
 
     function handleClientLoad() {
+        if (!googleConfigured) {
+            return;
+        }
+
         // eslint-disable-next-line no-undef
         gapi.load('client:auth2', onAuthLoad);
         // eslint-disable-next-line no-undef
@@ -31,7 +37,7 @@
     function onAuthLoad() {
         window.gapi.auth.authorize(
             {
-                client_id: '1068640082910-v81bvg55ts1dhamr3q272jouhm9qivkp',
+                client_id: clientId,
                 scope: ['https://www.googleapis.com/auth/drive.file'],
                 immediate: false,
             },

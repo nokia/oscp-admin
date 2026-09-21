@@ -15,6 +15,7 @@
 
 <Import
     {authStore}
+    title="Import Contents"
     {propertyMissingMessage}
     propertyElement={topicElement}
     postFileFunction={async ({ url, propertyValue, file, token }) => {

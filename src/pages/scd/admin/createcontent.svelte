@@ -24,7 +24,7 @@
 
     onMount(() => {
         newContentToCreate.update((current) => {
-            if ($geoPose?.position) {
+            if ($geoPose?.position && current.content.geopose) {
                 current.content.geopose.position = $geoPose.position;
             }
             return current;

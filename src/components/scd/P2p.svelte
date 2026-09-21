@@ -6,22 +6,27 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
 
-    import { geoPose, contentRefs } from '../../core/store.js';
+    import { geoPose, contentRefs } from '../../core/store';
 
     import Peer, { type DataConnection } from 'peerjs';
     import QRCode from 'qrcode';
 
-    const peer = new Peer({
-        // TODO: Introduce .env parameters
-        debug: 2,
-        host: 'rtc.oscp.cloudpose.io',
-        port: 5678,
-        key: 'peerjs-mvtest',
-        path: '/',
-    });
+    const peerHost = import.meta.env['VITE_PEERJS_HOST'];
+    const peerPort = import.meta.env['VITE_PEERJS_PORT'];
+    const peerKey = import.meta.env['VITE_PEERJS_KEY'];
+    const peerPath = import.meta.env['VITE_PEERJS_PATH'] || '/';
+    const clientUrl = import.meta.env['VITE_PEERJS_CLIENT_URL'];
+    const peerEnabled = Boolean(peerHost && peerPort && peerKey && clientUrl);
 
-    // const clientUrl = 'https://192.168.1.103:5001/dev/geoposeremote';
-    const clientUrl = 'https://client.browsar.app/dev/geoposeremote';
+    const peer = peerEnabled
+        ? new Peer({
+              debug: 2,
+              host: String(peerHost),
+              port: Number(peerPort),
+              key: String(peerKey),
+              path: peerPath,
+          })
+        : null;
     const idParameter = 'peerid';
     const dispatch = createEventDispatcher<{ connected: string; disconnected: undefined }>();
 
@@ -33,8 +38,12 @@
 
     let qrCodeUrl: string;
 
-    peer.on('open', () => {
+    peer?.on('open', () => {
         // Workaround for peer.reconnect deleting previous id
+        if (!peer) {
+            return;
+        }
+
         if (peer.id === null) {
             console.log('Received null id from peer open');
             (peer as any).id = lastPeerId;
@@ -49,7 +58,7 @@
         createQrCode(peer.id);
     });
 
-    peer.on('connection', (c) => {
+    peer?.on('connection', (c) => {
         if (connection && connection.open) {
             c.on('open', () => {
                 c.send('Already connected to another client');
@@ -69,12 +78,12 @@
         ready();
     });
 
-    peer.on('call', (call) => {
+    peer?.on('call', (call) => {
         call.answer();
         // TODO: Handle calls from remote to receive changes to geopose from client
     });
 
-    peer.on('error', function (err) {
+    peer?.on('error', function (err) {
         console.log(err);
         dispatch('disconnected');
     });
@@ -133,7 +142,9 @@
     }
 </script>
 
-{#if connectionStatus !== 'Connected'}
+{#if !peerEnabled}
+    <p>GeoPose check is disabled until <code>VITE_PEERJS_HOST</code>, <code>VITE_PEERJS_PORT</code>, <code>VITE_PEERJS_KEY</code>, and <code>VITE_PEERJS_CLIENT_URL</code> are set.</p>
+{:else if connectionStatus !== 'Connected'}
     <p>
         Scan the QR-Code with an AR capable mobile device to verify that the entered GeoPose values are correct. Once a connection is established and an AR session successfully started, the GeoPose
         values can be edited here.

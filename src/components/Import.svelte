@@ -8,6 +8,7 @@
     import type { ChangeEventHandler } from 'svelte/elements';
 
     export let authStore: typeof authenticationStore;
+    export let title = 'Import Services';
     export let postFileFunction: ({ url, propertyValue, file, token }: { url?: string; propertyValue: string; file: File; token: string }) => Promise<string>;
     export let propertyMissingMessage: string;
     export let propertyElement: HTMLInputElement;
@@ -74,7 +75,7 @@
     }
 </script>
 
-<h2>Import Services</h2>
+<h2>{title}</h2>
 
 <slot name="intro" />
 
