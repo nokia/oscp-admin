@@ -5,9 +5,10 @@
 
 <!-- routify:options bundle=true -->
 
-<script>
+<script lang="ts">
     import { ready, redirect } from '@sveltech/routify';
     import { loading, authenticated, user } from '@oarc/ssd-access';
+    import { authDisabled } from '../../../core/authMode';
 
     /*
      * since SSR normally won't render till all components have been loaded
@@ -17,14 +18,14 @@
     $ready();
 </script>
 
-<div class="admin-module" class:not-authed={!$user}>
+<div class="admin-module" class:not-authed={!$user && !authDisabled}>
     {#if !window.routify.inBrowser}
         Hello bot. This page is only available to humans.
-    {:else if $loading}
+    {:else if $loading && !authDisabled}
         <div class="center-all">
             <h1>Loading...</h1>
         </div>
-    {:else if $authenticated}
+    {:else if $authenticated || authDisabled}
         <slot />
     {:else}
         {$redirect('/')}

@@ -16,8 +16,6 @@
         "url": "git+https://github.com/OpenArCloud/oscp-admin"
     },
     "devDependencies": {
-        "@oarc/scd-access": "^0.2.0",
-        "@oarc/ssd-access": "^0.3.0",
         "@rollup/plugin-commonjs": "^15.1.0",
         "@rollup/plugin-json": "^4.1.0",
         "@rollup/plugin-node-resolve": "^9.0.0",
@@ -67,6 +65,8 @@
         "vite": "^5.0.12"
     },
     "dependencies": {
+        "@oarc/scd-access": "^0.3.1",
+        "@oarc/ssd-access": "^0.3.1",
         "@sveltech/routify": "^1.9.10",
         "draco3d": "^1.4.1",
         "sirv-cli": "^1.0.10"

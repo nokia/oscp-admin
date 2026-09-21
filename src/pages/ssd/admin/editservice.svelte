@@ -11,6 +11,8 @@
     import jwtDecode from 'jwt-decode';
     import CountryCode from '../../../components/ssd/CountryCode.svelte';
 
+    import { authDisabled, NO_AUTH_LABEL } from '../../../core/authMode';
+
     // eslint-disable-next-line no-undef
     const providerUrl = import.meta.env['VITE_AUTH0_SSD_PROVIDER'];
     const detailUrl = '../detail';
@@ -20,11 +22,16 @@
     let searchResults: SSR[] = [];
     let message = '';
 
-    let producer: any;
-    authStore.getToken().then((token) => {
-        const decoded: Record<string, unknown> = jwtDecode(token || '');
-        producer = decoded[providerUrl];
-    });
+    let producer = authDisabled ? NO_AUTH_LABEL : '';
+    if (!authDisabled) {
+        authStore.getToken().then((token) => {
+            if (!token) {
+                return;
+            }
+            const decoded: Record<string, unknown> = jwtDecode(token);
+            producer = String(decoded[providerUrl] ?? '');
+        });
+    }
 
     function handleSearch() {
         message = '';

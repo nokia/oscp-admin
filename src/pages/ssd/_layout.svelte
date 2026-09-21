@@ -6,9 +6,15 @@
 <!-- routify:options bundle=true -->
 
 <script lang="ts">
-    import { authStore, authenticated } from '@oarc/ssd-access';
+    import { setSsdUrl, authStore, authenticated, loading } from '@oarc/ssd-access';
+    import { oscpSsdUrl } from '../../core/store';
+    import { initAuth } from '../../core/authMode';
 
     import Navigation from '../../components/Navigation.svelte';
+
+    $oscpSsdUrl = import.meta.env['VITE_OSCP_SSD_URL'] ?? '';
+    setSsdUrl($oscpSsdUrl);
+    initAuth(authStore.init, 'SSD', (value) => loading.set(value));
 
     const links: [string, string, boolean][] = [
         ['/ssd/', 'Home', false],

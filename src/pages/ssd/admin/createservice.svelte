@@ -17,30 +17,28 @@
     let form: Form;
     let countryCodeElement: CountryCode;
     let data: SSR = JSON.parse(JSON.stringify(ssr_empty));
+    let errorMessage = '';
 
-    function save(event: Event) {
+    async function save(event: Event) {
         event.preventDefault();
 
         if (!form.reportValidity()) {
             event.preventDefault();
-            console.log(`New SSR not sent - Form invalid`);
-
+            errorMessage = 'New SSR not sent - Form invalid';
             return;
         }
 
+        errorMessage = '';
         data.timestamp = Date.now();
         const dataString = JSON.stringify(data);
-        validateSsr(dataString);
-        authStore
-            .getToken()
-            .then((token) => postService(countryCodeElement.value(), dataString, token || ''))
-            .then((response) => {
-                console.log(response);
-                $goto('/ssd');
-            })
-            .catch((error) => {
-                console.log(`New SSR not sent - ${error}`);
-            });
+        try {
+            validateSsr(dataString);
+            const token = await authStore.getToken();
+            await postService(countryCodeElement.value(), dataString, token || '');
+            $goto('/ssd');
+        } catch (error) {
+            errorMessage = `New SSR not sent - ${error}`;
+        }
     }
 </script>
 
@@ -62,3 +60,13 @@
         <button type="reset">Reset</button>
     </div>
 </Form>
+
+{#if errorMessage}
+    <p class="error" role="alert">{errorMessage}</p>
+{/if}
+
+<style>
+    .error {
+        color: #b00020;
+    }
+</style>

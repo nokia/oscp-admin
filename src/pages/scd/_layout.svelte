@@ -6,9 +6,14 @@
 <!-- routify:options bundle=true -->
 
 <script lang="ts">
-    import { authStore, authenticated } from '@oarc/scd-access';
+    import { authStore, authenticated, loading } from '@oarc/scd-access';
+    import { oscpScdUrl } from '../../core/store';
+    import { initAuth } from '../../core/authMode';
 
     import Navigation from '../../components/Navigation.svelte';
+
+    $oscpScdUrl = import.meta.env['VITE_OSCP_SCD_URL'] ?? '';
+    initAuth(authStore.init, 'SCD', (value) => loading.set(value));
 
     const links: [string, string, boolean][] = [
         ['/scd/', 'Home', false],

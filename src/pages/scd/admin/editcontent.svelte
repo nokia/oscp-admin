@@ -12,6 +12,8 @@
     import jwtDecode from 'jwt-decode';
     import Topic from '../../../components/scd/Topic.svelte';
 
+    import { authDisabled, NO_AUTH_LABEL } from '../../../core/authMode';
+
     // eslint-disable-next-line no-undef
     const tenantUrl = import.meta.env['VITE_AUTH0_SCD_TENANT'];
     const detailUrl = '../detail';
@@ -21,11 +23,16 @@
     let searchResults: SCR[] = [];
     let message = '';
 
-    let tenant: any;
-    authStore.getToken().then((token) => {
-        const decoded = jwtDecode<Record<string, any>>(token || '');
-        tenant = decoded[tenantUrl];
-    });
+    let tenant = authDisabled ? NO_AUTH_LABEL : '';
+    if (!authDisabled) {
+        authStore.getToken().then((token) => {
+            if (!token) {
+                return;
+            }
+            const decoded = jwtDecode<Record<string, unknown>>(token);
+            tenant = String(decoded[tenantUrl] ?? '');
+        });
+    }
 
     function handleSearch() {
         message = '';

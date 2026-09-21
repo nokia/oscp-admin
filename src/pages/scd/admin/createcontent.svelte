@@ -18,6 +18,7 @@
 
     let form: Form;
     let topicElement: Topic;
+    let errorMessage = '';
 
     let selection = $params.selection;
 
@@ -39,19 +40,19 @@
 
         if (!form.reportValidity()) {
             event.preventDefault();
-            console.log(`New SCR not sent - Form invalid`);
+            errorMessage = 'New SCR not sent - Form invalid';
             return;
         }
+        errorMessage = '';
         try {
             const token = await authStore.getToken();
             $newContentToCreate.timestamp = Date.now();
-            const response = await postContent($oscpScdUrl, topicElement.value(), $newContentToCreate, token || '');
+            await postContent($oscpScdUrl, topicElement.value(), $newContentToCreate, token || '');
             $newContentToCreate = scr_empty;
             $topicName = '';
-            console.log(response);
             $goto('/scd');
         } catch (error) {
-            console.log(`New SCR not sent - ${error}`);
+            errorMessage = `New SCR not sent - ${error}`;
         }
     }
 </script>
@@ -74,3 +75,13 @@
         <button type="reset">Reset</button>
     </div>
 </Form>
+
+{#if errorMessage}
+    <p class="error" role="alert">{errorMessage}</p>
+{/if}
+
+<style>
+    .error {
+        color: #b00020;
+    }
+</style>
