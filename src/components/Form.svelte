@@ -20,6 +20,47 @@
     export function reportValidity() {
         return form.reportValidity();
     }
+
+    function readableRecordId(record: SCRnoId | SCR | SSR): string {
+        if ('content' in record && record.content.id.trim()) {
+            return record.content.id.trim();
+        }
+
+        if ('services' in record) {
+            const serviceIds = record.services.map((service) => service.id.trim()).filter((id) => id.length > 0);
+            if (serviceIds.length > 0) {
+                return serviceIds.join('_');
+            }
+        }
+
+        if ('id' in record && record.id.trim()) {
+            return record.id.trim();
+        }
+
+        return 'data';
+    }
+
+    function exportFilename(record: SCRnoId | SCR | SSR): string {
+        const safe = readableRecordId(record)
+            .replace(/[<>:"/\\|?*\u0000-\u001f]/g, '_')
+            .replace(/\s+/g, '_')
+            .replace(/_+/g, '_')
+            .replace(/^[_.]+|[_.]+$/g, '');
+
+        return `${safe || 'data'}.json`;
+    }
+
+    function exportRecord(event: MouseEvent) {
+        event.preventDefault();
+
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = exportFilename(data);
+        anchor.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
 </script>
 
 <slot name="intro" />
@@ -28,9 +69,9 @@
     <fieldset>
         <legend>
             <span>Export</span>
-            <a class="editorbutton black-text" download="data.json" type="text/json" href={URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)]))}>
+            <button type="button" class="editorbutton black-text" on:click={exportRecord}>
                 <DownloadIcon class="editoricon" />
-            </a>
+            </button>
         </legend>
         {#if 'id' in data && data.id}
             <div>
