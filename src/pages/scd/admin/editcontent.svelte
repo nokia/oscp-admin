@@ -38,7 +38,7 @@
         message = '';
 
         if (!topicElement.checkValidity()) {
-            message = 'Please enter a topic for search';
+            message = 'Please select a topic for search';
             return;
         }
 

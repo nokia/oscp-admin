@@ -11,7 +11,7 @@
     export let title = 'Import Services';
     export let postFileFunction: ({ url, propertyValue, file, token }: { url?: string; propertyValue: string; file: File; token: string }) => Promise<string>;
     export let propertyMissingMessage: string;
-    export let propertyElement: HTMLInputElement;
+    export let propertyElement: { value: string; checkValidity(): boolean };
     export let url: string | undefined = undefined;
 
     let dropEnabled = true;
