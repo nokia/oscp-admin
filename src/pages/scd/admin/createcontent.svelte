@@ -4,8 +4,8 @@
 -->
 
 <script lang="ts">
-    import { authStore, postContent, scr_empty } from '@oarc/scd-access';
-    import { oscpScdUrl, newContentToCreate, geoPose, topicName } from '../../../core/store';
+    import { authStore, postContent } from '@oarc/scd-access';
+    import { oscpScdUrl, newContentToCreate, geoPose, topicName, emptyContentToCreate } from '../../../core/store';
 
     import { goto, params } from '@sveltech/routify';
 
@@ -19,8 +19,17 @@
     let form: Form;
     let topicElement: Topic;
     let errorMessage = '';
+    let formKey = 0;
 
     let selection = $params.selection;
+
+    function resetCreateForm() {
+        errorMessage = '';
+        $topicName = '';
+        $geoPose = undefined;
+        $newContentToCreate = emptyContentToCreate();
+        formKey += 1;
+    }
 
     onMount(() => {
         newContentToCreate.update((current) => {
@@ -48,8 +57,7 @@
             const token = await authStore.getToken();
             $newContentToCreate.timestamp = Date.now();
             await postContent($oscpScdUrl, topicElement.value(), $newContentToCreate, token || '');
-            $newContentToCreate = scr_empty;
-            $topicName = '';
+            resetCreateForm();
             $goto('/scd');
         } catch (error) {
             errorMessage = `New SCR not sent - ${error}`;
@@ -59,22 +67,24 @@
 
 <h2>Create Spatial Content Record</h2>
 
-<Form bind:data={$newContentToCreate} bind:this={form}>
-    <p slot="intro">Enter data for new SCR record.</p>
+{#key formKey}
+    <Form bind:data={$newContentToCreate} bind:this={form}>
+        <p slot="intro">Enter data for new SCR record.</p>
 
-    <div slot="extras">
-        <Topic bind:this={topicElement} />
-    </div>
+        <div slot="extras">
+            <Topic bind:this={topicElement} />
+        </div>
 
-    <div slot="form">
-        <SCRComponent bind:data={$newContentToCreate} />
-    </div>
+        <div slot="form">
+            <SCRComponent bind:data={$newContentToCreate} />
+        </div>
 
-    <div slot="controls">
-        <button on:click={save}>Save</button>
-        <button type="reset">Reset</button>
-    </div>
-</Form>
+        <div slot="controls">
+            <button on:click={save}>Save</button>
+            <button type="button" on:click={resetCreateForm}>Reset</button>
+        </div>
+    </Form>
+{/key}
 
 {#if errorMessage}
     <p class="error" role="alert">{errorMessage}</p>
