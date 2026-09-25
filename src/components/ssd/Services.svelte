@@ -26,6 +26,7 @@
 </script>
 
 {#each data as service, index}
+    {@const idPrefix = `service${index + 1}-`}
     <details>
         <summary>
             <span>{service.title} - </span>
@@ -36,13 +37,13 @@
         </summary>
 
         <div class="growable">
-            <label for="serviceid">ID</label>
-            <input id="serviceid" required bind:value={service.id} />
+            <label for={`${idPrefix}serviceid`}>ID</label>
+            <input id={`${idPrefix}serviceid`} required bind:value={service.id} />
         </div>
 
         <div>
-            <label for="servicetype">Type</label>
-            <select id="servicetype" bind:value={service.type} required>
+            <label for={`${idPrefix}servicetype`}>Type</label>
+            <select id={`${idPrefix}servicetype`} bind:value={service.type} required>
                 <option></option>
                 {#each availableServiceTypes as serviceType}
                     <option value={serviceType.toLowerCase()}>{serviceType}</option>
@@ -51,21 +52,21 @@
         </div>
 
         <div class="growable">
-            <label for="servicetitle">Title</label>
-            <input id="servicetitle" required bind:value={service.title} />
+            <label for={`${idPrefix}servicetitle`}>Title</label>
+            <input id={`${idPrefix}servicetitle`} required bind:value={service.title} />
         </div>
 
         <div class="growable">
-            <label for="servicedescription">Description</label>
-            <input id="servicedescription" bind:value={service.description} />
+            <label for={`${idPrefix}servicedescription`}>Description</label>
+            <input id={`${idPrefix}servicedescription`} bind:value={service.description} />
         </div>
 
         <div class="growable">
-            <label for="serviceurl">URL</label>
-            <input id="serviceurl" required type="url" bind:value={service.url} />
+            <label for={`${idPrefix}serviceurl`}>URL</label>
+            <input id={`${idPrefix}serviceurl`} required type="url" bind:value={service.url} />
         </div>
 
-        <Properties bind:data={service.properties} />
+        <Properties bind:data={service.properties} {idPrefix} />
     </details>
 {/each}
 
