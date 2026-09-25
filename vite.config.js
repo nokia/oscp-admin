@@ -10,6 +10,13 @@ import { routify } from '@sveltech/routify';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+    server: {
+        port: 8033,
+        host: true,
+    },
+    preview: {
+        port: 8033,
+    },
     plugins: [
         svelte(),
         //basicSsl(),

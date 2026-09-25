@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     image: oscp-admin:latest
     ports:
-      - "${ADMIN_PORT:-8081}:80"
+      - "${ADMIN_PORT:-8033}:80"
     env_file:
       - .env
     environment:

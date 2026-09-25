@@ -31,19 +31,24 @@ VITE_OSCP_SSD_URL=http://localhost:8031
 VITE_OSCP_SCD_URL=http://localhost:8032
 ```
 
-Auth0 stays optional. When `VITE_AUTH_DISABLED` is not `true`, fill in the `VITE_AUTH0_*` variables from `.env.example`.
+Auth0 stays optional. When `VITE_AUTH_DISABLED` is not `true`, fill in the `VITE_AUTH0_*` variables from `.env.example`. The scope values request the discovery-service permissions:
+
+```
+VITE_AUTH0_SSD_SCOPE="read:ssrs create:ssrs delete:ssrs update:ssrs"
+VITE_AUTH0_SCD_SCOPE="read:scrs delete:scrs update:scrs create:scrs"
+```
 
 For local HTTPS, uncomment `basicSsl()` in `vite.config.js`, then run `npm run dev`.
 
 Google Drive picker and the PeerJS geopose check stay disabled until their `VITE_GOOGLE_*` and `VITE_PEERJS_*` values are set.
 
-Start the dev server:
+Start the dev server. It listens on port **8033** (`http://localhost:8033`):
 
 ```
 npm run dev
 ```
 
-`npm start` runs the same dev server. Build and preview a production bundle:
+`npm start` runs the same dev server. Build and preview a production bundle on the same port:
 
 ```
 npm run build
@@ -59,7 +64,7 @@ own compose files, or already deployed hosts) and pass their public URLs.
 docker compose up --build
 ```
 
-The image is nginx serving the SPA on port 8081 (override with `ADMIN_PORT`).
+The image is nginx serving the SPA on host port **8033** (override with `ADMIN_PORT`).
 At container start, `docker-entrypoint.sh` writes `/config.js` from:
 
 - `OSCP_SSD_URL` or `VITE_OSCP_SSD_URL`

@@ -2,13 +2,13 @@
     "name": "oscp-admin",
     "version": "0.0.3",
     "scripts": {
-        "dev": "vite --host --port 8081",
+        "dev": "vite --host --port 8033",
         "start": "npm run dev",
         "postinstall": "node scripts/patch-routify-esm.cjs",
         "build": "vite build",
         "build:docker": "docker compose build",
         "start:docker": "docker compose up -d",
-        "preview": "vite preview --port 8081",
+        "preview": "vite preview --port 8033",
         "check": "svelte-check --tsconfig ./tsconfig.json",
         "lint": "eslint . --ext .js,.svelte --fix",
         "pretty": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json,svelte}\""
