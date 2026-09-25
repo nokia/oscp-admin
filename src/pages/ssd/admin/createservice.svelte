@@ -37,6 +37,7 @@
 
         errorMessage = '';
         $newServiceToCreate.timestamp = Date.now();
+        $newServiceToCreate.active = $newServiceToCreate.active ?? true;
         const dataString = JSON.stringify($newServiceToCreate);
         try {
             validateSsr(dataString);

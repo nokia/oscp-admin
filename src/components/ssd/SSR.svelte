@@ -26,7 +26,7 @@
 
 <div>
     <label for="serviceactive">Active</label>
-    <input id="serviceactive" type="checkbox" checked={data?.active} on:change={toggleActive} />
+    <input id="serviceactive" type="checkbox" checked={data.active ?? true} on:change={toggleActive} />
 </div>
 
 <fieldset class="container">

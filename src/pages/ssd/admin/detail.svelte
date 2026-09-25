@@ -50,6 +50,7 @@
 
         try {
             data.timestamp = Date.now();
+            data.active = data.active ?? true;
             const dataString = JSON.stringify(data);
             validateSsr(dataString);
             const token = await authStore.getToken();

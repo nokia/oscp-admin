@@ -30,7 +30,10 @@ export const topicName = writable<string>('');
 const emptyServiceTemplate: SSR = JSON.parse(JSON.stringify(ssr_empty));
 
 export function emptyServiceToCreate(): SSR {
-    return JSON.parse(JSON.stringify(emptyServiceTemplate));
+    const service = JSON.parse(JSON.stringify(emptyServiceTemplate)) as SSR;
+    // SSD stores a missing active flag as true. Start the create form the same way.
+    service.active = true;
+    return service;
 }
 
 export const newServiceToCreate = writable<SSR>(emptyServiceToCreate());
