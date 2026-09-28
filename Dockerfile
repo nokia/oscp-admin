@@ -4,6 +4,7 @@ FROM node:24.14.0 AS build
 WORKDIR /app
 
 COPY package*.json ./
+COPY scripts/patch-routify-esm.cjs scripts/
 RUN npm ci
 
 COPY . ./

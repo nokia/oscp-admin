@@ -13,6 +13,9 @@ export default defineConfig({
     server: {
         port: 8033,
         host: true,
+        allowedHosts: [
+            '0.0.0.0',
+        ],
     },
     preview: {
         port: 8033,
