@@ -1,6 +1,6 @@
 {
     "name": "oscp-admin",
-    "version": "0.0.3",
+    "version": "0.2.0",
     "scripts": {
         "dev": "vite --host --port 8033",
         "start": "npm run dev",
