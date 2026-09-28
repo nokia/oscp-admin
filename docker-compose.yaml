@@ -3,7 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: oscp-admin:latest
+    image: oscp/oscp-admin:latest
+    container_name: oscp-admin
     ports:
       - "${ADMIN_PORT:-8033}:80"
     env_file:
