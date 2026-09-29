@@ -19,7 +19,6 @@
     const COUNT_H3RING = 1;
 
     const DEFAULT_ZOOM = 13;
-    const MAX_ZOOM = 30;
 
     const COLOR_H3Center = '#ff7800';
     const COLOR_H3RING = '#e5b70b';
@@ -109,11 +108,9 @@
     function createMap(container: HTMLElement) {
         let calcH3Resolution = () => (currentH3Resolution === $H3RESOLUTION_AUTO ? Math.round(0.7 * (m.getZoom() - 3)) : currentH3Resolution);
 
-        let streetLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            attribution: `&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>,
-                                &copy; <a href="https://carto.com/attributions" target="_blank">CARTO</a>`,
-            subdomains: 'abcd',
-            maxZoom: MAX_ZOOM,
+        let streetLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: `&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>`,
+            maxZoom: 19,
         });
 
         let satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -125,7 +122,8 @@
         let m = L.map(container, {
             center: [thisLat, thisLon],
             zoom: DEFAULT_ZOOM,
-            layers: [streetLayer, satelliteLayer],
+            maxZoom: 19,
+            layers: [streetLayer],
         });
 
         const baseMaps = {
@@ -160,15 +158,13 @@
         h3Layer.addTo(m);
         h3Layer.bringToFront();
 
-        let marker = L.marker([thisLat, thisLon], { draggable: true }).addTo(m);
-        marker.on('dragend', () => {
-            const latlng = marker.getLatLng();
-            updateMarker(marker, latlng, calcH3Resolution(), toolbarComponent);
-
-            h3Layer.clearLayers();
-            const clickH3 = h3.geoToH3(latlng.lat, latlng.lng, calcH3Resolution());
-            updateH3Layers(clickH3, h3Layer);
-        });
+        let marker = L.circleMarker([thisLat, thisLon], {
+            radius: 8,
+            color: '#ff7800',
+            fillColor: '#ffffff',
+            fillOpacity: 1,
+            weight: 2,
+        }).addTo(m);
 
         m.on('click', (event) => {
             updateMarker(marker, event.latlng, calcH3Resolution(), toolbarComponent);
@@ -320,7 +316,7 @@
         coverageLayer.resetStyle();
     }
 
-    function updateMarker(marker: L.Marker, latlng: { lat: number; lng: number }, h3Resolution: number, toolbarComponent: MapControl | null) {
+    function updateMarker(marker: L.CircleMarker, latlng: { lat: number; lng: number }, h3Resolution: number, toolbarComponent: MapControl | null) {
         if (marker) {
             marker.setLatLng(latlng);
 
@@ -350,6 +346,7 @@
         L.Icon.Default.imagePath = '/leaflet/';
 
         map = createMap(container);
+        requestAnimationFrame(() => map?.invalidateSize());
         return {
             destroy: () => {
                 map?.remove();
@@ -391,6 +388,16 @@
     #map {
         height: 100%;
         width: 100%;
+    }
+
+    /* The create form gives every div inside a fieldset a 20px margin.
+       Leaflet panes are those divs, so the pin was drawn 40px from the click. */
+    #map :global(.leaflet-pane),
+    #map :global(.leaflet-control),
+    #map :global(.leaflet-top),
+    #map :global(.leaflet-bottom),
+    #map :global(.leaflet-control-container) {
+        margin: 0;
     }
 
     #map :global(.h3indexmarkercontainer) {

@@ -115,14 +115,14 @@
 </script>
 
 <aside on:click={preventDefault} on:dblclick={preventDefault}>
-    <fieldset>
+    <fieldset class="display">
         <legend>Display</legend>
         <div>
-            <input id="displaystreet" type="radio" name="displayinfo" value="streetLayer" on:change={() => handleDisplay('Street', 'Satellite')} />
+            <input id="displaystreet" type="radio" name="displayinfo" value="streetLayer" checked on:change={() => handleDisplay('Street', 'Satellite')} />
             <label for="displaystreet">Street</label>
         </div>
         <div>
-            <input id="displaysatellite" type="radio" name="displayinfo" value="satelliteLayer" checked on:change={() => handleDisplay('Satellite', 'Street')} />
+            <input id="displaysatellite" type="radio" name="displayinfo" value="satelliteLayer" on:change={() => handleDisplay('Satellite', 'Street')} />
             <label for="displaysatellite">Satellite</label>
         </div>
     </fieldset>
@@ -140,7 +140,7 @@
     <fieldset>
         <legend>
             <span>Position</span>
-            <button class="iconwrapper" on:click={panToFakePos}><ExploreIcon size="1rem" /></button>
+            <button type="button" class="iconwrapper" on:click={panToFakePos}><ExploreIcon size="1rem" /></button>
         </legend>
         <div>
             <label for="lat">Lat</label>
@@ -158,7 +158,7 @@
     <fieldset>
         <legend>
             <span class="clickable" on:click={checkForGeoPoseServices}>GeoPose Service</span>
-            <button class="iconwrapper" on:click={checkForGeoPoseServices}><ReloadIcon size="1rem" /></button>
+            <button type="button" class="iconwrapper" on:click={checkForGeoPoseServices}><ReloadIcon size="1rem" /></button>
         </legend>
         <ul id="geoposeservices">
             {#if geoPoseServices.length > 0}
@@ -173,11 +173,11 @@
                 <li>No services</li>
             {/if}
         </ul>
-        <button id="checkcontent" disabled={currentService.id === undefined} on:click={handleCheckContent}> check </button>
+        <button type="button" id="checkcontent" disabled={currentService.id === undefined} on:click={handleCheckContent}> check </button>
     </fieldset>
     <fieldset id="controls">
-        <button on:click={handleSave}>set</button>
-        <button on:click={handleCancel}>cancel</button>
+        <button type="button" on:click={handleSave}>set</button>
+        <button type="button" on:click={handleCancel}>cancel</button>
     </fieldset>
 </aside>
 
@@ -208,6 +208,11 @@
 
     fieldset div {
         margin: 5px;
+    }
+
+    fieldset.display label {
+        width: auto;
+        text-align: left;
     }
 
     fieldset label {
