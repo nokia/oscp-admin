@@ -11,7 +11,8 @@
     export let onApply: (coordinates: Position[]) => void;
     export let onCancel: () => void;
 
-    const DEFAULT_CENTER: L.LatLngExpression = [49.410625, 8.715277];
+    // Royal Observatory, Greenwich (51°28′40″N 0°00′05″W)
+    const DEFAULT_CENTER: L.LatLngExpression = [51.477778, -0.001389];
     const DEFAULT_ZOOM = 13;
     const COLOR = '#ff7800';
 
@@ -49,50 +50,102 @@
         return vertices.map((vertex) => [vertex.lat, vertex.lon]);
     }
 
+    function vertexIcon(isFirst: boolean) {
+        const size = isFirst ? 16 : 12;
+        return L.divIcon({
+            className: isFirst ? 'coverage-vertex first' : 'coverage-vertex',
+            iconSize: [size, size],
+            iconAnchor: [size / 2, size / 2],
+            html: '<span></span>',
+        });
+    }
+
+    function syncGeometry() {
+        if (!map) {
+            return;
+        }
+
+        const pts = latLngs();
+        if (vertices.length >= 3) {
+            if (polylineLayer) {
+                map.removeLayer(polylineLayer);
+                polylineLayer = null;
+            }
+            if (polygonLayer) {
+                polygonLayer.setLatLngs(pts);
+            } else {
+                polygonLayer = L.polygon(pts, {
+                    color: COLOR,
+                    weight: 2,
+                    fillColor: COLOR,
+                    fillOpacity: 0.25,
+                    interactive: false,
+                }).addTo(map);
+                polygonLayer.bringToBack();
+            }
+        } else if (vertices.length >= 2) {
+            if (polygonLayer) {
+                map.removeLayer(polygonLayer);
+                polygonLayer = null;
+            }
+            if (polylineLayer) {
+                polylineLayer.setLatLngs(pts);
+            } else {
+                polylineLayer = L.polyline(pts, {
+                    color: COLOR,
+                    weight: 2,
+                    interactive: false,
+                }).addTo(map);
+            }
+        } else {
+            if (polylineLayer) {
+                map.removeLayer(polylineLayer);
+                polylineLayer = null;
+            }
+            if (polygonLayer) {
+                map.removeLayer(polygonLayer);
+                polygonLayer = null;
+            }
+        }
+    }
+
     function redraw() {
         if (!map || !markerLayer) {
             return;
         }
 
-        if (polylineLayer) {
-            map.removeLayer(polylineLayer);
-            polylineLayer = null;
-        }
-        if (polygonLayer) {
-            map.removeLayer(polygonLayer);
-            polygonLayer = null;
-        }
-
-        const pts = latLngs();
-        if (vertices.length >= 3) {
-            polygonLayer = L.polygon(pts, {
-                color: COLOR,
-                weight: 2,
-                fillColor: COLOR,
-                fillOpacity: 0.25,
-                interactive: false,
-            }).addTo(map);
-        } else if (vertices.length >= 2) {
-            polylineLayer = L.polyline(pts, {
-                color: COLOR,
-                weight: 2,
-                interactive: false,
-            }).addTo(map);
-        }
-
+        syncGeometry();
         markerLayer.clearLayers();
         vertices.forEach((vertex, index) => {
-            const marker = L.circleMarker([vertex.lat, vertex.lon], {
-                radius: index === 0 ? 8 : 6,
-                color: COLOR,
-                fillColor: index === 0 ? '#ffffff' : COLOR,
-                fillOpacity: 1,
-                weight: 2,
-                bubblingMouseEvents: false,
+            const marker = L.marker([vertex.lat, vertex.lon], {
+                icon: vertexIcon(index === 0),
+                draggable: true,
+                autoPan: true,
+                zIndexOffset: 500,
             });
-            marker.bindTooltip(index === 0 ? 'First corner' : `Corner ${index + 1}`, { direction: 'top' });
+            let dragMoved = false;
+            marker.bindTooltip(index === 0 ? 'First corner. Drag to move, click to remove.' : `Corner ${index + 1}. Drag to move, click to remove.`, { direction: 'top' });
+            marker.on('dragstart', () => {
+                dragMoved = false;
+                suppressNextMapClick = true;
+            });
+            marker.on('drag', () => {
+                dragMoved = true;
+                const latlng = marker.getLatLng();
+                vertices = vertices.map((current, vertexIndex) => (vertexIndex === index ? { lat: latlng.lat, lon: latlng.lng } : current));
+                syncGeometry();
+            });
+            marker.on('dragend', () => {
+                suppressNextMapClick = true;
+                setTimeout(() => {
+                    dragMoved = false;
+                }, 0);
+            });
             marker.on('click', (event) => {
                 L.DomEvent.stopPropagation(event.originalEvent);
+                if (dragMoved) {
+                    return;
+                }
                 suppressNextMapClick = true;
                 removeVertex(index);
             });
@@ -241,7 +294,7 @@
         </fieldset>
         <fieldset>
             <legend>Polygon</legend>
-            <p>Click the map to add corners. Click a corner to remove it. At least 3 corners are required.</p>
+            <p>Click the map to add corners. Drag a corner to move it, or click it to remove it. At least 3 corners are required.</p>
             <p class="count">{vertices.length} {vertices.length === 1 ? 'corner' : 'corners'}</p>
             {#if vertices.length > 0}
                 <ol>
@@ -290,6 +343,28 @@
         height: 100%;
         width: 100%;
         background: #ddd;
+    }
+
+    .canvas :global(.coverage-vertex) {
+        background: transparent;
+        border: 0;
+    }
+
+    .canvas :global(.coverage-vertex span) {
+        display: block;
+        box-sizing: border-box;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 2px solid #ff7800;
+        background: #ff7800;
+        cursor: grab;
+    }
+
+    .canvas :global(.coverage-vertex.first span) {
+        width: 16px;
+        height: 16px;
+        background: #ffffff;
     }
 
     .panel {
