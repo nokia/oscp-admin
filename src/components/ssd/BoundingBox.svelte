@@ -4,10 +4,49 @@
 -->
 
 <script lang="ts">
-    import type { BBox, BBox2d, BBox3d } from '@oarc/ssd-access';
+    import type { BBox, BBox2d, BBox3d, Position } from '@oarc/ssd-access';
     import type { ChangeEventHandler } from 'svelte/elements';
 
     export let data: BBox | undefined;
+    export let coordinates: Position[] = [];
+
+    $: finiteCorners = openRing(coordinates.filter((position) => position.length >= 2 && Number.isFinite(position[0]) && Number.isFinite(position[1])));
+
+    function openRing(positions: Position[]): Position[] {
+        if (positions.length < 2) {
+            return positions;
+        }
+        const first = positions[0];
+        const last = positions[positions.length - 1];
+        if (first[0] === last[0] && first[1] === last[1]) {
+            return positions.slice(0, -1);
+        }
+        return positions;
+    }
+
+    function calculateBbox(event: Event) {
+        event.preventDefault();
+        // Planar min/max of longitude and latitude. This is not a spherical bounding box:
+        // a polygon across the antimeridian or over a pole needs care, because the box can span the long way around.
+        if (finiteCorners.length < 3) {
+            return;
+        }
+
+        const west = Math.min(...finiteCorners.map((position) => position[0]));
+        const south = Math.min(...finiteCorners.map((position) => position[1]));
+        const east = Math.max(...finiteCorners.map((position) => position[0]));
+        const north = Math.max(...finiteCorners.map((position) => position[1]));
+        const altitudes = finiteCorners.map((position) => position[2]).filter((altitude): altitude is number => Number.isFinite(altitude));
+
+        // GeoJSON stores every minimum before every maximum:
+        // [west, south, east, north], or [west, south, min altitude, east, north, max altitude].
+        if (altitudes.length > 0) {
+            data = [west, south, Math.min(...altitudes), east, north, Math.max(...altitudes)];
+            return;
+        }
+
+        data = [west, south, east, north];
+    }
 
     const toggleBbox: ChangeEventHandler<HTMLInputElement> = (event) => {
         if (event.currentTarget.checked) {
@@ -39,9 +78,10 @@
     <dt>
         <input type="checkbox" checked={data !== undefined} on:change={toggleBbox} />
         <span>BBox</span>
+        <button type="button" disabled={finiteCorners.length < 3} on:click={calculateBbox}>Calculate bounding box</button>
     </dt>
     {#if data}
-        <dd>
+        <dd class="edges">
             <span>
                 <label for="bbox-west">West</label>
                 <input id="bbox-west" type="number" step="any" required bind:value={data[0]} />
@@ -52,20 +92,12 @@
             </span>
             {#if data.length === 6}
                 <span>
-                    <label for="bbox-min-h">Min altitude</label>
-                    <input id="bbox-min-h" type="number" step="any" required bind:value={data[2]} />
-                </span>
-                <span>
                     <label for="bbox-east">East</label>
                     <input id="bbox-east" type="number" step="any" required bind:value={data[3]} />
                 </span>
                 <span>
                     <label for="bbox-north">North</label>
                     <input id="bbox-north" type="number" step="any" required bind:value={data[4]} />
-                </span>
-                <span>
-                    <label for="bbox-max-h">Max altitude</label>
-                    <input id="bbox-max-h" type="number" step="any" required bind:value={data[5]} />
                 </span>
             {:else}
                 <span>
@@ -84,5 +116,29 @@
                 <span>Altitude</span>
             </label>
         </dd>
+        {#if data.length === 6}
+            <dd class="edges">
+                <span>
+                    <label for="bbox-min-h">Min altitude</label>
+                    <input id="bbox-min-h" type="number" step="any" required bind:value={data[2]} />
+                </span>
+                <span>
+                    <label for="bbox-max-h">Max altitude</label>
+                    <input id="bbox-max-h" type="number" step="any" required bind:value={data[5]} />
+                </span>
+            </dd>
+        {/if}
     {/if}
 </dl>
+
+<style>
+    button {
+        margin-left: 1rem;
+    }
+
+    .edges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem 1.25rem;
+    }
+</style>

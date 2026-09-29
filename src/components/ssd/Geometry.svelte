@@ -16,5 +16,5 @@
     <summary>{data.type}</summary>
 
     <Coordinate bind:data={data.coordinates[0]} />
-    <BoundingBox bind:data={data.bbox} />
+    <BoundingBox bind:data={data.bbox} coordinates={data.coordinates[0] ?? []} />
 </details>
