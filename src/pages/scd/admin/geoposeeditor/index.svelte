@@ -28,9 +28,20 @@
 
         $goto('checkcontent');
     }
+
+    function updateGeopose({ lat, lon }: { lat: number; lon: number }) {
+        geoPose.update((pose) => {
+            if (!pose?.position) {
+                return pose;
+            }
+            pose.position.lat = lat;
+            pose.position.lon = lon;
+            return pose;
+        });
+    }
 </script>
 
-<Map on:goto-checkcontent={gotoCheckContent} />
+<Map on:goto-checkcontent={gotoCheckContent} {updateGeopose} onSaveCancel={() => {}} />
 
 {#if showModal}
     <Modal on:close={() => (showModal = false)}>
