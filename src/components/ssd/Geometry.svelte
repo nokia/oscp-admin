@@ -9,9 +9,10 @@
     import Coordinate from './Coordinate.svelte';
 
     export let data: Polygon;
+    export let open = false;
 </script>
 
-<details>
+<details bind:open>
     <summary>{data.type}</summary>
 
     <Coordinate bind:data={data.coordinates[0]} />
