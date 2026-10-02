@@ -9,6 +9,8 @@
     import type { ChangeEventHandler } from 'svelte/elements';
 
     export let data: Property[] | undefined;
+    /** Keeps ids unique when several property lists are on one form. */
+    export let idPrefix = '';
 
     function addProperty(event: Event) {
         event.preventDefault();
@@ -45,11 +47,11 @@
     {#if data}
         <dd>
             {#each data as property, index}
-                <label for="propertykey">Type</label>
-                <input id="propertykey" bind:value={property.type} />
+                <label for={`${idPrefix}propertykey${index + 1}`}>Type</label>
+                <input id={`${idPrefix}propertykey${index + 1}`} bind:value={property.type} />
 
-                <label for="propertyvalue">Value</label>
-                <input id="propertyvalue" bind:value={property.value} />
+                <label for={`${idPrefix}propertyvalue${index + 1}`}>Value</label>
+                <input id={`${idPrefix}propertyvalue${index + 1}`} bind:value={property.value} />
 
                 <button class="deletebutton" on:click={(event) => deleteProperty(event, index)}>
                     <CloseSolidIcon size="1.5rem" color="red" />

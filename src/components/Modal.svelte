@@ -49,7 +49,7 @@
         <slot />
     </div>
     <!-- svelte-ignore a11y-autofocus -->
-    <button autofocus on:click={close}>Close</button>
+    <button type="button" autofocus on:click={close}>Close</button>
 </div>
 
 <svelte:window on:keydown={handle_keydown} />

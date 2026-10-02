@@ -8,10 +8,13 @@
 
     import { CheveronLeftIcon } from 'svelte-zondicons';
     import type { MouseEventHandler } from 'svelte/elements';
+    import { env } from '../../../../core/runtimeConfig';
 
     let storageProvider: any;
 
-    let returnPath = ($route as any).last ? `${($route as any).last.path}?${new URLSearchParams(($route as any).last.params)}` : 'scd/admin/createservice';
+    const googleDriveEnabled = Boolean(env('VITE_GOOGLE_PROJECT_ID') && env('VITE_GOOGLE_PICKER_KEY') && env('VITE_GOOGLE_CLIENT_ID'));
+
+    let returnPath = ($route as any).last ? `${($route as any).last.path}?${new URLSearchParams(($route as any).last.params)}` : '/scd/admin/createcontent';
 
     const selectGDrive: MouseEventHandler<HTMLButtonElement> = (event) => {
         event.currentTarget.setAttribute('active', 'active');
@@ -57,10 +60,13 @@
     Right now, selecting a file or files in the picker helps to fill the form fields for the content. The main advantage could be to add some additional processing to the files uploaded, or specific
     validations to check for potential improvements to improve the usability of the file in an AR Cloud experience.
 </p>
+{#if !googleDriveEnabled}
+    <p>Google Drive is disabled until <code>VITE_GOOGLE_PROJECT_ID</code>, <code>VITE_GOOGLE_PICKER_KEY</code>, and <code>VITE_GOOGLE_CLIENT_ID</code> are set.</p>
+{/if}
 
 <ul id="selector">
     <li>
-        <button on:click={selectGDrive}>
+        <button on:click={selectGDrive} disabled={!googleDriveEnabled} title={googleDriveEnabled ? 'Google Drive' : 'Set VITE_GOOGLE_PROJECT_ID, VITE_GOOGLE_PICKER_KEY, and VITE_GOOGLE_CLIENT_ID to enable Google Drive'}>
             <img src="/cloudserviceicons/icons8-google-drive.svg" alt="Google Drive storage service icon" />
         </button>
     </li>

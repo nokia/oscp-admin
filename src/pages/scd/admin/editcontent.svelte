@@ -12,8 +12,10 @@
     import jwtDecode from 'jwt-decode';
     import Topic from '../../../components/scd/Topic.svelte';
 
-    // eslint-disable-next-line no-undef
-    const tenantUrl = import.meta.env['VITE_AUTH0_SCD_TENANT'];
+    import { authDisabled, NO_AUTH_LABEL } from '../../../core/authMode';
+    import { env } from '../../../core/runtimeConfig';
+
+    const tenantUrl = env('VITE_AUTH0_SCD_TENANT');
     const detailUrl = '../detail';
 
     let topicElement: Topic;
@@ -21,17 +23,22 @@
     let searchResults: SCR[] = [];
     let message = '';
 
-    let tenant: any;
-    authStore.getToken().then((token) => {
-        const decoded = jwtDecode<Record<string, any>>(token || '');
-        tenant = decoded[tenantUrl];
-    });
+    let tenant = authDisabled ? NO_AUTH_LABEL : '';
+    if (!authDisabled) {
+        authStore.getToken().then((token) => {
+            if (!token) {
+                return;
+            }
+            const decoded = jwtDecode<Record<string, unknown>>(token);
+            tenant = String(decoded[tenantUrl] ?? '');
+        });
+    }
 
     function handleSearch() {
         message = '';
 
         if (!topicElement.checkValidity()) {
-            message = 'Please enter a topic for search';
+            message = 'Please select a topic for search';
             return;
         }
 

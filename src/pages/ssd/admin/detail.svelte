@@ -14,46 +14,51 @@
     import type { MouseEventHandler } from 'svelte/elements';
 
     let data: SSR = ssr_empty;
+    let errorMessage = '';
     let returnPath = ($route as any).last ? `${($route as any).last.path}?${new URLSearchParams(($route as any).last.params)}` : '/ssd/admin/editservice';
 
     onMount(() => {
         getServiceWithId($params.countryCode, $params.id)
             .then((services) => (data = services))
-            .catch((error) => console.log(`Server access error: ${error}`));
+            .catch((error) => {
+                errorMessage = `Server access error: ${error}`;
+            });
     });
 
-    function handleDelete() {
-        // TODO: Show dialog - maybe
+    async function handleDelete() {
+        if (!confirm('Delete this service record?')) {
+            return;
+        }
 
-        authStore
-            .getToken()
-            .then((token) => {
-                deleteWithId($params.countryCode, $params.id, token || '');
-            })
-            .then(() => $goto(returnPath))
-            .catch((error) => console.error(`Failed to delete: ${error}`));
+        errorMessage = '';
+        try {
+            const token = await authStore.getToken();
+            await deleteWithId($params.countryCode, $params.id, token || '');
+            $goto(returnPath);
+        } catch (error) {
+            errorMessage = `Failed to delete: ${error}`;
+        }
     }
 
     const urlReturnPath = (): any => {
         return $url(returnPath);
     };
 
-    const handleSave: MouseEventHandler<HTMLButtonElement> = (event) => {
+    const handleSave: MouseEventHandler<HTMLButtonElement> = async (event) => {
         event.preventDefault();
+        errorMessage = '';
 
-        data.timestamp = Date.now();
-        const dataString = JSON.stringify(data);
-        validateSsr(dataString);
-        authStore
-            .getToken()
-            .then((token) => putService($params.countryCode, dataString, data.id, token || ''))
-            .then((response) => {
-                console.log(`Record created: ${response}`);
-                $goto(returnPath);
-            })
-            .catch((error) => {
-                console.log(`New SSR not sent - ${error}`);
-            });
+        try {
+            data.timestamp = Date.now();
+            data.active = data.active ?? true;
+            const dataString = JSON.stringify(data);
+            validateSsr(dataString);
+            const token = await authStore.getToken();
+            await putService($params.countryCode, dataString, data.id, token || '');
+            $goto(returnPath);
+        } catch (error) {
+            errorMessage = `Service record not saved: ${error}`;
+        }
     };
 </script>
 
@@ -74,4 +79,14 @@
     </div>
 </Form>
 
+{#if errorMessage}
+    <p class="error" role="alert">{errorMessage}</p>
+{/if}
+
 <button on:click={handleDelete}>Delete</button>
+
+<style>
+    .error {
+        color: #b00020;
+    }
+</style>

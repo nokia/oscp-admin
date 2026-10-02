@@ -28,12 +28,12 @@
     {#each data as coordinate, index}
         <dd>
             <span>
-                <label for="coordlon1">Lat</label>
-                <input id="coordlon1" type="number" step="any" required bind:value={coordinate[1]} />
+                <label for={`coordlat${index + 1}`}>Lat</label>
+                <input id={`coordlat${index + 1}`} type="number" step="any" required bind:value={coordinate[1]} />
             </span>
             <span>
-                <label for="coordlat1">Lon</label>
-                <input id="coordlat1" type="number" step="any" required bind:value={coordinate[0]} />
+                <label for={`coordlon${index + 1}`}>Lon</label>
+                <input id={`coordlon${index + 1}`} type="number" step="any" required bind:value={coordinate[0]} />
 
                 <button class="deletebutton" on:click={(event) => deleteCoordinate(event, index)}>
                     <CloseSolidIcon size="1.5rem" color="red" />

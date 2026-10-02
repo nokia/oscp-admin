@@ -8,15 +8,25 @@
     import { oscpScdUrl } from '../../../core/store';
 
     import Import from '../../../components/Import.svelte';
+    import Topic from '../../../components/scd/Topic.svelte';
 
-    let topicElement: HTMLInputElement;
-    const propertyMissingMessage = 'Please enter a topic';
+    let topicElement: Topic;
+    const propertyMissingMessage = 'Please select a topic';
+    const topicControl = {
+        get value() {
+            return topicElement ? topicElement.value() : '';
+        },
+        checkValidity() {
+            return topicElement ? topicElement.checkValidity() : false;
+        },
+    };
 </script>
 
 <Import
     {authStore}
+    title="Import Contents"
     {propertyMissingMessage}
-    propertyElement={topicElement}
+    propertyElement={topicControl}
     postFileFunction={async ({ url, propertyValue, file, token }) => {
         if (url == null) {
             throw new Error('url is undefined!');
@@ -31,7 +41,6 @@
     </p>
 
     <div slot="search" id="search">
-        <label for="searchtopic">Topic</label>
-        <input id="searchtopic" type="text" required bind:this={topicElement} />
+        <Topic bind:this={topicElement} />
     </div>
 </Import>

@@ -17,38 +17,44 @@
     import type { MouseEventHandler } from 'svelte/elements';
 
     let data: SCR | undefined;
+    let errorMessage = '';
     let returnPath = ($route as any).last ? `${($route as any).last.path}?${new URLSearchParams(($route as any).last.params)}` : '/scd/admin/editcontent';
 
     onMount(() => {
         getContentWithId($oscpScdUrl, $params.topic, $params.id)
             .then((contents) => (data = contents))
-            .catch((error) => console.log(`Server access error: ${error}`));
+            .catch((error) => {
+                errorMessage = `Server access error: ${error}`;
+            });
     });
 
-    function handleDelete() {
-        // TODO: Show dialog - maybe
+    async function handleDelete() {
+        if (!confirm('Delete this content record?')) {
+            return;
+        }
 
-        authStore
-            .getToken()
-            .then((token) => {
-                deleteWithId($oscpScdUrl, $params.topic, $params.id, token || '');
-            })
-            .then(() => $goto(returnPath))
-            .catch((error) => console.error(`Failed to delete: ${error}`));
+        errorMessage = '';
+        try {
+            const token = await authStore.getToken();
+            await deleteWithId($oscpScdUrl, $params.topic, $params.id, token || '');
+            $goto(returnPath);
+        } catch (error) {
+            errorMessage = `Failed to delete: ${error}`;
+        }
     }
 
     const handleSave: MouseEventHandler<HTMLButtonElement> = async (event) => {
         event.preventDefault();
 
         if (data) {
-            const token = await authStore.getToken();
+            errorMessage = '';
             try {
+                const token = await authStore.getToken();
                 data.timestamp = Date.now();
-                const response = putContent($oscpScdUrl, $params.topic, data, data.id, token || '');
-                console.log(`Record created: ${response}`);
+                await putContent($oscpScdUrl, $params.topic, data, data.id, token || '');
                 $goto(returnPath);
             } catch (error) {
-                console.log(`New SCR not sent - ${error}`);
+                errorMessage = `Content record not saved: ${error}`;
             }
         }
     };
@@ -77,5 +83,17 @@
         </div>
     </Form>
 
+    {#if errorMessage}
+        <p class="error" role="alert">{errorMessage}</p>
+    {/if}
+
     <button on:click={handleDelete}>Delete</button>
+{:else if errorMessage}
+    <p class="error" role="alert">{errorMessage}</p>
 {/if}
+
+<style>
+    .error {
+        color: #b00020;
+    }
+</style>

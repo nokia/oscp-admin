@@ -14,12 +14,27 @@
     import { contentRefs, geoPose } from '../../core/store';
     import { createEventDispatcher } from 'svelte';
     import type { ChangeEventHandler } from 'svelte/elements';
-    import type { Content } from '@oarc/scd-access';
+    import type { Content, Geopose } from '@oarc/scd-access';
 
     export let data: Content;
     let showModal = false;
 
+    // Types spARcl already handles. The field stays free text so a new type can be entered.
+    const contentTypes = ['MODEL_3D', 'ICON', 'VIDEO', 'SOUND', 'POINT_CLOUD', 'POI', 'TEXT', 'SENSOR_STREAM', 'GEOPOSE_STREAM'];
+
+    const defaultGeopose = (): Geopose => ({
+        position: { lon: 0, lat: 0, h: 0 },
+        quaternion: { x: 0, y: 0, z: 0, w: 1 },
+    });
+
+    if (!data.geopose) {
+        data.geopose = defaultGeopose();
+    }
+
     function updateGeopose({ lat, lon }: { lat: number; lon: number }) {
+        if (!data.geopose) {
+            return;
+        }
         data.geopose.position.lat = lat;
         data.geopose.position.lon = lon;
     }
@@ -66,7 +81,12 @@
 
 <div>
     <label for="contenttype">Type</label>
-    <input id="contenttype" required bind:value={data.type} />
+    <input id="contenttype" required list="content-types" bind:value={data.type} />
+    <datalist id="content-types">
+        {#each contentTypes as contentType}
+            <option value={contentType}></option>
+        {/each}
+    </datalist>
 </div>
 
 <div>
@@ -109,7 +129,9 @@
         </button>
     </legend>
 
-    <GeoPose bind:data={data.geopose} />
+    {#if data.geopose}
+        <GeoPose bind:data={data.geopose} />
+    {/if}
 </fieldset>
 
 {#if showModal}
@@ -118,7 +140,9 @@
     </Modal>
 {/if}
 
-<References bind:data={data.refs} geopose={data.geopose} on:refsUpdated={() => dispatch('refsUpdated')} />
+{#if data.geopose}
+    <References bind:data={data.refs} geopose={data.geopose} on:refsUpdated={() => dispatch('refsUpdated')} />
+{/if}
 
 <Definitions bind:data={data.definitions} />
 

@@ -13,15 +13,76 @@
     let form: HTMLFormElement;
     let timestamp = 0;
 
-    $: {
-        if (data.timestamp) {
-            timestamp = data.timestamp;
-            delete data.timestamp;
-        }
+    $: if (data.timestamp) {
+        timestamp = data.timestamp;
     }
+
+    // Discovery services return the platform timestamp as Unix seconds
+    // (`Date#getTime() / 1000`, often fractional). `Date` expects milliseconds.
+    // Values already in milliseconds (about 1e12 for current dates) are left as-is.
+    function epochMillis(value: number): number {
+        return Math.abs(value) < 1e11 ? value * 1000 : value;
+    }
+
+    function formatLastEdited(value: number): string {
+        const date = new Date(epochMillis(value));
+        if (Number.isNaN(date.getTime())) {
+            return String(value);
+        }
+
+        const local = new Intl.DateTimeFormat(undefined, {
+            dateStyle: 'medium',
+            timeStyle: 'medium',
+        }).format(date);
+
+        return `${local} (${value})`;
+    }
+
+    $: lastEditedLabel = timestamp ? formatLastEdited(timestamp) : '';
 
     export function reportValidity() {
         return form.reportValidity();
+    }
+
+    function readableRecordId(record: SCRnoId | SCR | SSR): string {
+        if ('content' in record && record.content.id.trim()) {
+            return record.content.id.trim();
+        }
+
+        if ('services' in record) {
+            const serviceIds = record.services.map((service) => service.id.trim()).filter((id) => id.length > 0);
+            if (serviceIds.length > 0) {
+                return serviceIds.join('_');
+            }
+        }
+
+        if ('id' in record && record.id.trim()) {
+            return record.id.trim();
+        }
+
+        return 'data';
+    }
+
+    function exportFilename(record: SCRnoId | SCR | SSR): string {
+        const safe = readableRecordId(record)
+            .replace(/[<>:"/\\|?*\u0000-\u001f]/g, '_')
+            .replace(/\s+/g, '_')
+            .replace(/_+/g, '_')
+            .replace(/^[_.]+|[_.]+$/g, '');
+
+        return `${safe || 'data'}.json`;
+    }
+
+    function exportRecord(event: MouseEvent) {
+        event.preventDefault();
+
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = exportFilename(data);
+        anchor.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
 </script>
 
@@ -31,9 +92,9 @@
     <fieldset>
         <legend>
             <span>Export</span>
-            <a class="editorbutton black-text" download="data.json" type="text/json" href={URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)]))}>
+            <button type="button" class="editorbutton black-text" on:click={exportRecord}>
                 <DownloadIcon class="editoricon" />
-            </a>
+            </button>
         </legend>
         {#if 'id' in data && data.id}
             <div>
@@ -62,10 +123,10 @@
             </div>
         {/if}
 
-        {#if timestamp}
+        {#if lastEditedLabel}
             <div>
                 <label for="roottimestamp">Last edited</label>
-                <span id="roottimestamp">{timestamp}</span>
+                <span id="roottimestamp">{lastEditedLabel}</span>
             </div>
         {/if}
 

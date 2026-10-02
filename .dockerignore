@@ -1,0 +1,14 @@
+node_modules
+dist
+.git
+.github
+.idea
+.vscode
+.env
+*.md
+.gitignore
+.prettierignore
+.prettierrc
+.eslintrc.json
+docker-compose.yaml
+docker-compose.yml
