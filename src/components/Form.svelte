@@ -17,6 +17,23 @@
         timestamp = data.timestamp;
     }
 
+    // OSCP timestamps are Unix epoch milliseconds (UTC). Show local time, and keep that UTC value.
+    function formatLastEdited(value: number): string {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+            return String(value);
+        }
+
+        const local = new Intl.DateTimeFormat(undefined, {
+            dateStyle: 'medium',
+            timeStyle: 'medium',
+        }).format(date);
+
+        return `${local} (${value})`;
+    }
+
+    $: lastEditedLabel = timestamp ? formatLastEdited(timestamp) : '';
+
     export function reportValidity() {
         return form.reportValidity();
     }
@@ -100,10 +117,10 @@
             </div>
         {/if}
 
-        {#if timestamp}
+        {#if lastEditedLabel}
             <div>
                 <label for="roottimestamp">Last edited</label>
-                <span id="roottimestamp">{timestamp}</span>
+                <span id="roottimestamp">{lastEditedLabel}</span>
             </div>
         {/if}
 
