@@ -17,6 +17,29 @@
         timestamp = data.timestamp;
     }
 
+    // Discovery services return the platform timestamp as Unix seconds
+    // (`Date#getTime() / 1000`, often fractional). `Date` expects milliseconds.
+    // Values already in milliseconds (about 1e12 for current dates) are left as-is.
+    function epochMillis(value: number): number {
+        return Math.abs(value) < 1e11 ? value * 1000 : value;
+    }
+
+    function formatLastEdited(value: number): string {
+        const date = new Date(epochMillis(value));
+        if (Number.isNaN(date.getTime())) {
+            return String(value);
+        }
+
+        const local = new Intl.DateTimeFormat(undefined, {
+            dateStyle: 'medium',
+            timeStyle: 'medium',
+        }).format(date);
+
+        return `${local} (${value})`;
+    }
+
+    $: lastEditedLabel = timestamp ? formatLastEdited(timestamp) : '';
+
     export function reportValidity() {
         return form.reportValidity();
     }
@@ -100,10 +123,10 @@
             </div>
         {/if}
 
-        {#if timestamp}
+        {#if lastEditedLabel}
             <div>
                 <label for="roottimestamp">Last edited</label>
-                <span id="roottimestamp">{timestamp}</span>
+                <span id="roottimestamp">{lastEditedLabel}</span>
             </div>
         {/if}
 

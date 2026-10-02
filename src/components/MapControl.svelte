@@ -7,8 +7,6 @@
     import { createEventDispatcher } from 'svelte';
     import * as h3Lib from 'h3-js';
 
-    import { ReloadIcon, ExploreIcon } from 'svelte-zondicons';
-
     import { MIN_H3RESOLUTION, DEFAULT_H3RESOLUTION, MAX_H3RESOLUTION, H3RESOLUTION_AUTO } from '../core/store';
     import { geoPose } from '../core/store';
     import type { StreetOrSatellite } from '../types/map';
@@ -22,32 +20,12 @@
     export let h3: h3Lib.H3IndexInput;
     export let onSaveCancel: () => void;
     export let updateGeopose: ({ lat, lon }: { lat: number; lon: number }) => void;
-    type Service = { title?: string; id?: string; url?: string };
-    type Record = { id: string; services: Service[] };
-
-    export let geoPoseServices: Record[] = [];
 
     const dispatch = createEventDispatcher<{
         movemarker: { lat: number; lon: number; h3: h3Lib.H3IndexInput };
         'change-h3resolution': number;
         'change-display': { add: StreetOrSatellite; remove: StreetOrSatellite };
-        'check-geoposeservices': h3Lib.H3IndexInput;
-        'select-geoposeservice': string;
-        checkcontent: {
-            lat: number;
-            lon: number;
-            h3: h3Lib.H3IndexInput;
-        };
     }>();
-
-    const fakePos = {
-        lat: 48.661773184610375,
-        lon: 8.695943579077722,
-        h3: '871faa49dffffff',
-    };
-
-    let currentService: Service = {};
-    let serviceId = (recordId: string, serviceId: string | undefined) => `${recordId}-${serviceId}`;
 
     function preventDefault(event: Event) {
         event.stopPropagation();
@@ -78,26 +56,6 @@
         onSaveCancel();
     }
 
-    function checkForGeoPoseServices() {
-        dispatch('check-geoposeservices', h3);
-    }
-
-    function handleGeoPoseServiceSelect(record: Record, service: Service) {
-        currentService = {
-            id: serviceId(record.id, service.id),
-            url: service.url,
-        };
-        dispatch('select-geoposeservice', record.id);
-    }
-
-    function handleCheckContent() {
-        dispatch('checkcontent', {
-            lat: lat,
-            lon: lon,
-            h3: h3,
-        });
-    }
-
     const handleKeyup: KeyboardEventHandler<HTMLInputElement> = (event) => {
         if (event.code === 'Enter') {
             dispatch('movemarker', {
@@ -107,22 +65,17 @@
             });
         }
     };
-
-    function panToFakePos() {
-        ({ lat, lon, h3 } = fakePos);
-        dispatch('movemarker', fakePos);
-    }
 </script>
 
 <aside on:click={preventDefault} on:dblclick={preventDefault}>
-    <fieldset>
+    <fieldset class="display">
         <legend>Display</legend>
         <div>
-            <input id="displaystreet" type="radio" name="displayinfo" value="streetLayer" on:change={() => handleDisplay('Street', 'Satellite')} />
+            <input id="displaystreet" type="radio" name="displayinfo" value="streetLayer" checked on:change={() => handleDisplay('Street', 'Satellite')} />
             <label for="displaystreet">Street</label>
         </div>
         <div>
-            <input id="displaysatellite" type="radio" name="displayinfo" value="satelliteLayer" checked on:change={() => handleDisplay('Satellite', 'Street')} />
+            <input id="displaysatellite" type="radio" name="displayinfo" value="satelliteLayer" on:change={() => handleDisplay('Satellite', 'Street')} />
             <label for="displaysatellite">Satellite</label>
         </div>
     </fieldset>
@@ -138,10 +91,7 @@
         </div>
     </fieldset>
     <fieldset>
-        <legend>
-            <span>Position</span>
-            <button class="iconwrapper" on:click={panToFakePos}><ExploreIcon size="1rem" /></button>
-        </legend>
+        <legend>Position</legend>
         <div>
             <label for="lat">Lat</label>
             <input id="lat" type="number" step="any" bind:value={lat} on:keyup|preventDefault={handleKeyup} />
@@ -155,29 +105,9 @@
             <input id="h3" bind:value={h3} on:keyup|preventDefault={handleKeyup} />
         </div>
     </fieldset>
-    <fieldset>
-        <legend>
-            <span class="clickable" on:click={checkForGeoPoseServices}>GeoPose Service</span>
-            <button class="iconwrapper" on:click={checkForGeoPoseServices}><ReloadIcon size="1rem" /></button>
-        </legend>
-        <ul id="geoposeservices">
-            {#if geoPoseServices.length > 0}
-                {#each geoPoseServices as record}
-                    {#each record.services as service}
-                        <li class:selected={currentService.id === serviceId(record.id, service.id)} on:click={() => handleGeoPoseServiceSelect(record, service)}>
-                            {service.title}
-                        </li>
-                    {/each}
-                {/each}
-            {:else}
-                <li>No services</li>
-            {/if}
-        </ul>
-        <button id="checkcontent" disabled={currentService.id === undefined} on:click={handleCheckContent}> check </button>
-    </fieldset>
     <fieldset id="controls">
-        <button on:click={handleSave}>set</button>
-        <button on:click={handleCancel}>cancel</button>
+        <button type="button" on:click={handleSave}>set</button>
+        <button type="button" on:click={handleCancel}>cancel</button>
     </fieldset>
 </aside>
 
@@ -210,6 +140,11 @@
         margin: 5px;
     }
 
+    fieldset.display label {
+        width: auto;
+        text-align: left;
+    }
+
     fieldset label {
         width: 2rem;
         display: inline-block;
@@ -224,25 +159,9 @@
         width: unset;
     }
 
-    #geoposeservices li {
-        padding: 6px;
-        cursor: pointer;
-    }
-
-    #geoposeservices li.selected {
-        background-color: #ffc5b2;
-    }
-
-    #checkcontent {
-        width: 100%;
-    }
-
     .placeholder {
         padding: 4px 0 9px 5px;
         display: inline-block;
     }
 
-    .clickable {
-        cursor: pointer;
-    }
 </style>

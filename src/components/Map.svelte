@@ -4,8 +4,6 @@
 -->
 
 <script lang="ts">
-    import { createEventDispatcher } from 'svelte';
-
     import L from 'leaflet';
     import * as h3 from 'h3-js';
     import geojson2h3 from 'geojson2h3';
@@ -19,101 +17,26 @@
     const COUNT_H3RING = 1;
 
     const DEFAULT_ZOOM = 13;
-    const MAX_ZOOM = 30;
 
     const COLOR_H3Center = '#ff7800';
     const COLOR_H3RING = '#e5b70b';
     const OPACITY_H3HEXAGON = 0.4;
 
-    const COLOR_GEOPOSECOVERAGE = '#78ff00';
-    const COLOR_GEOPOSECOVERAGESELECTED = '#ff7800';
-    const OPACITY_GEOPOSECOVERAGE = 0.4;
-
-    const dispatch = createEventDispatcher<{
-        'goto-checkcontent': {
-            lat: number;
-            lon: number;
-            h3: h3.H3IndexInput;
-        };
-    }>();
-
     let map: L.Map | null;
 
-    // LatLon defaults to Heidelberg Castle
-    let thisLat = 49.410625;
-    let thisLon = 8.715277;
+    // Royal Observatory, Greenwich (51°28′40″N 0°00′05″W)
+    let thisLat = 51.477778;
+    let thisLon = -0.001389;
 
     let thisH3Index: h3.H3IndexInput;
     let currentH3Resolution = $DEFAULT_H3RESOLUTION;
 
-    let thisGeoposeId: string;
-
-    let fakeServices = [
-        {
-            id: '12345',
-            type: 'ssr',
-            services: [
-                {
-                    id: 'mv1',
-                    type: 'geopose',
-                    url: 'http://geopose.geo1.example.com/neubulach',
-                    title: 'Neubulach area',
-                    description: "Find out where you are and in which direction you're looking",
-                    capabilities: ['geopose', 'outside'],
-                },
-            ],
-            geometry: {
-                type: 'Polygon',
-                coordinates: [
-                    [
-                        [8.69997024536, 48.65729395205282],
-                        [8.71387481689, 48.68824070611107],
-                        [8.66769790649, 48.716337032605665],
-                        [8.60006332397, 48.67702045350972],
-                        [8.64126205444, 48.65718055903762],
-                        [8.69997024536, 48.65729395205282],
-                    ],
-                ],
-            },
-            altitude: 0,
-        },
-        {
-            id: '54321',
-            type: 'ssr',
-            services: [
-                {
-                    id: 'mv1',
-                    type: 'geopose',
-                    url: 'http://geopose.geo1.example.com/calw',
-                    title: 'Calw area',
-                    description: "Find out where you are and in which direction you're looking",
-                    capabilities: ['geopose', 'outside'],
-                },
-            ],
-            geometry: {
-                type: 'Polygon',
-                coordinates: [
-                    [
-                        [8.67610931396, 48.663756932307564],
-                        [8.74185562134, 48.618044744593455],
-                        [8.84056091309, 48.653665249055535],
-                        [8.7384223938, 48.72018772585415],
-                        [8.67610931396, 48.663756932307564],
-                    ],
-                ],
-            },
-            altitude: 0,
-        },
-    ];
-
     function createMap(container: HTMLElement) {
         let calcH3Resolution = () => (currentH3Resolution === $H3RESOLUTION_AUTO ? Math.round(0.7 * (m.getZoom() - 3)) : currentH3Resolution);
 
-        let streetLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            attribution: `&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>,
-                                &copy; <a href="https://carto.com/attributions" target="_blank">CARTO</a>`,
-            subdomains: 'abcd',
-            maxZoom: MAX_ZOOM,
+        let streetLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: `&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>`,
+            maxZoom: 19,
         });
 
         let satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -125,7 +48,8 @@
         let m = L.map(container, {
             center: [thisLat, thisLon],
             zoom: DEFAULT_ZOOM,
-            layers: [streetLayer, satelliteLayer],
+            maxZoom: 19,
+            layers: [streetLayer],
         });
 
         const baseMaps = {
@@ -160,15 +84,13 @@
         h3Layer.addTo(m);
         h3Layer.bringToFront();
 
-        let marker = L.marker([thisLat, thisLon], { draggable: true }).addTo(m);
-        marker.on('dragend', () => {
-            const latlng = marker.getLatLng();
-            updateMarker(marker, latlng, calcH3Resolution(), toolbarComponent);
-
-            h3Layer.clearLayers();
-            const clickH3 = h3.geoToH3(latlng.lat, latlng.lng, calcH3Resolution());
-            updateH3Layers(clickH3, h3Layer);
-        });
+        let marker = L.circleMarker([thisLat, thisLon], {
+            radius: 8,
+            color: '#ff7800',
+            fillColor: '#ffffff',
+            fillOpacity: 1,
+            weight: 2,
+        }).addTo(m);
 
         m.on('click', (event) => {
             updateMarker(marker, event.latlng, calcH3Resolution(), toolbarComponent);
@@ -189,26 +111,6 @@
 
             updateMarker(marker, marker ? marker.getLatLng() : { lat: centerGeo[0], lng: centerGeo[1] }, calcH3Resolution(), toolbarComponent);
         });
-
-        const coverageLayer = L.geoJSON([], {
-            style: (feature) => {
-                return {
-                    fillColor: COLOR_GEOPOSECOVERAGE,
-                    color: feature?.properties.recordId === thisGeoposeId ? COLOR_GEOPOSECOVERAGESELECTED : COLOR_GEOPOSECOVERAGE,
-                    opacity: OPACITY_GEOPOSECOVERAGE,
-                };
-            },
-            onEachFeature: (feature, layer) => {
-                layer.on({
-                    click: (event) => {
-                        updateGeoposeCoverageLayers(event.target.feature.id, coverageLayer);
-                    },
-                });
-            },
-        });
-
-        coverageLayer.addTo(m);
-        coverageLayer.bringToBack();
 
         const toolbar = new L.Control({ position: 'topright' });
         let toolbarComponent: MapControl | null;
@@ -242,20 +144,6 @@
                 m.removeLayer(baseMaps[event.detail.remove]);
                 m.addLayer(baseMaps[event.detail.add]);
             });
-            toolbarComponent.$on('check-geoposeservices', () => {
-                // TODO: Simple fake for now, as no GeoPose services are available, yet
-
-                // Request services from service discovery
-                toolbarComponent?.$set({
-                    geoPoseServices: fakeServices,
-                });
-
-                // Display the service coverage polygons on the map
-                let geoJsonFeatures = coverageFeatureCollectionFromSsrs(fakeServices);
-
-                coverageLayer.clearLayers();
-                coverageLayer.addData(geoJsonFeatures);
-            });
             toolbarComponent.$on('movemarker', (event) => {
                 m.panTo([event.detail.lat, event.detail.lon]);
                 marker.setLatLng([event.detail.lat, event.detail.lon]);
@@ -264,10 +152,6 @@
                 const clickH3 = h3.geoToH3(event.detail.lat, event.detail.lon, calcH3Resolution());
                 updateH3Layers(clickH3, h3Layer);
             });
-            toolbarComponent.$on('select-geoposeservice', (event) => updateGeoposeCoverageLayers(event.detail, coverageLayer));
-
-            toolbarComponent.$on('checkcontent', (event) => dispatch('goto-checkcontent', event.detail));
-
             return div;
         };
 
@@ -283,44 +167,7 @@
         return m;
     }
 
-    function coverageFeatureCollectionFromSsrs(scrs: typeof fakeServices) {
-        const features = scrs.reduce(
-            (geoJsonFeatures, record) => {
-                if (record.services.some((service) => service.type === 'geopose')) {
-                    geoJsonFeatures.push({
-                        type: 'Feature',
-                        properties: {
-                            recordId: record.id,
-                        },
-                        geometry: record.geometry,
-                    });
-                }
-                return geoJsonFeatures;
-            },
-            [] as {
-                type: 'Feature';
-                properties: {
-                    recordId: any;
-                };
-                geometry: {
-                    type: string;
-                    coordinates: number[][][];
-                };
-            }[],
-        );
-
-        return {
-            type: 'FeatureCollection',
-            features: features,
-        } as const;
-    }
-
-    function updateGeoposeCoverageLayers(featureId: string, coverageLayer: L.GeoJSON) {
-        thisGeoposeId = featureId;
-        coverageLayer.resetStyle();
-    }
-
-    function updateMarker(marker: L.Marker, latlng: { lat: number; lng: number }, h3Resolution: number, toolbarComponent: MapControl | null) {
+    function updateMarker(marker: L.CircleMarker, latlng: { lat: number; lng: number }, h3Resolution: number, toolbarComponent: MapControl | null) {
         if (marker) {
             marker.setLatLng(latlng);
 
@@ -350,6 +197,7 @@
         L.Icon.Default.imagePath = '/leaflet/';
 
         map = createMap(container);
+        requestAnimationFrame(() => map?.invalidateSize());
         return {
             destroy: () => {
                 map?.remove();
@@ -391,6 +239,16 @@
     #map {
         height: 100%;
         width: 100%;
+    }
+
+    /* The create form gives every div inside a fieldset a 20px margin.
+       Leaflet panes are those divs, so the pin was drawn 40px from the click. */
+    #map :global(.leaflet-pane),
+    #map :global(.leaflet-control),
+    #map :global(.leaflet-top),
+    #map :global(.leaflet-bottom),
+    #map :global(.leaflet-control-container) {
+        margin: 0;
     }
 
     #map :global(.h3indexmarkercontainer) {
