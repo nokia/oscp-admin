@@ -17,9 +17,15 @@
         timestamp = data.timestamp;
     }
 
-    // OSCP timestamps are Unix epoch milliseconds (UTC). Show local time, and keep that UTC value.
+    // Discovery services return the platform timestamp as Unix seconds
+    // (`Date#getTime() / 1000`, often fractional). `Date` expects milliseconds.
+    // Values already in milliseconds (about 1e12 for current dates) are left as-is.
+    function epochMillis(value: number): number {
+        return Math.abs(value) < 1e11 ? value * 1000 : value;
+    }
+
     function formatLastEdited(value: number): string {
-        const date = new Date(value);
+        const date = new Date(epochMillis(value));
         if (Number.isNaN(date.getTime())) {
             return String(value);
         }
