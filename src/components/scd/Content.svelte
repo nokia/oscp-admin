@@ -19,6 +19,9 @@
     export let data: Content;
     let showModal = false;
 
+    // Types spARcl already handles. The field stays free text so a new type can be entered.
+    const contentTypes = ['MODEL_3D', 'ICON', 'VIDEO', 'SOUND', 'POINT_CLOUD', 'POI', 'TEXT', 'SENSOR_STREAM', 'GEOPOSE_STREAM'];
+
     const defaultGeopose = (): Geopose => ({
         position: { lon: 0, lat: 0, h: 0 },
         quaternion: { x: 0, y: 0, z: 0, w: 1 },
@@ -78,7 +81,12 @@
 
 <div>
     <label for="contenttype">Type</label>
-    <input id="contenttype" required bind:value={data.type} />
+    <input id="contenttype" required list="content-types" bind:value={data.type} />
+    <datalist id="content-types">
+        {#each contentTypes as contentType}
+            <option value={contentType}></option>
+        {/each}
+    </datalist>
 </div>
 
 <div>
