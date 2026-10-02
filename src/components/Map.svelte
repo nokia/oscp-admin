@@ -239,11 +239,15 @@
     #map {
         height: 100%;
         width: 100%;
+        margin: 0;
     }
 
     /* The create form gives every div inside a fieldset a 20px margin.
-       Leaflet panes are those divs, so the pin was drawn 40px from the click. */
+       Leaflet draws tiles in .leaflet-layer and .leaflet-tile-container, which
+       are those divs. The panes were already reset, so a click's lat/lon stayed
+       on the cursor while the imagery sat 40px down and to the right. */
     #map :global(.leaflet-pane),
+    #map :global(.leaflet-pane div),
     #map :global(.leaflet-control),
     #map :global(.leaflet-top),
     #map :global(.leaflet-bottom),
